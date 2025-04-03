@@ -4,6 +4,7 @@ from click_up.models import ClickTransaction
 from shop.models import Order
 class ClickWebhookAPIView(ClickWebhook):
     def successfully_payment(self, params):
+
         transaction = ClickTransaction.objects.get(
             transaction_id=params.click_trans_id
         )

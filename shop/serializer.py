@@ -7,7 +7,7 @@ User = get_user_model()
 class ImageProductsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageProducts
-        fields = ["id", "image"]
+        fields = ["image"]
 
 
 class ProductsSerializer(serializers.ModelSerializer):
@@ -21,7 +21,7 @@ class ProductsSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = '__all__'
+        fields = ['name',"product_count",]
 
 class OrderItemSerializer(serializers.ModelSerializer):
 

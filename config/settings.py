@@ -13,6 +13,9 @@ import os
 from pathlib import Path
 from decouple import config
 import matplotlib
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 matplotlib.use('Agg')
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -202,3 +205,17 @@ CORS_ALLOW_METHODS = [
     "OPTIONS",
 ]
 CORS_ALLOW_CREDENTIALS = True
+
+
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": config("CLOUDINARY_CLOUD_NAME"),
+    "API_KEY": config("CLOUDINARY_API_KEY"),
+    "API_SECRET": config("CLOUDINARY_API_SECRET"),
+}
+cloudinary.config(
+    cloud_name=CLOUDINARY_STORAGE["CLOUD_NAME"],
+    api_key=CLOUDINARY_STORAGE["API_KEY"],
+    api_secret=CLOUDINARY_STORAGE["API_SECRET"]
+)
+
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"

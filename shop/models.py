@@ -5,7 +5,8 @@ from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
 import os
-
+import cloudinary.uploader
+from cloudinary.models import CloudinaryField
 # Create your models here.
 
 
@@ -14,6 +15,10 @@ User = get_user_model()
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
+
+    @property
+    def product_count(self):
+        return self.products.count()
 
     def __str__(self):
         return self.name
@@ -24,13 +29,15 @@ class Category(models.Model):
 
 
 class Products(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Categoriya:")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Categoriya:",related_name="products")
     name = models.CharField(max_length=100, verbose_name="O'yinchoq nomi:")
     price = models.DecimalField(decimal_places=2, max_digits=14, verbose_name="O'yinchoq narxi:")
     discount = models.IntegerField(default=0, verbose_name="O'yinchoq chegirmasi: (ixtiyoriy)")
     description = models.TextField(null=True, blank=True, verbose_name="O'yinchoq xaqida:")
     quantity = models.IntegerField(verbose_name="O'yinchoq soni:")
     video_url = models.URLField(null=True, blank=True, verbose_name="You tubdan video joylash:")
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now=True)
 
     @property
     def discounted_price(self):
@@ -57,7 +64,7 @@ class Products(models.Model):
 
 class ImageProducts(models.Model):
     product = models.ForeignKey(Products, related_name="images", on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='toy_images/', verbose_name="O'yinchoq uchun rasm (istagancha)")
+    image = CloudinaryField("image")
 
     class Meta:
         verbose_name = "Rasm"
@@ -67,8 +74,10 @@ class ImageProducts(models.Model):
 @receiver(post_delete, sender=ImageProducts)
 def delete_product_image(sender, instance, **kwargs):
     if instance.image:
-        if os.path.isfile(instance.image.path):
-            os.remove(instance.image.path)
+        try:
+            cloudinary.uploader.destroy(instance.image.public_id)
+        except Exception as e:
+            print(f"Cloudinary rasm o‘chirishda xatolik: {e}")
 
 
 class Order(models.Model):
