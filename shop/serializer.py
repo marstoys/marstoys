@@ -9,14 +9,15 @@ class ImageProductsSerializer(serializers.ModelSerializer):
         model = ImageProducts
         fields = ["image"]
 
-
 class ProductsSerializer(serializers.ModelSerializer):
-    images = ImageProductsSerializer(many=True, read_only=True)
+    images = serializers.SerializerMethodField()
 
     class Meta:
         model = Products
-        fields = ["id", "name", "price", "images", "description","discount","quantity","category",'discounted_price', 'average_rating','sold','video_url']
+        fields = ["id", "name", "price", "images", "description", "discount", "quantity", "category", "discounted_price", "average_rating", "sold", "video_url"]
 
+    def get_images(self, obj):
+        return [img.image.url for img in obj.images.all()]
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
