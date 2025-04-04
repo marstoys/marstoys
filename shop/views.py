@@ -42,8 +42,7 @@ class ProductListAPIView(generics.ListAPIView):
 
 
 class ProductDetailsAPIView(APIView):
-    def post(self, request):
-        product_id = request.data.get("product_id")
+    def post(self, request, product_id):
         product = get_object_or_404(Products, pk=product_id)
         serializer = ProductsSerializer(product)
         return Response(serializer.data)
