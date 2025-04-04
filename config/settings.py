@@ -193,8 +193,8 @@ CLICK_ACCOUNT_MODEL = "shop.models.Order"
 CLICK_AMOUNT_FIELD = "total_price"
 CORS_ALLOWED_ORIGINS = [
     "https://toysmars.com",
-    "http://127.0.0.1:3000",
-    "http://localhost:3000",
+    "http://127.0.0.1:5173",
+    "http://localhost:5173",
 ]
 CORS_ALLOW_METHODS = [
     "GET",

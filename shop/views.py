@@ -93,11 +93,6 @@ class ViewCommentProductAPIView(generics.ListAPIView):
         product = get_object_or_404(Products, id=product_id)
         return CommentProducts.objects.filter(product=product)
 
-
-
-
-
-
 class ViewCartProductsAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ProductsSerializer
@@ -114,6 +109,10 @@ class OrderCreateAPIView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         order = serializer.save()
+        for item in order.items.all():
+            product = item.product
+            product.quantity -= item.quantity
+            product.save(update_fields=["quantity"])
         result = {"order": serializer.data}
         if serializer.data.get('payment_method') == "karta":
             payment_link = click_up.initializer.generate_pay_link(
