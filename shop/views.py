@@ -41,11 +41,13 @@ class ProductListAPIView(generics.ListAPIView):
         return queryset
 
 
-class ProductDetailsAPIView(APIView):
-    def post(self, request, product_id):
-        product = get_object_or_404(Products, pk=product_id)
-        serializer = ProductsSerializer(product)
-        return Response(serializer.data)
+class ProductDetailsAPIView(generics.RetrieveAPIView):
+    serializer_class = ProductsSerializer
+    queryset = Products.objects.all()
+
+    def get_object(self):
+        product_id = self.kwargs.get("product_id")
+        return get_object_or_404(Products, pk=product_id)
 
 
 class CategoryListAPIView(generics.ListAPIView):
