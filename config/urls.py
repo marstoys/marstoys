@@ -22,7 +22,6 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from payments.views import ClickWebhookAPIView
-from shop.views import sales_chart
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -38,7 +37,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-                  path("admin/sales_chart/", sales_chart, name="sales_chart"),
+
                   path('admin/', admin.site.urls),
                   path('shop/', include('shop.urls')),
                   path('users/', include('users.urls')),

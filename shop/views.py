@@ -138,34 +138,3 @@ class GetOrderHistoryAPIView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-
-def sales_chart(request):
-    sales_data = (
-        Order.objects.values("created_at__date")
-        .annotate(total_sales=Sum("total_price"))
-        .order_by("created_at__date")
-    )
-
-    dates = [item["created_at__date"] for item in sales_data]
-    sales = [item["total_sales"] for item in sales_data]
-
-    plt.figure(figsize=(8, 4))
-    plt.bar(dates, sales, color="b", label="Sales")
-
-    plt.xlabel("Sana")
-    plt.ylabel("Sotuv summasi")
-    plt.title("Sotuvlar statistikasi")
-    plt.legend()
-    plt.grid(axis="y", linestyle="--", alpha=0.7)
-
-    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))
-    plt.xticks(rotation=45)
-
-    buffer = BytesIO()
-    plt.savefig(buffer, format="png")
-    buffer.seek(0)
-    image_png = buffer.getvalue()
-    buffer.close()
-    graph = base64.b64encode(image_png).decode("utf-8")
-
-    return render(request, "admin/sales_chart.html", {"chart": graph})

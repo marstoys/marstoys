@@ -45,13 +45,15 @@ class ProductsAdmin(admin.ModelAdmin):
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
-    extra = 1
-    readonly_fields = ('product', 'quantity', 'total_price', "product_image",)
+    extra = 0
+    exclude = ('total_price',)
+    readonly_fields = ('product', 'quantity', 'calculated_total_price', "product_image",)
 
-    def total_price(self, obj):
-        return obj.quantity * obj.product.discounted_price()
 
-    total_price.short_description = "Total Price"
+    def calculated_total_price(self, obj):
+        return obj.quantity * obj.product.discounted_price
+
+    calculated_total_price.short_description = "Jami narxi:"
 
     def product_image(self, obj):
         if obj and obj.product and obj.product.images.exists():
@@ -60,12 +62,12 @@ class OrderItemInline(admin.TabularInline):
                                first_image.image.url)
         return "No Image"
 
-    product_image.short_description = "Product Image"
+    product_image.short_description = "O'yinchoq rasmi:"
 
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
-         "ordered_by_name", "address", "total_price", "payment_method", "is_paid", "status", "sales_statistics")
+         "ordered_by_name", "address", "total_price", "payment_method", "is_paid", "status")
     list_filter = ("is_paid", "payment_method")
     search_fields = ("ordered_by__first_name", "ordered_by__username", "address")
     ordering = ("-total_price",)
@@ -78,10 +80,7 @@ class OrderAdmin(admin.ModelAdmin):
 
     ordered_by_name.short_description = "Ordered By"
 
-    def sales_statistics(self, obj):
-        return format_html('<a href="{}">📊 Sotuv statistikasi</a>', reverse("sales_chart"))
 
-    sales_statistics.short_description = "Statistika"
 
 admin.site.register(Category)
 admin.site.register(Products, ProductsAdmin)

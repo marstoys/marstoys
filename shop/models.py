@@ -24,8 +24,8 @@ class Category(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = "Categoriya"
-        verbose_name_plural = "Categoriyalar"
+        verbose_name = "Kategoriya"
+        verbose_name_plural = "Kategoriyalar"
 
 
 class Products(models.Model):
@@ -83,6 +83,7 @@ def delete_product_image(sender, instance, **kwargs):
 class Order(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Kutilmoqda'),
+        ('delivering','Yetkazilmoqda'),
         ('delivered', 'Yetkazib berildi'),
         ('cancelled', 'Bekor qilindi'),
 
@@ -116,7 +117,7 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
-    product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name="ordered_products")
+    product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name="ordered_products",verbose_name="O'yinchoq nomi:")
     quantity = models.PositiveIntegerField(default=1, verbose_name='Buyurtma soni:')
     total_price = models.DecimalField(decimal_places=2, max_digits=14, default=0, verbose_name='Jami summa:')
     created_at = models.DateTimeField(auto_now_add=True)
