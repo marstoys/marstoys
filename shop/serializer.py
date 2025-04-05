@@ -34,7 +34,7 @@ class ProductsSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['name',"product_count",]
+        fields = ['id','name',"product_count",]
 
 class OrderItemSerializer(serializers.ModelSerializer):
 
