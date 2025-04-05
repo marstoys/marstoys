@@ -18,7 +18,7 @@ class Category(models.Model):
         ('all',"Barcha uchun")
     ]
     gender=models.CharField(choices=GENDER_CHOICES, max_length=6,default='male', verbose_name='Kimlar uchun:')
-    name_uz = models.CharField(max_length=100,default='ok',verbose_name='Kategory nomi (uzb)')
+    name = models.CharField(max_length=100,default='ok',verbose_name='Kategory nomi (uzb)')
     name_ru = models.CharField(max_length=100,default='ok',verbose_name='Kategory nomi (rus)')
     name_en = models.CharField(max_length=100,default='ok',verbose_name='Kategory nomi (eng)')
 
@@ -27,7 +27,7 @@ class Category(models.Model):
         return self.products.count()
 
     def __str__(self):
-        return self.name_uz
+        return self.name
 
     class Meta:
         verbose_name = "Kategoriya"
@@ -36,12 +36,12 @@ class Category(models.Model):
 
 class Products(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Kategoriya:",related_name="products")
-    name_uz = models.CharField(max_length=100,default='ok', verbose_name="O'yinchoq nomi (uzb):")
+    name = models.CharField(max_length=100,default='ok', verbose_name="O'yinchoq nomi (uzb):")
     name_ru = models.CharField(max_length=100,default='ok', verbose_name="O'yinchoq nomi (rus):")
     name_en = models.CharField(max_length=100,default='ok', verbose_name="O'yinchoq nomi (eng):")
     price = models.DecimalField(decimal_places=2, max_digits=14, verbose_name="O'yinchoq narxi:")
     discount = models.IntegerField(default=0, verbose_name="O'yinchoq chegirmasi: (ixtiyoriy)")
-    description_uz = models.TextField(null=True, blank=True, verbose_name="O'yinchoq xaqida (uzb):")
+    description = models.TextField(null=True, blank=True, verbose_name="O'yinchoq xaqida (uzb):")
     description_ru = models.TextField(null=True, blank=True, verbose_name="O'yinchoq xaqida (rus):")
     description_en = models.TextField(null=True, blank=True, verbose_name="O'yinchoq xaqida (eng):")
     quantity = models.IntegerField(verbose_name="O'yinchoq soni:")
@@ -65,7 +65,7 @@ class Products(models.Model):
             "quantity__sum"] or 0
 
     def __str__(self):
-        return self.name_uz
+        return self.name
 
     class Meta:
         verbose_name = "Mahsulot"
@@ -137,7 +137,7 @@ class OrderItem(models.Model):
         verbose_name_plural = "Buyurtmadagi o'yinchoqlar"
 
     def __str__(self):
-        return self.product.name_uz
+        return self.product.name
 
 
 class CommentProducts(models.Model):

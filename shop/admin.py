@@ -15,7 +15,7 @@ class ImageProductsInline(admin.TabularInline):
 
 
 class ProductsAdmin(admin.ModelAdmin):
-    list_display = ("name_uz", "price", "discount", "quantity", "category", "product_image")
+    list_display = ("name", "price", "discount", "quantity", "category", "product_image")
     inlines = [ImageProductsInline]
 
     def product_image(self, obj):

@@ -15,7 +15,7 @@ class ProductsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Products
         fields = [
-            "id", "name_uz",'name_ru','name_en' ,"price", "images", "description_uz","description_ru","description_en",
+            "id", "name",'name_ru','name_en' ,"price", "images", "description","description_ru","description_en",
             "discount", "quantity", "category", "discounted_price",
             "average_rating", "sold", "video_url"
         ]
@@ -34,7 +34,7 @@ class ProductsSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id','gender','name_uz','name_ru','name_en',"product_count",]
+        fields = ['id','gender','name','name_ru','name_en',"product_count",]
 
 class OrderItemSerializer(serializers.ModelSerializer):
 
@@ -73,6 +73,7 @@ class OrderSerializer(serializers.ModelSerializer):
             product = item_data.get("product")
             quantity = item_data.get("quantity", 1)
             price = product.discounted_price if product else 0
+
             total_price = quantity * price
 
 
