@@ -37,10 +37,12 @@ class ProductDetailsAPIView(generics.RetrieveAPIView):
 
 
 class CategoryListAPIView(generics.ListAPIView):
+    queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
-    def get_queryset(self):
-        categories = Category.objects.all()
+    def list(self, request, *args, **kwargs):
+        categories = self.get_queryset()
+
         grouped = {
             'male': [],
             'female': [],
@@ -54,7 +56,21 @@ class CategoryListAPIView(generics.ListAPIView):
                 grouped['female'].append(category_data)
 
 
-        return grouped
+        male_page = self.paginate_queryset(grouped['male'])
+        female_page = self.paginate_queryset(grouped['female'])
+
+        # Create the response data as per your format
+        response_data = {
+            "count": len(categories),
+            "next": None,
+            "previous": None,
+            "results": [
+                {"male": male_page},
+                {"female": female_page}
+            ]
+        }
+
+        return Response(response_data)
 
 class PopularProducts(APIView):
     serializer_class = ProductsSerializer
