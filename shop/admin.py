@@ -15,7 +15,7 @@ class ImageProductsInline(admin.TabularInline):
 
 
 class ProductsAdmin(admin.ModelAdmin):
-    list_display = ("name_product", "price_product", "discount_product", "quantity_product", "category_product", "product_image")
+    list_display = ("name_uz", "price", "discount", "quantity", "category", "product_image")
     inlines = [ImageProductsInline]
 
     def product_image(self, obj):
@@ -26,21 +26,8 @@ class ProductsAdmin(admin.ModelAdmin):
         return "No Image"
 
     product_image.short_description = "Rasm:"
-    def name_product(self, obj):
-        return obj.name
-    name_product.short_description = "O'yinchoq nomi:"
-    def price_product(self, obj):
-        return obj.price
-    price_product.short_description = "O'yinchoq narxi:"
-    def discount_product(self, obj):
-        return obj.discount
-    discount_product.short_description = "Oyinchoq chegirmasi:"
-    def quantity_product(self, obj):
-        return obj.quantity
-    quantity_product.short_description = "O'yinchoqlar soni:"
-    def category_product(self, obj):
-        return obj.category
-    category_product.short_description = "O'yinchoq Categoriyasi:"
+
+
 
 
 class OrderItemInline(admin.TabularInline):
