@@ -11,15 +11,15 @@ from cloudinary.models import CloudinaryField
 
 User = get_user_model()
 
-class GenderCategory(models.Model):
-    GENDER_CHOICES = [
-        ('male', 'Ogil bollar'),
-        ('female', 'Qiz bollar'),
-    ]
-    for_gender = models.CharField(choices=GENDER_CHOICES, max_length=6, default='male',
-                                      verbose_name='Kim uchun:')
+# class GenderCategory(models.Model):
+#     GENDER_CHOICES = [
+#         ('male', 'Ogil bollar'),
+#         ('female', 'Qiz bollar'),
+#     ]
+#     for_gender = models.CharField(choices=GENDER_CHOICES, max_length=6, default='male',
+#                                       verbose_name='Kim uchun:')
 class Category(models.Model):
-    gender=models.ForeignKey(GenderCategory, on_delete=models.CASCADE,verbose_name='Kim uchun:')
+    # gender=models.ForeignKey(GenderCategory, on_delete=models.CASCADE,verbose_name='Kim uchun:')
     name = models.CharField(max_length=100)
 
     @property
