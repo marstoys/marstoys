@@ -15,6 +15,7 @@ class Category(models.Model):
     GENDER_CHOICES = [
         ('male', "O'g'il bolalar uchun"),
         ('female', 'Qiz bolalar uchun'),
+        ('all',"Barcha uchun")
     ]
     gender=models.CharField(choices=GENDER_CHOICES, max_length=6,default='male',
                                       verbose_name='Kimlar uchun:')
