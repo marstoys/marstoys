@@ -1,9 +1,9 @@
 from rest_framework import serializers
+from django.contrib.auth import get_user_model
 from .models import *
-from decimal import Decimal
 from rest_framework.serializers import Serializer, IntegerField
 User = get_user_model()
-import requests
+
 class ImageProductsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageProducts
@@ -19,11 +19,7 @@ class ProductsSerializer(serializers.ModelSerializer):
             "discount", "quantity", "category", "discounted_price",
             "average_rating", "sold", "video_url"
         ]
-    def price(self,obj):
-        if obj.price_all<1000:
-            converted = convert_usd_to_uzs(obj.price_all)
-            return converted
-        return obj.price_all
+
     def get_images(self, obj):
         return [
             self._make_https(img.image.url)
@@ -117,14 +113,3 @@ class CartProductsSerializer(serializers.ModelSerializer):
 
 class PermissionToCommentSerializer(Serializer):
     product_id = IntegerField()
-
-
-def convert_usd_to_uzs(amount):
-    url = "https://open.er-api.com/v6/latest/USD"
-    response = requests.get(url)
-    data = response.json()
-
-    rate = Decimal(str(data["rates"]["UZS"]))
-    amount_decimal = Decimal(str(amount))
-    converted = (amount_decimal * rate).quantize(Decimal("0.00"))
-    return converted
