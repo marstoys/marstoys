@@ -30,7 +30,7 @@ class ProductsAdmin(admin.ModelAdmin):
         return obj.name
     name_product.short_description = "O'yinchoq nomi:"
     def price_product(self, obj):
-        return obj.price
+        return obj.price_all
     price_product.short_description = "O'yinchoq narxi:"
     def discount_product(self, obj):
         return obj.discount

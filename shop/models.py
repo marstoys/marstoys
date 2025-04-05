@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
-import os
 import cloudinary.uploader
 from cloudinary.models import CloudinaryField
 # Create your models here.
@@ -12,8 +11,15 @@ from cloudinary.models import CloudinaryField
 
 User = get_user_model()
 
-
+class GenderCategory(models.Model):
+    GENDER_CHOICES = [
+        ('male', 'Ogil bollar'),
+        ('female', 'Qiz bollar'),
+    ]
+    for_gender = models.CharField(choices=GENDER_CHOICES, max_length=6, default='male',
+                                      verbose_name='Kim uchun:')
 class Category(models.Model):
+    gender=models.ForeignKey(GenderCategory, on_delete=models.CASCADE,verbose_name='Kim uchun:')
     name = models.CharField(max_length=100)
 
     @property
@@ -31,7 +37,7 @@ class Category(models.Model):
 class Products(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Categoriya:",related_name="products")
     name = models.CharField(max_length=100, verbose_name="O'yinchoq nomi:")
-    price = models.DecimalField(decimal_places=2, max_digits=14, verbose_name="O'yinchoq narxi:")
+    price_all = models.DecimalField(decimal_places=2, max_digits=14, verbose_name="O'yinchoq narxi:")
     discount = models.IntegerField(default=0, verbose_name="O'yinchoq chegirmasi: (ixtiyoriy)")
     description = models.TextField(null=True, blank=True, verbose_name="O'yinchoq xaqida:")
     quantity = models.IntegerField(verbose_name="O'yinchoq soni:")
@@ -42,9 +48,9 @@ class Products(models.Model):
     @property
     def discounted_price(self):
         if self.discount > 0:
-            discounted = self.price * Decimal(1 - self.discount / 100)
+            discounted = self.price_all * Decimal(1 - self.discount / 100)
             return Decimal(f'{discounted}').quantize(Decimal('0.00'))
-        return Decimal(f'{self.price}').quantize(Decimal('0.00'))
+        return Decimal(f'{self.price_all}').quantize(Decimal('0.00'))
 
     def average_rating(self):
         avg_rating = self.comments.aggregate(Avg('rating'))['rating__avg']
