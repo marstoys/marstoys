@@ -17,27 +17,13 @@ click_up = ClickUp(service_id=settings.CLICK_SERVICE_ID, merchant_id=settings.CL
 
 
 class ProductListAPIView(generics.ListAPIView):
-    queryset = Products.objects.prefetch_related("images").all()
     serializer_class = ProductsSerializer
-    comments = CommentProducts.objects.all()
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        category = self.request.query_params.get("category")
-        search = self.request.query_params.get("search")
-        cost_min = self.request.query_params.get("cost_min")
-        cost_max = self.request.query_params.get("cost_max")
-
-        if cost_min and cost_max:
-            queryset = queryset.filter(price__gte=cost_min, price__lte=cost_max)
-        elif cost_min:
-            queryset = queryset.filter(price__gte=cost_min)
-        elif cost_max:
-            queryset = queryset.filter(price__lte=cost_max)
-        if search:
-            queryset = queryset.filter(Q(name__icontains=search) | Q(description__icontains=search))
-        if category:
-            queryset = queryset.filter(category__name=category)
+        category_id = self.kwargs.get("category_id")
+        queryset = Products.objects.prefetch_related("images")
+        if category_id:
+            queryset = queryset.filter(category_id=category_id)
         return queryset
 
 
@@ -62,11 +48,10 @@ class PopularProducts(APIView):
         serializer = self.serializer_class(popular_products, many=True)
         return Response(serializer.data)
 class CommentProductAPIView(APIView):
-    permission_classes = [IsAuthenticated]
     serializer_class = CommentProductSerializer
 
     def post(self, request, *args, **kwargs):
-        product_id = request.data.get("product_id")
+        product_id = self.kwargs.get("product_id")
         product = get_object_or_404(Products, id=product_id)
         comment = request.data.get("comment")
         rating = request.data.get("rating")
@@ -85,21 +70,14 @@ class CommentProductAPIView(APIView):
 
 
 class ViewCommentProductAPIView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
     serializer_class = CommentProductSerializer
 
     def get_queryset(self):
-        product_id = self.request.data.get("product_id")
+        product_id = self.kwargs.get("product_id")
         product = get_object_or_404(Products, id=product_id)
         return CommentProducts.objects.filter(product=product)
 
-class ViewCartProductsAPIView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = ProductsSerializer
 
-    def get_queryset(self):
-        user = self.request.user
-        return Products.objects.filter(cartproduct__carted_by=user)
 
 
 class OrderCreateAPIView(generics.CreateAPIView):
