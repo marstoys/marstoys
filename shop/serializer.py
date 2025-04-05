@@ -14,10 +14,22 @@ class ProductsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Products
-        fields = ["id", "name", "price", "images", "description", "discount", "quantity", "category", "discounted_price", "average_rating", "sold", "video_url"]
+        fields = [
+            "id", "name", "price", "images", "description",
+            "discount", "quantity", "category", "discounted_price",
+            "average_rating", "sold", "video_url"
+        ]
 
     def get_images(self, obj):
-        return [img.image.url for img in obj.images.all()]
+        return [
+            self._make_https(img.image.url)
+            for img in obj.images.all()
+        ]
+
+    def _make_https(self, url):
+        if url.startswith("http://"):
+            return url.replace("http://", "https://")
+        return url
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
