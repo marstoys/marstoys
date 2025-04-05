@@ -37,8 +37,24 @@ class ProductDetailsAPIView(generics.RetrieveAPIView):
 
 
 class CategoryListAPIView(generics.ListAPIView):
-    queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+    def get_queryset(self):
+        categories = Category.objects.all()
+        grouped = {
+            'male': [],
+            'female': [],
+        }
+
+        for category in categories:
+            category_data = CategorySerializer(category).data
+            if category.gender == 'male':
+                grouped['male'].append(category_data)
+            else:
+                grouped['female'].append(category_data)
+
+
+        return grouped
 
 class PopularProducts(APIView):
     serializer_class = ProductsSerializer
