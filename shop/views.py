@@ -46,7 +46,7 @@ class CategoryListAPIView(generics.ListAPIView):
         grouped = {
             'male': [],
             'female': [],
-            'all':[]
+            'all':[],
         }
 
         for category in categories:
@@ -60,7 +60,7 @@ class CategoryListAPIView(generics.ListAPIView):
 
 
 
-        # Create the response data as per your format
+
         response_data = {
             "count": len(categories),
             "next": None,
