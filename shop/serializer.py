@@ -139,10 +139,7 @@ class LikedProductsSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class CartProductsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=CartProduct
-        fields="__all__"
+
 
 
 class PermissionToCommentSerializer(Serializer):
