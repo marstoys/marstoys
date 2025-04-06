@@ -46,14 +46,14 @@ class CategoryListAPIView(generics.ListAPIView):
         return Category.objects.all()
 
 
-
 class PopularProducts(APIView):
     serializer_class = ProductsSerializer
 
     def get(self, request):
-        popular_products = Products.objects.order_by("-created_at")[:5]
-        serializer = self.serializer_class(popular_products, many=True)
+        popular_products = Products.objects.order_by("-created_at")[:8]
+        serializer = self.serializer_class(popular_products, many=True, context={'request': request})
         return Response(serializer.data)
+
 class CommentProductAPIView(APIView):
     serializer_class = CommentProductSerializer
 
