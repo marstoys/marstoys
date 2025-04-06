@@ -37,15 +37,13 @@ class ProductDetailsAPIView(generics.RetrieveAPIView):
 
 
 class CategoryListAPIView(generics.ListAPIView):
-    queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
     def get_queryset(self):
-        gender=self.kwargs.get("gender")
-        queryset = Category.objects.all()
+        gender = self.request.query_params.get("gender")
         if gender:
-            queryset = Category.objects.filter(gender=gender)
-        return queryset
+            return Category.objects.filter(gender=gender)
+        return Category.objects.all()
 
 
 
