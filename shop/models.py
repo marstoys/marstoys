@@ -50,6 +50,9 @@ class Products(models.Model):
     updated_at=models.DateTimeField(auto_now=True)
 
     @property
+    def price(self):
+
+    @property
     def discounted_price(self):
         if self.discount > 0:
             discounted = self.price * Decimal(1 - self.discount / 100)

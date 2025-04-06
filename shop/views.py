@@ -46,28 +46,26 @@ class CategoryListAPIView(generics.ListAPIView):
         grouped = {
             'male': [],
             'female': [],
+            'all':[]
         }
 
         for category in categories:
             category_data = CategorySerializer(category).data
             if category.gender == 'male':
                 grouped['male'].append(category_data)
-            else:
+            elif category.gender=='female':
                 grouped['female'].append(category_data)
+            else:
+                grouped['all'].append(category_data)
 
 
-        male_page = self.paginate_queryset(grouped['male'])
-        female_page = self.paginate_queryset(grouped['female'])
 
         # Create the response data as per your format
         response_data = {
             "count": len(categories),
             "next": None,
             "previous": None,
-            "results": [
-                {"male": male_page},
-                {"female": female_page}
-            ]
+            "results": grouped
         }
 
         return Response(response_data)
