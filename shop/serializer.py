@@ -11,14 +11,36 @@ class ImageProductsSerializer(serializers.ModelSerializer):
 
 class ProductsSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
+    name = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
 
     class Meta:
         model = Products
         fields = [
-            "id", "name",'name_ru','name_en' ,"price", "images", "description","description_ru","description_en",
+            "id", "name", "price", "images", "description",
             "discount", "quantity", "category", "discounted_price",
             "average_rating", "sold", "video_url"
         ]
+
+    def get_name(self, obj):
+        request = self.context.get("request")
+        lang = request.query_params.get("lang") if request else None
+
+        if lang == "ru":
+            return obj.name_ru
+        elif lang == "en":
+            return obj.name_en
+        return obj.name
+
+    def get_description(self, obj):
+        request = self.context.get("request")
+        lang = request.query_params.get("lang") if request else None
+
+        if lang == "ru":
+            return obj.description_ru
+        elif lang == "en":
+            return obj.description_en
+        return obj.description
 
     def get_images(self, obj):
         return [
@@ -32,9 +54,21 @@ class ProductsSerializer(serializers.ModelSerializer):
         return url
 
 class CategorySerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+
     class Meta:
         model = Category
-        fields = ['id','gender','name','name_ru','name_en',"product_count",]
+        fields = ['id', 'gender', 'name', 'product_count']
+
+    def get_name(self, obj):
+        request = self.context.get("request")
+        lang = request.query_params.get("lang") if request else None
+
+        if lang == "ru":
+            return obj.name_ru
+        elif lang == "en":
+            return obj.name_en
+        return obj.name
 
 class OrderItemSerializer(serializers.ModelSerializer):
 
