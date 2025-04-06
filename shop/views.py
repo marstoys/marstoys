@@ -114,13 +114,10 @@ class OrderCreateAPIView(generics.CreateAPIView):
 class PermissionToCommentAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, *args, **kwargs):
-        serializer = PermissionToCommentSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+    def get(self, request, *args, **kwargs):
+        product_id = kwargs.get('product_id')
 
         user_id = request.user.id
-        product_id = serializer.validated_data["product_id"]
-
         exists = Order.objects.filter(
             ordered_by_id=user_id,
             status="delivered",
@@ -131,6 +128,7 @@ class PermissionToCommentAPIView(APIView):
             return Response({"message": True}, status=status.HTTP_200_OK)
 
         return Response({"message": False}, status=status.HTTP_403_FORBIDDEN)
+
 
 
 class GetOrderHistoryAPIView(APIView):
