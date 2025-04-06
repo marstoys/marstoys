@@ -39,7 +39,7 @@ class Products(models.Model):
     name = models.CharField(max_length=100,default='ok', verbose_name="O'yinchoq nomi (uzb):")
     name_ru = models.CharField(max_length=100,default='ok', verbose_name="O'yinchoq nomi (rus):")
     name_en = models.CharField(max_length=100,default='ok', verbose_name="O'yinchoq nomi (eng):")
-    price = models.DecimalField(decimal_places=2, max_digits=14, verbose_name="O'yinchoq narxi:")
+    price = models.DecimalField(decimal_places=2, max_digits=14, verbose_name="O'yinchoq narxi (Faqat so'mda):")
     discount = models.IntegerField(default=0, verbose_name="O'yinchoq chegirmasi: (ixtiyoriy)")
     description = models.TextField(null=True, blank=True, verbose_name="O'yinchoq xaqida (uzb):")
     description_ru = models.TextField(null=True, blank=True, verbose_name="O'yinchoq xaqida (rus):")
@@ -155,10 +155,4 @@ class LikedProducts(models.Model):
     liked_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
-class CartProduct(models.Model):
-    product = models.ForeignKey(Products, on_delete=models.CASCADE)
-    carted_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
 
-    class Meta:
-        unique_together = ('product', 'carted_by')
