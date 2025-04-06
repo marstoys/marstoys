@@ -40,35 +40,14 @@ class CategoryListAPIView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
-    def list(self, request, *args, **kwargs):
-        categories = self.get_queryset()
-
-        grouped = {
-            'male': [],
-            'female': [],
-            'all':[],
-        }
-
-        for category in categories:
-            category_data = CategorySerializer(category).data
-            if category.gender == 'male':
-                grouped['male'].append(category_data)
-            elif category.gender=='female':
-                grouped['female'].append(category_data)
-            else:
-                grouped['all'].append(category_data)
+    def get_queryset(self):
+        gender=self.kwargs.get("gender")
+        queryset = Category.objects.all()
+        if gender:
+            queryset = Category.objects.filter(gender=gender)
+        return queryset
 
 
-
-
-        response_data = {
-            "count": len(categories),
-            "next": None,
-            "previous": None,
-            "results": grouped
-        }
-
-        return Response(response_data)
 
 class PopularProducts(APIView):
     serializer_class = ProductsSerializer
