@@ -4,16 +4,17 @@ from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-from io import BytesIO
-import base64
 from .serializer import *
 from click_up import ClickUp
 from config import settings
+from rest_framework.pagination import PageNumberPagination
 
 # Create your views here.
 click_up = ClickUp(service_id=settings.CLICK_SERVICE_ID, merchant_id=settings.CLICK_MERCHANT_ID)
+
+
+class CategoryPagination(PageNumberPagination):
+    page_size = 100
 
 
 class ProductListAPIView(generics.ListAPIView):
@@ -38,6 +39,7 @@ class ProductDetailsAPIView(generics.RetrieveAPIView):
 
 class CategoryListAPIView(generics.ListAPIView):
     serializer_class = CategorySerializer
+    pagination_class = CategoryPagination
 
     def get_queryset(self):
         gender = self.request.query_params.get("gender")
@@ -53,6 +55,7 @@ class PopularProducts(APIView):
         popular_products = Products.objects.order_by("-created_at")[:8]
         serializer = self.serializer_class(popular_products, many=True, context={'request': request})
         return Response(serializer.data)
+
 
 class CommentProductAPIView(APIView):
     serializer_class = CommentProductSerializer
@@ -83,8 +86,6 @@ class ViewCommentProductAPIView(generics.ListAPIView):
         product_id = self.kwargs.get("product_id")
         product = get_object_or_404(Products, id=product_id)
         return CommentProducts.objects.filter(product=product)
-
-
 
 
 class OrderCreateAPIView(generics.CreateAPIView):
@@ -130,10 +131,10 @@ class PermissionToCommentAPIView(APIView):
         return Response({"message": False}, status=status.HTTP_403_FORBIDDEN)
 
 
-
 class GetOrderHistoryAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    serializers=OrderSerializer
+    serializers = OrderSerializer
+
     def get(self, request, *args, **kwargs):
         user_id = request.user.id
         orders = Order.objects.filter(
@@ -141,5 +142,3 @@ class GetOrderHistoryAPIView(APIView):
         )
         serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
