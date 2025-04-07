@@ -9,17 +9,52 @@ class ImageProductsSerializer(serializers.ModelSerializer):
         model = ImageProducts
         fields = ["image"]
 
+class CommentProductSerializer(serializers.ModelSerializer):
+    first_name = serializers.ReadOnlyField(source="commented_by.first_name")
+
+    class Meta:
+        model = CommentProducts
+        fields = ["id", "comment", "rating", "product", "first_name", "created_at"]
+        extra_kwargs = {
+            'commented_by': {'read_only': True},
+            'product': {'read_only': True},
+        }
+
+    def create(self, validated_data):
+        request = self.context.get("request")
+        if request:
+            validated_data["user"] = request.user
+        return super().create(validated_data)
+
+class CategorySerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Category
+        fields = ['id', 'gender', 'name', 'product_count']
+
+    def get_name(self, obj):
+        request = self.context.get("request")
+        lang = request.query_params.get("lang") if request else None
+
+        if lang == "ru":
+            return obj.name_ru
+        elif lang == "en":
+            return obj.name_en
+        return obj.name
+
 class ProductsSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
     name = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
+    comments = CommentProductSerializer(many=True, read_only=True)
 
     class Meta:
         model = Products
         fields = [
             "id", "name", "price", "images", "description",
             "discount", "quantity", "category", "discounted_price",
-            "average_rating", "sold", "video_url"
+            "average_rating", "sold", "video_url","comments"
         ]
 
     def get_name(self, obj):
@@ -53,22 +88,7 @@ class ProductsSerializer(serializers.ModelSerializer):
             return url.replace("http://", "https://")
         return url
 
-class CategorySerializer(serializers.ModelSerializer):
-    name = serializers.SerializerMethodField()
 
-    class Meta:
-        model = Category
-        fields = ['id', 'gender', 'name', 'product_count']
-
-    def get_name(self, obj):
-        request = self.context.get("request")
-        lang = request.query_params.get("lang") if request else None
-
-        if lang == "ru":
-            return obj.name_ru
-        elif lang == "en":
-            return obj.name_en
-        return obj.name
 
 class OrderItemSerializer(serializers.ModelSerializer):
 
@@ -116,22 +136,7 @@ class OrderSerializer(serializers.ModelSerializer):
         return order
 
 
-class CommentProductSerializer(serializers.ModelSerializer):
-    first_name = serializers.ReadOnlyField(source="commented_by.first_name")
 
-    class Meta:
-        model = CommentProducts
-        fields = ["id", "comment", "rating", "product", "first_name", "created_at"]
-        extra_kwargs = {
-            'commented_by': {'read_only': True},
-            'product': {'read_only': True},
-        }
-
-    def create(self, validated_data):
-        request = self.context.get("request")
-        if request:
-            validated_data["user"] = request.user
-        return super().create(validated_data)
 
 class LikedProductsSerializer(serializers.ModelSerializer):
     class Meta:

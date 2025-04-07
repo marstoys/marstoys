@@ -1,4 +1,3 @@
-from django.db.models import Q, Sum
 from django.shortcuts import render, get_object_or_404
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
@@ -8,8 +7,8 @@ from .serializer import *
 from click_up import ClickUp
 from config import settings
 from rest_framework.pagination import PageNumberPagination
-
 # Create your views here.
+
 click_up = ClickUp(service_id=settings.CLICK_SERVICE_ID, merchant_id=settings.CLICK_MERCHANT_ID)
 
 
@@ -79,13 +78,7 @@ class CommentProductAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ViewCommentProductAPIView(generics.ListAPIView):
-    serializer_class = CommentProductSerializer
 
-    def get_queryset(self):
-        product_id = self.kwargs.get("product_id")
-        product = get_object_or_404(Products, id=product_id)
-        return CommentProducts.objects.filter(product=product)
 
 
 class OrderCreateAPIView(generics.CreateAPIView):
