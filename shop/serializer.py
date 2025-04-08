@@ -21,7 +21,7 @@ def get_response():
         result=requests.post(url, data=head).json()
         access_token=result["data"]["acces_token"]
         refresh_token=result["data"]["refresh_token"]
-        BillzToken.objects.create(acces_token=access_token, refresh_token=refresh_token)
+        BillzToken.objects.update(acces_token=access_token, refresh_token=refresh_token)
         header = {
             "Authorization": f"Bearer {access_token}",
         }
@@ -154,11 +154,10 @@ class OrderSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if not validated_data.get('ordered_by') and request:
             validated_data['ordered_by'] = request.user
-        buyer_name = validated_data.get('buyer_name')
-        buyer_surname = validated_data.get('buyer_surname')
         user = request.user
-        user.first_name = buyer_name
-        user.last_name = buyer_surname
+        user.first_name = validated_data.get('buyer_name')
+        user.last_name = validated_data.get('buyer_surname')
+        user.address = validated_data.get('address')
         user.save()
         items_data = validated_data.pop('items')
         order = Order.objects.create( **validated_data)
