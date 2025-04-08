@@ -107,7 +107,7 @@ class Order(models.Model):
 
     buyer_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='Xaridor ismi:')
     buyer_surname = models.CharField(max_length=100, null=True, blank=True, verbose_name='Xaridor familiyasi:')
-    buyer_number = models.CharField(max_length=100, null=True, blank=True, verbose_name='Xaridor raqami:')
+    phone_number = models.CharField(max_length=100, null=True, blank=True, verbose_name='Xaridor raqami:')
     ordered_by = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
     address = models.TextField(verbose_name='Xaridor manzili:')
     total_price = models.DecimalField(decimal_places=2, max_digits=14, default=0, verbose_name='Jami xarid narxi:')

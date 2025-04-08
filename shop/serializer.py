@@ -1,8 +1,13 @@
+
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import *
 from rest_framework.serializers import Serializer, IntegerField
 User = get_user_model()
+
+
+
+
 
 class ImageProductsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,7 +19,7 @@ class CommentProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CommentProducts
-        fields = ["id", "comment", "rating", "product", "first_name", "created_at"]
+        fields = ["comment", "rating", "product", "first_name", "created_at"]
         extra_kwargs = {
             'commented_by': {'read_only': True},
             'product': {'read_only': True},
@@ -116,8 +121,8 @@ class OrderSerializer(serializers.ModelSerializer):
             validated_data['ordered_by'] = request.user
         buyer_name = validated_data.get('buyer_name')
         buyer_surname = validated_data.get('buyer_surname')
-        buyer_number = validated_data.get('buyer_number')
-        user = User.objects.get(phone_number=buyer_number)
+        phone_number = validated_data.get('phone_number')
+        user = User.objects.get(phone_number=phone_number)
         user.first_name = buyer_name
         user.last_name = buyer_surname
         user.save()
@@ -149,3 +154,4 @@ class LikedProductsSerializer(serializers.ModelSerializer):
 
 class PermissionToCommentSerializer(Serializer):
     product_id = IntegerField()
+

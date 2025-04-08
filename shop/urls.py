@@ -8,8 +8,7 @@ urlpatterns = [
     path('new-products/',PopularProducts.as_view(), name='popular-products'),
     path('product-details/<int:product_id>/', ProductDetailsAPIView.as_view(), name='product-details'),
     path('comment-create/<int:product_id>/', CommentProductAPIView.as_view(), name='comment-create'),
-    path('comment-premission/<int:product_id>/', PermissionToCommentAPIView.as_view(), name='comment-premission'),
+    path('comment-permission/<int:product_id>/', PermissionToCommentAPIView.as_view(), name='comment-premission'),
     path('order-product/', OrderCreateAPIView.as_view(), name='order-product'),
     path('order-history/',GetOrderHistoryAPIView.as_view(), name='order-history'),
-
 ]

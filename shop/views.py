@@ -58,7 +58,7 @@ class PopularProducts(APIView):
 
 class CommentProductAPIView(APIView):
     serializer_class = CommentProductSerializer
-
+    permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
         product_id = self.kwargs.get("product_id")
         product = get_object_or_404(Products, id=product_id)
@@ -73,7 +73,7 @@ class CommentProductAPIView(APIView):
 
         serializer = self.serializer_class(data=data)
         if serializer.is_valid():
-            serializer.save(commented_by=request.user)
+            serializer.save(commented_by=request.user,product=product)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

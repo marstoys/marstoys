@@ -59,7 +59,7 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ("ordered_by__first_name", "ordered_by__username", "address")
     ordering = ("-total_price",)
     inlines = [OrderItemInline]
-    readonly_fields = ('buyer_name','buyer_surname','buyer_number',
+    readonly_fields = ('buyer_name','buyer_surname','phone_number',
         "ordered_by", "address", "total_price", "payment_method", "is_paid",   "created_at")
 
     def ordered_by_name(self, obj):
