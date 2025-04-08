@@ -45,6 +45,7 @@ class Products(models.Model):
     description_ru = models.TextField(null=True, blank=True, verbose_name="O'yinchoq xaqida (rus):")
     description_en = models.TextField(null=True, blank=True, verbose_name="O'yinchoq xaqida (eng):")
     quantity = models.IntegerField(verbose_name="O'yinchoq soni:")
+    sku=models.CharField(max_length=100,blank=True, verbose_name="O'yinchoq karobkasidagi kod:")
     video_url = models.URLField(null=True, blank=True, verbose_name="You tubdan video joylash:")
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
@@ -156,3 +157,7 @@ class LikedProducts(models.Model):
 
 
 
+class BillzToken(models.Model):
+    acces_token=models.TextField(unique=True)
+    refresh_token=models.TextField(unique=True)
+    created_at=models.DateTimeField(auto_now_add=True)

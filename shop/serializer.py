@@ -1,11 +1,32 @@
-
+import requests
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from decouple import config
 from .models import *
 from rest_framework.serializers import Serializer, IntegerField
 User = get_user_model()
+url = config("URL")
 
-
+def get_response():
+    token = BillzToken.objects.order_by("-created_at").first().acces_token
+    headers = {
+        "Authorization": f"Bearer {token}",
+    }
+    response = requests.get(url, headers=headers)
+    if response.status_code != 200:
+        head={
+            {
+                "secret_token": f"{config('BILLZ_SECRET_KEY')}",}
+        }
+        result=requests.post(url, data=head).json()
+        access_token=result["data"]["acces_token"]
+        refresh_token=result["data"]["refresh_token"]
+        BillzToken.objects.create(acces_token=access_token, refresh_token=refresh_token)
+        header = {
+            "Authorization": f"Bearer {access_token}",
+        }
+        response = requests.get(url, headers=header)
+    return response
 
 
 
@@ -58,10 +79,24 @@ class ProductsSerializer(serializers.ModelSerializer):
         model = Products
         fields = [
             "id", "name", "price", "images", "description",
-            "discount", "quantity", "category", "discounted_price",
+            "discount", "quantity_get", "category", "discounted_price",
             "average_rating", "sold", "video_url","comments"
         ]
 
+    def quantity_get(self,obj):
+        if obj.sku:
+            response = get_response()
+            data = response.json()
+            sku = obj.sku
+            filtered_products = [
+                p for p in data.get("products", [])
+                if p.get("sku") == sku
+            ]
+            for product in filtered_products:
+                for shop in product.get("shop_measurement_values", []):
+                    return shop['active_measurement_value']
+        else:
+            return obj.quantity
     def get_name(self, obj):
         request = self.context.get("request")
         lang = request.query_params.get("lang") if request else None
@@ -121,8 +156,7 @@ class OrderSerializer(serializers.ModelSerializer):
             validated_data['ordered_by'] = request.user
         buyer_name = validated_data.get('buyer_name')
         buyer_surname = validated_data.get('buyer_surname')
-        phone_number = validated_data.get('phone_number')
-        user = User.objects.get(phone_number=phone_number)
+        user = request.user
         user.first_name = buyer_name
         user.last_name = buyer_surname
         user.save()
