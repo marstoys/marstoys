@@ -137,13 +137,23 @@ class OrderItemSerializer(serializers.ModelSerializer):
         fields = ['product','quantity','total_price']
 
     def get_product(self, obj):
+        request = self.context.get("request")
+        lang = request.query_params.get("lang") if request else None
+
         product = obj.product
         first_image = product.images.first()
         image_url = first_image.image.url if first_image else None
 
+        if lang == "ru":
+            title = product.name_ru
+        elif lang == "en":
+            title = product.name_en
+        else:
+            title = product.name
+
         return {
             "id": product.id,
-            "title": product.name,
+            "title": title,
             "price": product.price,
             "image": image_url
         }
