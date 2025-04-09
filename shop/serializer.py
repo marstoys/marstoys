@@ -131,16 +131,21 @@ class ProductsSerializer(serializers.ModelSerializer):
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
-
+    product = serializers.SerializerMethodField()
     class Meta:
         model = OrderItem
-        fields = ['product', 'quantity']
+        fields = ['product','quantity','total_price']
 
-    def get_product_details(self, obj):
+    def get_product(self, obj):
+        product = obj.product
+        first_image = product.images.first()
+        image_url = first_image.image.url if first_image else None
+
         return {
-            "id": obj.product.id,
-            "title": obj.product.name_uz,
-            "price": obj.product.price
+            "id": product.id,
+            "title": product.name,
+            "price": product.price,
+            "image": image_url
         }
 
 class OrderSerializer(serializers.ModelSerializer):
