@@ -133,5 +133,5 @@ class GetOrderHistoryAPIView(APIView):
         orders = Order.objects.filter(
             ordered_by_id=user_id,
         )
-        serializer = OrderSerializer(orders, many=True)
+        serializer = OrderSerializer(orders, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
