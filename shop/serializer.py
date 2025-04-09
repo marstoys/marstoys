@@ -134,7 +134,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
     product = serializers.SerializerMethodField()
     class Meta:
         model = OrderItem
-        fields = ['product','quantity','total_price']
+        fields = ['product','quantity']
 
     def get_product(self, obj):
         request = self.context.get("request")
