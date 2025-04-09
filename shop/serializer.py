@@ -131,12 +131,14 @@ class ProductsSerializer(serializers.ModelSerializer):
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
-    product = serializers.SerializerMethodField()
+    product = serializers.PrimaryKeyRelatedField(queryset=Products.objects.all(), write_only=True)
+    product_detail = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = OrderItem
-        fields = ['product','quantity']
+        fields = ['product', 'product_detail', 'quantity']
 
-    def get_product(self, obj):
+    def get_product_detail(self, obj):
         request = self.context.get("request")
         lang = request.query_params.get("lang") if request else None
 
