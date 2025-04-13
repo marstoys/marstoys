@@ -18,7 +18,7 @@ class Category(models.Model):
         ('all',"Barcha uchun")
     ]
     gender=models.CharField(choices=GENDER_CHOICES, max_length=6,default='male', verbose_name='Kimlar uchun:')
-    name = models.CharField(max_length=100,default='ok',verbose_name='Kategory nomi (uzb)')
+    name:str = models.CharField(max_length=100,default='ok',verbose_name='Kategory nomi (uzb)')
     name_ru = models.CharField(max_length=100,default='ok',verbose_name='Kategory nomi (rus)')
     name_en = models.CharField(max_length=100,default='ok',verbose_name='Kategory nomi (eng)')
 

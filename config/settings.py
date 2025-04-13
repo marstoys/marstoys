@@ -27,9 +27,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", "").split(",")
+CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", "").split(",")
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -191,12 +192,7 @@ CLICK_MERCHANT_ID = config("CLICK_MERCHANT_ID")
 CLICK_SECRET_KEY = config("CLICK_SECRET_KEY")
 CLICK_ACCOUNT_MODEL = "shop.models.Order"
 CLICK_AMOUNT_FIELD = "total_price"
-CORS_ALLOWED_ORIGINS = [
-    "https://toysmars.com",
-    "http://127.0.0.1:5173",
-    "http://localhost:5173",
-    'https://frontend-production-1d06.up.railway.app',
-]
+CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", "").split(",")
 CORS_ALLOW_METHODS = [
     "GET",
     "POST",

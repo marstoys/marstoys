@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a99a54c6-83c1-494b-b963-12ff360dc02b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/config/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/shop/models.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +25,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Norqulov-Sardorbek&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/marstoys/marstoys.git&quot;,
+    &quot;accountId&quot;: &quot;c1ee2104-182d-4092-8cb4-855d44427e70&quot;
+  }
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
 }</component>
@@ -125,6 +140,15 @@
       <workItem from="1744167624038" duration="4537000" />
       <workItem from="1744172658140" duration="383000" />
       <workItem from="1744217556788" duration="543000" />
+      <workItem from="1744338658655" duration="1254000" />
+      <workItem from="1744347830887" duration="251000" />
+      <workItem from="1744372863591" duration="883000" />
+      <workItem from="1744376912355" duration="533000" />
+      <workItem from="1744382344292" duration="115000" />
+      <workItem from="1744382468596" duration="10000" />
+      <workItem from="1744436349743" duration="10254000" />
+      <workItem from="1744556436288" duration="35000" />
+      <workItem from="1744558760979" duration="1103000" />
     </task>
     <servers />
   </component>

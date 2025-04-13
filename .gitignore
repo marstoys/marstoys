@@ -147,7 +147,7 @@ data.json
 
 # Redis data
 redis_data/
-
+.env
 # Celery files
 celerybeat-schedule-shm
 celerybeat-schedule-wal
