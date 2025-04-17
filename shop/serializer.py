@@ -36,6 +36,8 @@ class ImageProductsSerializer(serializers.ModelSerializer):
         fields = ["image"]
 
 class CommentProductSerializer(serializers.ModelSerializer):
+    comment = serializers.CharField(required=False, allow_blank=True)
+    rating = serializers.IntegerField(required=False)
     first_name = serializers.ReadOnlyField(source="commented_by.first_name")
 
     class Meta:

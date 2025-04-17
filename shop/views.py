@@ -66,7 +66,7 @@ class CommentProductAPIView(APIView):
         rating = request.data.get("rating")
 
         data = {
-            "product": product.id,
+            "product": product,
             "comment": comment,
             "rating": rating,
         }
