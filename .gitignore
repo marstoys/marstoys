@@ -104,7 +104,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env/
+.env
 venv/
 env.bak/
 venv.bak/
@@ -146,7 +146,7 @@ data.json
 /staticfiles/
 # Redis data
 redis_data/
-.env
+
 # Celery files
 celerybeat-schedule-shm
 celerybeat-schedule-wal
