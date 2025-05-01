@@ -13,8 +13,6 @@ import os
 from pathlib import Path
 from decouple import config
 import matplotlib
-import cloudinary
-import cloudinary.uploader
 import cloudinary.api
 matplotlib.use('Agg')
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -29,7 +27,7 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", "").split(",")
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -85,6 +83,7 @@ SIMPLE_JWT = {
 }
 
 MIDDLEWARE = [
+'whitenoise.middleware.WhiteNoiseMiddleware',
 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -172,7 +171,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/staticfiles/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
@@ -216,3 +215,4 @@ cloudinary.config(
 )
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
