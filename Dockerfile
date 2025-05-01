@@ -12,11 +12,11 @@ ENV PYTHONUNBUFFERED 1
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 # .env faylni konteynerga nusxalash
-COPY .env .env
+
 
 # Barcha boshqa fayllarni ko'chirish
 COPY . .
-
+COPY .env .env
 # Static fayllarni collect qilish (Django uchun)
 RUN python manage.py collectstatic --noinput
 
