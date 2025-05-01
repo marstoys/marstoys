@@ -6,6 +6,8 @@ services:
     command: gunicorn myproject.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - .:/app
+    env_file:
+      - .env
     expose:
       - "8000"
     depends_on:
