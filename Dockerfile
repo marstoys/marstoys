@@ -18,7 +18,7 @@ COPY . .
 # Static fayllarni collect qilish (Django uchun)
 RUN python manage.py collectstatic --noinput
 
-# Portni ochish (8000-portni ishlatamiz)
+
 EXPOSE 8000
 
 # Gunicorn yordamida Django ilovasini ishga tushirish
