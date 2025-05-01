@@ -10,6 +10,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN python manage.py collectstatic --noinput
+# Bu qatordagi collectstaticni olib tashlang:
+# RUN python manage.py collectstatic --noinput
 
-CMD ["sh", "-c", "python manage.py runserver 0.0.0.0:8000"]
+EXPOSE 8000
+
+# Gunicornni ishga tushirishdan oldin collectstaticni amalga oshiramiz
+CMD ["sh", "-c", "python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000"]
