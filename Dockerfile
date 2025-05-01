@@ -12,7 +12,7 @@ ENV PYTHONUNBUFFERED 1
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 # .env faylni konteynerga nusxalash
-COPY .env
+COPY .env .env
 
 # Barcha boshqa fayllarni ko'chirish
 COPY . .
