@@ -16,9 +16,9 @@ services:
   nginx:
     image: nginx:latest
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf  # Nginx konfiguratsiya faylini konteynerga ko'chirish
-      - .:/app  # Django ilovasi va fayllar
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - .:/app
     ports:
-      - "80:80"  # Nginx porti
+      - "80:80"
     depends_on:
       - django
