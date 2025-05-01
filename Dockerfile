@@ -11,6 +11,8 @@ ENV PYTHONUNBUFFERED 1
 # Kerakli fayllarni ko'chirish va kutubxonalarni o'rnatish
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+# .env faylni konteynerga nusxalash
+COPY .env .env
 
 # Barcha boshqa fayllarni ko'chirish
 COPY . .
