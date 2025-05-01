@@ -7,7 +7,7 @@ services:
     volumes:
       - .:/app
     env_file:
-      - ENV
+      - .env
     expose:
       - "8000"
     depends_on:
