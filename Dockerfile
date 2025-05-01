@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Barcha boshqa fayllarni ko'chirish
 COPY . .
-COPY .env .env
+
 # Static fayllarni collect qilish (Django uchun)
 RUN python manage.py collectstatic --noinput
 
@@ -24,4 +24,4 @@ RUN python manage.py collectstatic --noinput
 EXPOSE 8000
 
 # Gunicorn yordamida Django ilovasini ishga tushirish
-CMD ["gunicorn", "myproject.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
