@@ -54,13 +54,13 @@ class OrderItemInline(admin.TabularInline):
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
-         "ordered_by_name", "address", "total_price", "payment_method", "is_paid", "status")
+         "ordered_by_name",  "payment_method", "is_paid", "status")
     list_filter = ("is_paid", "payment_method")
-    search_fields = ("ordered_by__first_name", "ordered_by__username", "address")
-    ordering = ("-created_at",)
+    search_fields = ("ordered_by__first_name", "ordered_by__username")
+    
     inlines = [OrderItemInline]
-    readonly_fields = ('buyer_name','buyer_surname','phone_number',
-        "ordered_by", "address", "total_price", "payment_method", "is_paid",   "created_at")
+    readonly_fields = (
+        "ordered_by","payment_method", "is_paid")
 
     def ordered_by_name(self, obj):
         return obj.ordered_by.first_name if obj.ordered_by else "No User"
@@ -73,7 +73,3 @@ admin.site.register(Category)
 admin.site.register(Products, ProductsAdmin)
 admin.site.register(Order, OrderAdmin)
 
-admin.site.unregister(Group)
-admin.site.unregister(BlacklistedToken)
-admin.site.unregister(OutstandingToken)
-admin.site.unregister(ClickTransaction)
