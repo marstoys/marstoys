@@ -36,8 +36,8 @@ def send_otp_via_sms(phone_number):
 
 
 def verify_otp(phone_number, otp):
-    
-    cached_otp = UserOtp.objects.filter(phone_number=phone_number, otp_code=otp).first()
+
+    cached_otp = UserOtp.objects.filter(phone_number=phone_number, otp_code=otp, is_verified=False).first()
 
     if cached_otp is None:
         raise CustomApiException(ErrorCodes.OTP_EXPIRED,message="OTP muddati tugagan yoki mavjud emas.")
@@ -47,7 +47,8 @@ def verify_otp(phone_number, otp):
 
     user, _ = User.objects.get_or_create(phone_number=phone_number)
 
-    cache.delete(f"otp_{phone_number}")
+    cached_otp.is_verified = True
+    cached_otp.save()
 
     refresh = RefreshToken.for_user(user)
     return {
