@@ -11,7 +11,8 @@ class ProductDetailsAPIView(APIView):
 
     def get(self, request):
         product_id = request.query_params.get("product_id")
-        product = get_product_details(product_id)
+        lang= request.query_params.get("lang", "uz")
+        product = get_product_details(product_id, lang)
         serializer = ProductsSerializer(product)
         return Response(serializer.data,status=status.HTTP_200_OK)
 

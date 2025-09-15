@@ -3,13 +3,13 @@ from shop.models import Category
 
 
 
-def get_all_categories():
+def get_all_categories(lang="uz"):
     categories=Category.objects.all()
     date_info=[]
     for category in categories:
         category_data = {
             "id": category.id,
-            "name": category.name,
+            "name": category.name if lang == "uz" else category.name_ru if lang == "ru" else category.name_en,
             "product_count": category.product_count
         }
         date_info.append(category_data)
