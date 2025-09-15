@@ -20,6 +20,7 @@ class ProductsSerializer(serializers.Serializer):
     images = serializers.ListField(
         child=serializers.URLField()
     )
+    sold_count = serializers.IntegerField()
 
 
 
