@@ -3,8 +3,10 @@ from shop.models import Category
 
 
 
-def get_all_categories(lang="uz"):
+def get_all_categories(lang="uz", gender="all"):
     categories=Category.objects.all()
+    if gender != "all":
+        categories=categories.filter(gender=gender)
     date_info=[]
     for category in categories:
         category_data = {
