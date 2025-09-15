@@ -12,9 +12,8 @@ from core.exceptions.error_messages import ErrorCodes
 
 def send_otp_via_sms(phone_number):
     
-    
     otp = str(random.randint(10000, 99999))
-    otp=UserOtp.objects.create(phone_number=phone_number, otp_code=otp)
+    UserOtp.objects.create(phone_number=phone_number, otp_code=otp)
 
     url = "https://notify.eskiz.uz/api/message/sms/send"
     headers = {
