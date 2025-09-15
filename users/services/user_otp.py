@@ -29,9 +29,11 @@ def send_otp_via_sms(phone_number):
 
     try:
         response = requests.post(url, json=payload, headers=headers)
+        print(response.json())
         response.raise_for_status()
         return True
     except requests.exceptions.RequestException:
+        print(requests.exceptions.RequestException)
         return False
 
 
