@@ -17,6 +17,7 @@ class ErrorCodes(Enum):
     METHOD_NOT_ALLOWED = 'method_not_allowed'
     NOT_VERIFIED = 'not_verified'
     TEST_ALREADY_TAKEN = 'test_already_taken'
+    OTP_EXPIRED='otp_expired'
 
 ERROR_MESSAGES = {
     ErrorCodes.UNAUTHORIZED: {
@@ -79,6 +80,10 @@ ERROR_MESSAGES = {
         "message": "Test has already been taken by the user.",
         "status": status.HTTP_400_BAD_REQUEST,
     },
+    ErrorCodes.OTP_EXPIRED:{
+        "message":"OTP muddati tugagan yoki mavjud emas.",
+        "status":status.HTTP_400_BAD_REQUEST,
+    }
 }
 
 def get_error_details(error_code: ErrorCodes):

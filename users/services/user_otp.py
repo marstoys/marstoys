@@ -1,7 +1,6 @@
 import requests
 import random
 from decouple import config
-from django.core.cache import cache
 from users.models import UserOtp, CustomUser as User
 from rest_framework_simplejwt.tokens import RefreshToken
 from core.exceptions.exception import CustomApiException
@@ -46,7 +45,9 @@ def verify_otp(phone_number, otp):
     if cached_otp.otp_code != otp:
         raise CustomApiException(ErrorCodes.INVALID_INPUT,message="Xato kod terdingiz.")
 
-    user, _ = User.objects.get_or_create(phone_number=phone_number)
+    user= User.objects.filter(phone_number=phone_number).first()
+    if user is None:
+        user = User.objects.create(phone_number=phone_number)
 
     cached_otp.is_verified = True
     cached_otp.save()
