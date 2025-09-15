@@ -48,6 +48,7 @@ def verify_otp(phone_number, otp):
     user= User.objects.filter(phone_number=phone_number).first()
     if user is None:
         user = User.objects.create(phone_number=phone_number)
+    print(user)
 
     cached_otp.is_verified = True
     cached_otp.save()

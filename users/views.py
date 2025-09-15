@@ -3,30 +3,12 @@ from users.services.get_user_profile import get_user_profile
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from core.exceptions.exception import CustomApiException
 from core.exceptions.error_messages import ErrorCodes
 User = get_user_model()
 
 
-class LogoutView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        try:
-            refresh_token = request.data.get("refresh_token")
-
-            if not refresh_token:
-                raise CustomApiException(ErrorCodes.INVALID_TOKEN, message="Refresh token not provided.")
-
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-
-            return Response({"success": True, "message": "Logged out successfully"}, status=200)
-
-        except Exception as e:
-            raise CustomApiException(ErrorCodes.INVALID_TOKEN, message=str(e))
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
