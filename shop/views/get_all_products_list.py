@@ -4,6 +4,7 @@ from shop.services.get_all_products_list import get_all_products_list
 from core.exceptions.exception import CustomApiException
 from core.exceptions.error_messages import ErrorCodes
 from rest_framework import serializers , status
+from core.constants import CustomPagination
 
 class ProductsSerializer(serializers.Serializer):
     id= serializers.IntegerField()
@@ -24,7 +25,7 @@ class ProductsSerializer(serializers.Serializer):
 
 
 class ProductListAPIView(APIView):
-
+    pagination_class = CustomPagination
     def get(self, request):
         category_id = request.query_params.get("category_id")
         lang = request.query_params.get("lang", "uz")
@@ -33,5 +34,8 @@ class ProductListAPIView(APIView):
         if not products:
             raise CustomApiException(ErrorCodes.NOT_FOUND, message="No products found.")
 
-        serializer = ProductsSerializer(products, many=True)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+        paginator = self.pagination_class()
+        paginated_products = paginator.paginate_queryset(products, request, view=self)
+        
+        serializer = ProductsSerializer(paginated_products, many=True)
+        return paginator.get_paginated_response(serializer.data)
