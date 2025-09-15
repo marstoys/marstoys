@@ -8,7 +8,6 @@ from rest_framework import serializers , status
 class ProductsSerializer(serializers.Serializer):
     id= serializers.IntegerField()
     name = serializers.CharField(max_length=255)
-    group= serializers.CharField(max_length=255)
     category = serializers.CharField(max_length=255)
     price = serializers.DecimalField(max_digits=10, decimal_places=2)
     quantity= serializers.IntegerField()
