@@ -11,7 +11,7 @@ from core.models.basemodel import SafeBaseModel
 
 
 
-class Category(models.Model):
+class Category(SafeBaseModel):
     GENDER_CHOICES = [
         ('male', "O'g'il bolalar uchun"),
         ('female', 'Qiz bolalar uchun'),
@@ -34,7 +34,7 @@ class Category(models.Model):
         verbose_name_plural = "Kategoriyalar"
 
 
-class Products(models.Model):
+class Products(SafeBaseModel):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Kategoriya:",related_name="products")
     name = models.CharField(max_length=100,default='ok', verbose_name="O'yinchoq nomi (uzb):")
     name_ru = models.CharField(max_length=100,default='ok', verbose_name="O'yinchoq nomi (rus):")

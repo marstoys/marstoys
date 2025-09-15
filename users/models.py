@@ -14,3 +14,7 @@ class CustomUser(SafeBaseModel):
 
     def __str__(self):
         return self.first_name
+    
+    class Meta:
+        verbose_name = "Foydalanuvchi"
+        verbose_name_plural = "Foydalanuvchilar"
