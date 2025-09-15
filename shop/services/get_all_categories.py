@@ -6,7 +6,10 @@ from shop.models import Category
 def get_all_categories(lang="uz", gender="all"):
     categories=Category.objects.all()
     if gender != "all":
-        categories=categories.filter(gender=gender)
+        if gender == "male":
+            categories=categories.exclude(gender="female")
+        elif gender == "female":
+            categories=categories.exclude(gender="male")
     date_info=[]
     for category in categories:
         category_data = {
