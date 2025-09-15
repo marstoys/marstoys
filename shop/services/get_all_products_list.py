@@ -26,7 +26,8 @@ def get_all_products_list(category_id=None, lang="uz"):
             "discounted_price": product.discounted_price,
             "average_rating": product.average_rating,
             "description": product.description if lang == "uz" else product.description_ru if lang == "ru" else product.description_en,
-            "images": [ image.image.url for image in product.images.all()]
+            "images": [ image.image.url for image in product.images.all()],
+            "sold_count": product.sold
         }
         products_data.append(product_data)
 
