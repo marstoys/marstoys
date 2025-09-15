@@ -2,11 +2,11 @@ import requests
 import random
 from decouple import config
 from django.core.cache import cache
-from django.contrib.auth import get_user_model
+from users.models import UserOtp, CustomUser as User
 from rest_framework_simplejwt.tokens import RefreshToken
 from core.exceptions.exception import CustomApiException
 from core.exceptions.error_messages import ErrorCodes
-User = get_user_model()
+
 
 
 
@@ -14,7 +14,7 @@ def send_otp_via_sms(phone_number):
     
     
     otp = str(random.randint(10000, 99999))
-    cache.set(f"otp_{phone_number}", otp, timeout=300)
+    otp=UserOtp.objects.create(phone_number=phone_number, otp_code=otp)
 
     url = "https://notify.eskiz.uz/api/message/sms/send"
     headers = {
@@ -37,13 +37,13 @@ def send_otp_via_sms(phone_number):
 
 def verify_otp(phone_number, otp):
     
-    cached_otp = cache.get(f"otp_{phone_number}")
+    cached_otp = UserOtp.objects.filter(phone_number=phone_number, otp_code=otp).first()
 
     if cached_otp is None:
         raise CustomApiException(ErrorCodes.OTP_EXPIRED,message="OTP muddati tugagan yoki mavjud emas.")
 
     if cached_otp != otp:
-        raise CustomApiException(ErrorCodes.INVALID_OTP,message="Xato kod terdingiz.")
+        raise CustomApiException(ErrorCodes.INVALID_INPUT,message="Xato kod terdingiz.")
 
     user, _ = User.objects.get_or_create(phone_number=phone_number)
 
