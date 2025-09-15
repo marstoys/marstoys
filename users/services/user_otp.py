@@ -43,7 +43,7 @@ def verify_otp(phone_number, otp):
     if cached_otp is None:
         raise CustomApiException(ErrorCodes.OTP_EXPIRED,message="OTP muddati tugagan yoki mavjud emas.")
 
-    if cached_otp != otp:
+    if cached_otp.otp_code != otp:
         raise CustomApiException(ErrorCodes.INVALID_INPUT,message="Xato kod terdingiz.")
 
     user, _ = User.objects.get_or_create(phone_number=phone_number)
