@@ -36,7 +36,7 @@ def get_order_history(user_id,lang="uz"):
                 "product_name": item.product.name if lang == "uz" else item.product.name_ru if lang == "ru" else item.product.name_en,
                 "price": float(item.product.price),
                 "quantity": item.quantity,
-                "image": [img.image for img in item.product.images.all()]
+                "image": [img.image.url for img in item.product.images.all()]
             })
 
         result.append(order_dict)
