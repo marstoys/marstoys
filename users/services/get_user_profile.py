@@ -14,7 +14,6 @@ def get_user_profile(user_id):
             "last_name": user.last_name,
             "phone_number": user.phone_number,
             "address": user.address,
-            "image": user.image.url if user.image else None
         }
     except User.DoesNotExist:
         return None

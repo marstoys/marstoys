@@ -4,11 +4,16 @@ from users.models import CustomUser as User
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import serializers, status
 from core.exceptions.exception import CustomApiException
 from core.exceptions.error_messages import ErrorCodes
 
-
-
+class UserProfileSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    first_name = serializers.CharField(max_length=30, required=False)
+    last_name = serializers.CharField(max_length=30, required=False)
+    phone_number = serializers.CharField(max_length=15, required=False)
+    address = serializers.CharField(max_length=255, required=False)
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
@@ -47,9 +52,10 @@ class UserProfileAPIView(APIView):
         profile = get_user_profile(user_id)
         if not profile:
             raise CustomApiException(ErrorCodes.USER_DOES_NOT_EXIST, message="Foydalanuvchi profili topilmadi.")
-        return Response(profile, status=200)
-        
-        
+        serializer = UserProfileSerializer(data=profile)
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
+
 class UserUpdateAPIView(APIView):
 
     def put(self, request):
@@ -66,5 +72,6 @@ class UserUpdateAPIView(APIView):
         user.save()
 
         profile = get_user_profile(user.id)
-        return Response(profile, status=200)
+        serializer = UserProfileSerializer(data=profile)
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
