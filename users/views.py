@@ -27,7 +27,7 @@ class RegisterView(APIView):
         if not send_otp_via_sms(phone_number):
             raise CustomApiException(ErrorCodes.INVALID_INPUT, message="SMS yuborishda xatolik yuz berdi.")
 
-        return Response({"message": "OTP muvaffaqiyatli yuborildi"}, status=200)
+        return Response({"message": "OTP muvaffaqiyatli yuborildi"}, status=status.HTTP_200_OK)
 
 class VerifyOTPAndRegisterView(APIView):
     permission_classes = [AllowAny]
@@ -40,7 +40,7 @@ class VerifyOTPAndRegisterView(APIView):
             raise CustomApiException(ErrorCodes.INVALID_INPUT, message="Telefon raqam va OTP talab qilinadi.")
 
         response=verify_otp(phone_number, otp)
-        return Response(response, status=200)
+        return Response(response, status=status.HTTP_200_OK)
         
 class UserProfileAPIView(APIView):
     permission_classes = [AllowAny]
@@ -74,6 +74,6 @@ class UserUpdateAPIView(APIView):
         user.save()
 
         profile = get_user_profile(user.id)
-        serializer = UserProfileSerializer(data=profile)
-        return Response(serializer.validated_data, status=status.HTTP_200_OK)
+        serializer = UserProfileSerializer(profile)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
