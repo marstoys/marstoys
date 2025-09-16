@@ -17,7 +17,7 @@ def get_order_history(user_id,lang="uz"):
             Order.objects
             .filter(ordered_by=user_id)
             .order_by('-id')
-            .prefetch_related('orderitem_set', 'orderitem_set__product') 
+            .prefetch_related('items', 'items__product') 
         )
 
     result = []
@@ -30,7 +30,7 @@ def get_order_history(user_id,lang="uz"):
             "items": []
         }
 
-        for item in order.orderitem_set.all():
+        for item in order.items.all():
             order_dict["items"].append({
                 "item_id": item.id,
                 "product_id": item.product.id,
