@@ -50,5 +50,21 @@ class UserProfileAPIView(APIView):
         return Response(profile, status=200)
         
         
-        
+class UserUpdateAPIView(APIView):
+
+    def put(self, request):
+        user_id = request.user.id
+        data = request.data
+
+        user = User.objects.get(id=user_id)
+
+        user.first_name = data.get('first_name', user.first_name)
+        user.last_name = data.get('last_name', user.last_name)
+        user.phone_number = data.get('phone', user.phone_number)
+        user.address = data.get('address', user.address)
+
+        user.save()
+
+        profile = get_user_profile(user.id)
+        return Response(profile, status=200)
 
