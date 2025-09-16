@@ -113,7 +113,7 @@ class Order(SafeBaseModel):
     
 
     def __str__(self):
-        return f"Ordered by {self.buyer_name}"
+        return f"Ordered by {self.ordered_by.full_name} - Status: {self.status}"
 
     class Meta:
         verbose_name = "Buyurtma"

@@ -1,10 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import *
-from django.urls import reverse
-from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
-from click_up.models import ClickTransaction
-from django.contrib.auth.models import Group
 
 admin.site.site_header = 'E-Commerce Admin'
 
