@@ -43,7 +43,6 @@ class VerifyOTPAndRegisterView(APIView):
         return Response(response, status=200)
         
 class UserProfileAPIView(APIView):
-    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         user_id = request.user.id
