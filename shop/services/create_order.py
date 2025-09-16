@@ -1,10 +1,10 @@
 from core.constants import click_up
 from decimal import Decimal
 from shop.models import Order,OrderItem,Products
-from django.contrib.auth import get_user_model
+from users.models import CustomUser as User
 from core.exceptions.error_messages import ErrorCodes
 from core.exceptions.exception import CustomApiException
-User= get_user_model()
+
 
 
 

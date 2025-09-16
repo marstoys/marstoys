@@ -1,12 +1,12 @@
 from users.services.user_otp import send_otp_via_sms,verify_otp
 from users.services.get_user_profile import get_user_profile
-from django.contrib.auth import get_user_model
+from users.models import CustomUser as User
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from core.exceptions.exception import CustomApiException
 from core.exceptions.error_messages import ErrorCodes
-User = get_user_model()
+
 
 
 
