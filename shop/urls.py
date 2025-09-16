@@ -1,6 +1,7 @@
 from django.urls import path
 from shop.views.get_all_products_list import ProductListAPIView
 from shop.views.get_all_categories import CategoryListAPIView
+from shop.views.get_product_comments import ProductComments
 from shop.views.get_product_details import ProductDetailsAPIView
 from shop.views.create_product_comments import CreateCommentProductAPIView
 from shop.views.create_order import OrderCreateAPIView
@@ -16,4 +17,5 @@ urlpatterns = [
     path('comment-permission/', PermissionToCommentAPIView.as_view(), name='comment-premission'),
     path('order-product/', OrderCreateAPIView.as_view(), name='order-product'),
     path('order-history/',GetOrderHistoryAPIView.as_view(), name='order-history'),
+    path('product-comments/<int:product_id>/', ProductComments.as_view(), name='product-comments'),
 ]
