@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, serializers
+from rest_framework import status
 from core.exceptions.error_messages import ErrorCodes
 from core.exceptions.exception import CustomApiException
 from shop.services.create_product_comments import create_comment_product

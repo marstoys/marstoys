@@ -1,5 +1,5 @@
 from shop.models import CommentProducts,Products
-from django.contrib.auth.models import User
+from users.models import CustomUser as User
 from core.exceptions.error_messages import ErrorCodes
 from core.exceptions.exception import CustomApiException
 
