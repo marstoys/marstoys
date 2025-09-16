@@ -44,15 +44,18 @@ class VerifyOTPAndRegisterView(APIView):
         
 class UserProfileAPIView(APIView):
     permission_classes = [AllowAny]
+
     def get(self, request):
-        user_id = request.user.id
+        user_id = request.user.id if hasattr(request.user, 'id') else None
         if not user_id:
             raise CustomApiException(ErrorCodes.USER_DOES_NOT_EXIST, message="Foydalanuvchi topilmadi.")
+
         profile = get_user_profile(user_id)
         if not profile:
             raise CustomApiException(ErrorCodes.USER_DOES_NOT_EXIST, message="Foydalanuvchi profili topilmadi.")
-        serializer = UserProfileSerializer(data=profile)
-        return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
+        serializer = UserProfileSerializer(profile) 
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class UserUpdateAPIView(APIView):
