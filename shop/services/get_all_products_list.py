@@ -13,6 +13,7 @@ def get_all_products_list(category_id=None, lang="uz"):
         queryset = queryset.filter(category_id=category_id)
     
     products_data=[]
+    queryset = queryset.order_by('-created_datetime')
     for product in queryset:
 
         product_data = {

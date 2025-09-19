@@ -35,9 +35,13 @@ class Category(SafeBaseModel):
         verbose_name_plural = "Kategoriyalar"
 
 class Colors(SafeBaseModel):
-    name=models.CharField(choices=COLOR_CHOICES)
+    name=models.CharField(choices=COLOR_CHOICES, max_length=50, unique=True)
     def __str__(self):
-        return self.name
+        
+        return dict(COLOR_CHOICES).get(self.name, self.name)
+    class Meta:
+        verbose_name = "Rang"
+        verbose_name_plural = "Ranglar"
 class Products(SafeBaseModel):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Kategoriya:",related_name="products")
     name = models.CharField(max_length=100,default='ok', verbose_name="O'yinchoq nomi (uzb):")
