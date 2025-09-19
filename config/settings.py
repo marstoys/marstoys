@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_filters',
     "core",
+    # "orders_bot"
 ]
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',

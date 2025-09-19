@@ -6,10 +6,6 @@ from core.exceptions.error_messages import ErrorCodes
 from core.exceptions.exception import CustomApiException
 
 
-
-
-
-
 def create_order(data,user_id):
     user= User.objects.filter(id=user_id).first()
     if not user:
