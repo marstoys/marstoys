@@ -36,6 +36,8 @@ class Category(SafeBaseModel):
 
 class Colors(SafeBaseModel):
     name=models.CharField(choices=COLOR_CHOICES)
+    def __str__(self):
+        return self.name
 class Products(SafeBaseModel):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Kategoriya:",related_name="products")
     name = models.CharField(max_length=100,default='ok', verbose_name="O'yinchoq nomi (uzb):")
