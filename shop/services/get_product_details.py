@@ -18,7 +18,6 @@ def get_product_details(product_id,lang="uz"):
             "name": product.name if lang == "uz" else product.name_ru if lang == "ru" else product.name_en,
             "category": product.category.name if lang == "uz" else product.category.name_ru if lang == "ru" else product.category.name_en,
             "price": product.price,
-            "colors": [color.name for color in product.color.all()],
             "quantity": product.quantity,
             "discount": product.discount,
             "video_url": product.video_url,
