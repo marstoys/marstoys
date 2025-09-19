@@ -35,7 +35,7 @@ def get_order_history(user_id,lang="uz"):
                 "product_id": item.product.id,
                 "product_name": item.product.name if lang == "uz" else item.product.name_ru if lang == "ru" else item.product.name_en,
                 "price": float(item.product.price),
-                "color": item.image.color if item.image else None,
+                "color": item.color,
                 "quantity": item.quantity,
                 "image": [img.image.url for img in item.product.images.all()]
             })

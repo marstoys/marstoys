@@ -126,7 +126,7 @@ class OrderItem(SafeBaseModel):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name="ordered_products",verbose_name="O'yinchoq nomi:")
     quantity = models.PositiveIntegerField(default=1, verbose_name='Buyurtma soni:')
-    image = models.ForeignKey(ImageProducts, on_delete=models.CASCADE, null=True, blank=True, verbose_name="O'yinchoq rangi:")
+    color = models.CharField(choices=COLOR_CHOICES, default=COLOR_CHOICES[0][0], max_length=20, verbose_name="O'yinchoq rangi:")
    
 
     class Meta:
