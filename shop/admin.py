@@ -12,7 +12,7 @@ class ImageProductsInline(admin.TabularInline):
 
 class ProductsAdmin(admin.ModelAdmin):
     list_display = ("name", "price", "discount", "quantity", "category", "product_image")
-    filter_horizontal = ("colors",)
+    filter_horizontal = ("color",)
     inlines = [ImageProductsInline]
 
     def product_image(self, obj):
