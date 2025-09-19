@@ -7,22 +7,21 @@ from rest_framework import serializers , status
 from core.constants import CustomPagination
 
 class ProductsSerializer(serializers.Serializer):
+    class ProductImages(serializers.Serializer):
+        id = serializers.IntegerField()
+        image = serializers.URLField()
+        color = serializers.CharField(max_length=20)
     id= serializers.IntegerField()
     name = serializers.CharField(max_length=255)
     category = serializers.CharField(max_length=255)
     price = serializers.DecimalField(max_digits=10, decimal_places=2)
-    colors = serializers.ListField(
-        child=serializers.CharField(max_length=50)
-    )
     quantity= serializers.IntegerField()
     discount = serializers.IntegerField()
     video_url = serializers.URLField(required=False, allow_blank=True)
     discounted_price = serializers.DecimalField(max_digits=10, decimal_places=2)
     average_rating = serializers.DecimalField(max_digits=3, decimal_places=1)
     description = serializers.CharField()
-    images = serializers.ListField(
-        child=serializers.URLField()
-    )
+    images = ProductImages(many=True)
     sold_count = serializers.IntegerField()
 
 

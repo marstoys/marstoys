@@ -34,21 +34,13 @@ class Category(SafeBaseModel):
         verbose_name = "Kategoriya"
         verbose_name_plural = "Kategoriyalar"
 
-class Colors(SafeBaseModel):
-    name=models.CharField(choices=COLOR_CHOICES, max_length=50, unique=True)
-    def __str__(self):
-        
-        return dict(COLOR_CHOICES).get(self.name, self.name)
-    class Meta:
-        verbose_name = "Rang"
-        verbose_name_plural = "Ranglar"
+
 class Products(SafeBaseModel):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Kategoriya:",related_name="products")
     name = models.CharField(max_length=100,default='ok', verbose_name="O'yinchoq nomi (uzb):")
     name_ru = models.CharField(max_length=100,default='ok', verbose_name="O'yinchoq nomi (rus):")
     name_en = models.CharField(max_length=100,default='ok', verbose_name="O'yinchoq nomi (eng):")
     price = models.DecimalField(decimal_places=2, max_digits=14, verbose_name="O'yinchoq narxi (Faqat so'mda):")
-    color = models.ManyToManyField(Colors, blank=True, verbose_name="O'yinchoq rangi:")
     discount = models.IntegerField(default=0, verbose_name="O'yinchoq chegirmasi: (ixtiyoriy)")
     description = models.TextField(null=True, blank=True, verbose_name="O'yinchoq xaqida (uzb):")
     description_ru = models.TextField(null=True, blank=True, verbose_name="O'yinchoq xaqida (rus):")
@@ -86,6 +78,7 @@ class Products(SafeBaseModel):
 class ImageProducts(SafeBaseModel):
     product = models.ForeignKey(Products, related_name="images", on_delete=models.CASCADE)
     image = CloudinaryField("image")
+    color = models.CharField(choices=COLOR_CHOICES, default=COLOR_CHOICES[0][0], max_length=20, verbose_name="O'yinchoq rangi:")
 
     class Meta:
         verbose_name = "Rasm"
@@ -133,7 +126,7 @@ class OrderItem(SafeBaseModel):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name="ordered_products",verbose_name="O'yinchoq nomi:")
     quantity = models.PositiveIntegerField(default=1, verbose_name='Buyurtma soni:')
-    color = models.CharField(choices=COLOR_CHOICES, default=COLOR_CHOICES[0][0], max_length=20, verbose_name="O'yinchoq rangi:")
+    image = models.ForeignKey(ImageProducts, on_delete=models.CASCADE, null=True, blank=True, verbose_name="O'yinchoq rangi:")
    
 
     class Meta:

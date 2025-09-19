@@ -26,13 +26,13 @@ def create_order(data,user_id):
     for item in product_items:
         product_id = item.get('product_id')
         quantity = item.get('quantity', 1)
-        color = item.get('color')
+        image_id = item.get('image_id')
         product=Products.objects.filter(id=product_id).first()
         OrderItem.objects.create(
             order=order,
             product=product,
             quantity=quantity,
-            color=color
+            image_id= image_id
         )
         total_price += product.discounted_price * Decimal(str(quantity))
     if payment_method == "karta":

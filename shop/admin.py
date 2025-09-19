@@ -4,7 +4,6 @@ from .models import *
 
 admin.site.site_header = 'E-Commerce Admin'
 
-admin.site.register(Colors)
 class ImageProductsInline(admin.TabularInline):
     model = ImageProducts
     extra = 1
@@ -12,7 +11,6 @@ class ImageProductsInline(admin.TabularInline):
 
 class ProductsAdmin(admin.ModelAdmin):
     list_display = ("name", "price", "discount", "quantity", "category", "product_image")
-    filter_horizontal = ("color",)
     inlines = [ImageProductsInline]
 
     def product_image(self, obj):
