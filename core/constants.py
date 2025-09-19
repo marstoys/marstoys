@@ -9,3 +9,21 @@ class CustomPagination(PageNumberPagination):
     page_size = 8
     page_size_query_param = 'page_size'
     max_page_size = 1000
+    
+    
+COLOR_CHOICES = (
+    ("oq", "Oq"),
+    ("qora", "Qora"),
+    ("kulrang", "Kulrang"),
+    ("qizil", "Qizil"),
+    ("yashil", "Yashil"),
+    ("ko‘k", "Ko‘k"),
+    ("sariq", "Sariq"),
+    ("to‘q sariq", "To‘q sariq"),
+    ("pushti", "Pushti"),
+    ("binafsha", "Binafsha"),
+    ("jigarrang", "Jigarrang"),
+    ("bej", "Bej"),
+    ("oltin", "Oltin"),
+    ("kumush", "Kumush"),
+)

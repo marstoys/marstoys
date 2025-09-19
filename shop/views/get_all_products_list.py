@@ -11,6 +11,9 @@ class ProductsSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=255)
     category = serializers.CharField(max_length=255)
     price = serializers.DecimalField(max_digits=10, decimal_places=2)
+    colors = serializers.ListField(
+        child=serializers.CharField(max_length=50)
+    )
     quantity= serializers.IntegerField()
     discount = serializers.IntegerField()
     video_url = serializers.URLField(required=False, allow_blank=True)
