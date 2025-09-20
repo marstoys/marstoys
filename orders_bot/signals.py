@@ -21,7 +21,7 @@ def order_created_handler(sender, instance, created, **kwargs):
         orderitem = OrderItem.objects.filter(order_id=instance.id)
         for item in orderitem:
             msg += (
-                f" - {item.product.name} (x{item.quantity}): {item.calculated_total_price}\n"
+                f" - {item.product.name} (x{item.quantity}): {item.calculated_total_price} - {item.color}\n"
             )
         msg += f"\n💰 Jami to'lov: {sum(item.calculated_total_price for item in orderitem)} UZS"
 
