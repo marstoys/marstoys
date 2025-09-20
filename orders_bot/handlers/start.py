@@ -33,6 +33,8 @@ async def process_order_number(message: Message, state: FSMContext):
             f"🆔 Buyurtma raqami: <code>{order.order_number}</code>\n"
             f"👤 Ism: <b>{order.ordered_by.first_name}</b>\n"
             f"📞 Tel: <code>{order.ordered_by.phone_number}</code>\n"
+            f"🏠 Manzil: {order.ordered_by.address}\n"
+            f"💳 To'lov usuli: {order.payment_method.capitalize()}\n"
             f"🕒 Sana: {timezone.localtime(order.created_datetime).strftime('%Y-%m-%d %H:%M')}"
             f"\n\n📦 Buyurtma tafsilotlari:\n"
         )

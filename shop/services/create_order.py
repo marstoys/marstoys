@@ -23,6 +23,8 @@ def create_order(data,user_id):
             "order_number": order.order_number,
             "first_name": user.first_name,
             "phone_number": user.phone_number,
+            "address": user.address,
+            "payment_method": order.payment_method,
             "created_datetime": order.created_datetime,
             "items":[]
         }

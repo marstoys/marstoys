@@ -12,6 +12,8 @@ def send_order_message(data):
         f"🆔 Buyurtma raqami: <code>{data.get('order_number')}</code>\n"
         f"👤 Ism: <b>{data.get('first_name')}</b>\n"
         f"📞 Tel: <code>{data.get('phone_number')}</code>\n"
+        f"🏠 Manzil: {data.get('address')}\n"
+        f"💳 To'lov usuli: {data.get('payment_method').capitalize()}\n"
         f"🕒 Sana: {timezone.localtime(data.get('created_datetime')).strftime('%Y-%m-%d %H:%M')}"
         f"\n\n📦 Buyurtma tafsilotlari:\n"
     )
