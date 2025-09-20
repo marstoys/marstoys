@@ -55,7 +55,7 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline]
     
     readonly_fields = (
-        "ordered_by","payment_method", "is_paid","order_number",  "created_datetime", "updated_datetime", "payment_link")
+        "ordered_by","payment_method", "is_paid","order_number",  "created_datetime", "modified_datetime", "payment_link")
 
     def ordered_by_name(self, obj):
         return obj.ordered_by.first_name if obj.ordered_by else "No User"
