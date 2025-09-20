@@ -1,3 +1,4 @@
+import random
 import cloudinary.uploader
 from decimal import Decimal
 from django.db.models import Avg, Sum
@@ -9,7 +10,6 @@ from cloudinary.models import CloudinaryField
 from core.models.basemodel import SafeBaseModel
 from core.constants import COLOR_CHOICES
 # Create your models here.
-
 
 
 class Category(SafeBaseModel):
@@ -100,20 +100,28 @@ class Order(SafeBaseModel):
         ('delivering','Yetkazilmoqda'),
         ('delivered', 'Yetkazib berildi'),
         ('cancelled', 'Bekor qilindi'),
-
     ]
+    
     PAYMENT_METHOD_CHOICES = [
         ('naxt', 'Naxt'),
         ('karta', 'Karta'),
     ]
+    order_number = models.CharField(max_length=20, unique=True, verbose_name='Buyurtma raqami:')
     ordered_by = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
     payment_method = models.CharField(choices=PAYMENT_METHOD_CHOICES, max_length=6, default='naxt',
                                       verbose_name='Tolov turi:')
     payment_link = models.URLField(blank=True, null=True, verbose_name='Tolov qilish uchun link:')
     is_paid = models.BooleanField(default=False, verbose_name='Tolanganligi:')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending', verbose_name='Buyurtma xolati:')
-    
 
+    def save(self, *args, **kwargs):
+        if not self.order_number:
+            try:
+                self.order_number = str(10_000_000 + (Order.objects.count() + 1))
+            except Exception as e:
+                print(f"Error creating order number: {e}")
+        super().save(*args, **kwargs)
+        
     def __str__(self):
         return f"Ordered by {self.ordered_by.full_name} - Status: {self.status}"
 
