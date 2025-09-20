@@ -1,64 +1,67 @@
 from aiogram import F
-from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message, BotCommand
-from aiogram.filters import Command
-from django.utils import timezone
-from django.core.paginator import Paginator
+from aiogram.types import CallbackQuery,   Message
+from aiogram.filters import Command , StateFilter
 from orders_bot.models import  TelegramAdminsID
-from orders_bot.dispatcher import dp, bot
-from shop.models import Order
+from orders_bot.dispatcher import dp
+from shop.models import Order, OrderItem
+from orders_bot.buttons.inline import *
+from aiogram.fsm.context import FSMContext
+from orders_bot.state import OrderState
+from django.utils import timezone
 
 @dp.message(Command("start"))
 async def start(message: Message) -> None:
     if not TelegramAdminsID.objects.filter(tg_id=message.from_user.id).exists():
         TelegramAdminsID.objects.create(tg_id=message.from_user.id)
-    await message.answer("Assalomu alaykum. Bu bot sizga Buyurtmalarni avtomatik yuborib boradi.")
+    await message.answer(text="Assalomu alaykum. Bu bot sizga Buyurtmalarni avtomatik yuborib boradi.",reply_markup=main_keyboard())
 
 
-@dp.message(Command("all"))
-async def send_all_orders(message: Message):
-    msg, keyboard = generate_order_list_message(page=1)
-    await message.answer(msg, reply_markup=keyboard, parse_mode="HTML")
+
+@dp.callback_query(F.data == "check_order_number")
+async def order_number_handler(callback_query: CallbackQuery, state: FSMContext):
+    await callback_query.message.edit_text(text="Iltimos, buyurtma raqamini kiriting:", reply_markup=back_keyboard())
+    await state.set_state(OrderState.waiting_for_order_number)
 
 
-@dp.callback_query(F.data.startswith("orders_page_"))
-async def orders_pagination_handler(callback_query: CallbackQuery):
-    page = int(callback_query.data.split("_")[-1])
-    msg, keyboard = generate_order_list_message(page=page)
-
-    await callback_query.message.edit_text(
-        msg,
-        reply_markup=keyboard,
-        parse_mode="HTML"
-    )
-    await callback_query.answer()
-
-
-def generate_order_list_message(page: int = 1, per_page: int = 5):
-    orders = Order.objects.all().order_by('-created_at')
-    paginator = Paginator(orders, per_page)
-    page_obj = paginator.get_page(page)
-
-    if not orders.exists():
-        return "Hozircha hech qanday zayafka mavjud emas.", None
-
-    msg = f"📋 <b>Barcha zayafkalar</b> (Sahifa {page}/{paginator.num_pages})\n\n"
-
-    for i, order in enumerate(page_obj, start=1 + (page - 1) * per_page):
-        msg += (
-            f"#{i}\n"
-            f"👤 Ism: {order}\n"
-            f"📞 Tel: {order.phone}\n"
-            f"🛠 O'rnatib berish bilan: {'✅' if order.service_included else '❌'}\n"
-            f"🕒 Sana: {timezone.localtime(order.created_at).strftime('%Y-%m-%d %H:%M')}\n\n"
+@dp.message(StateFilter(OrderState.waiting_for_order_number))
+async def process_order_number(message: Message, state: FSMContext):
+    order_number = message.text.strip()
+    try:
+        order = Order.objects.get(order_number=order_number)
+        msg = (
+            f"🆕 Yangi zayafka:\n\n"
+            f"🆔 Buyurtma raqami: {order.order_number}\n"
+            f"👤 Ism: {order.ordered_by.first_name}\n"
+            f"📞 Tel: {order.ordered_by.phone_number}\n"
+            f"🕒 Sana: {timezone.localtime(order.created_datetime).strftime('%Y-%m-%d %H:%M')}"
+            f"\n\n📦 Buyurtma tafsilotlari:\n"
         )
+        orderitem = OrderItem.objects.filter(order_id=order.id)
+        for item in orderitem:
+            msg += (
+                f" - {item.product.name} (x{item.quantity}): {item.calculated_total_price}\n"
+            )
+        msg += f"\n💰 Jami to'lov: {sum(item.calculated_total_price for item in orderitem)} UZS"
+        await message.answer(text=msg, reply_markup=change_order_status_keyboard(order.order_number))
+    except Order.DoesNotExist:
+        await message.answer(text="Kechirasiz, bunday buyurtma raqami topilmadi. Iltimos, qayta urinib ko'ring yoki /start buyrug'ini bosing.", reply_markup=back_keyboard())
 
 
-    navigation_buttons = []
-    if page > 1:
-        navigation_buttons.append(InlineKeyboardButton(text="⬅️ Prev", callback_data=f"orders_page_{page - 1}"))
-    if page < paginator.num_pages:
-        navigation_buttons.append(InlineKeyboardButton(text="Next ➡️", callback_data=f"orders_page_{page + 1}"))
 
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[navigation_buttons]) if navigation_buttons else None
-    return msg, keyboard
+@dp.callback_query(F.data == "back")
+async def back_handler(callback_query: CallbackQuery, state: FSMContext):
+    await callback_query.message.edit_text(text="Assalomu alaykum. Bu bot sizga Buyurtmalarni avtomatik yuborib boradi.",reply_markup=main_keyboard())
+    await state.clear()
 
+@dp.callback_query(F.data.startswith("status_"))
+async def order_status_handler(callback_query: CallbackQuery):
+    new_status = callback_query.data.split("_")[1]
+    order_number = callback_query.data.split("_")[-1]
+    try:
+        order = Order.objects.get(order_number=order_number)
+        order.status = new_status
+        order.save()
+        await callback_query.message.edit_text(text="Assalomu alaykum. Bu bot sizga Buyurtmalarni avtomatik yuborib boradi.",reply_markup=main_keyboard())
+        await callback_query.answer(text=f"Buyurtma holati '{new_status}' ga o'zgartirildi.", show_alert=True)
+    except Order.DoesNotExist:
+        await callback_query.answer(text="Buyurtma topilmadi.", show_alert=True)

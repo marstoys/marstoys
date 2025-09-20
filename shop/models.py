@@ -121,7 +121,7 @@ class Order(SafeBaseModel):
             except Exception as e:
                 print(f"Error creating order number: {e}")
         super().save(*args, **kwargs)
-        
+    
     def __str__(self):
         return f"Ordered by {self.ordered_by.full_name} - Status: {self.status}"
 
@@ -136,7 +136,9 @@ class OrderItem(SafeBaseModel):
     quantity = models.PositiveIntegerField(default=1, verbose_name='Buyurtma soni:')
     color = models.CharField(choices=COLOR_CHOICES, default=COLOR_CHOICES[0][0], max_length=20, verbose_name="O'yinchoq rangi:")
    
-
+    @property
+    def calculated_total_price(self):
+        return self.quantity * self.product.discounted_price
     class Meta:
         verbose_name = "Buyurtmadagi o'yinchoq"
         verbose_name_plural = "Buyurtmadagi o'yinchoqlar"
