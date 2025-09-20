@@ -17,9 +17,9 @@ def send_order_message(data):
         f"\n\n📦 Buyurtma tafsilotlari:\n"
     )
 
-    for item in data.get('items', []):
+    for index, item in enumerate(data.get('items', [])):
         msg += (
-            f" - {item.get('product_name')} (x{item.get('quantity')}): {item.get('calculated_total_price')} - {item.get('color')}\n"
+            f" {index + 1}. {item.get('product_name')} (x{item.get('quantity')}): {item.get('calculated_total_price')} - {item.get('color')}\n"
         )
 
     msg += f"\n💰 Jami to'lov: {sum(item.get('calculated_total_price') for item in data.get('items', []))} UZS"
