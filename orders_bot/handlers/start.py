@@ -29,12 +29,13 @@ async def process_order_number(message: Message, state: FSMContext):
     try:
         order = Order.objects.get(order_number=str(order_number))
         msg = (
-            f"🆕 Yangi buyurtma:\n\n"
+            f"📦 Buyurtma:\n\n"
             f"🆔 Buyurtma raqami: <code>{order.order_number}</code>\n"
             f"👤 Ism: <b>{order.ordered_by.first_name}</b>\n"
             f"📞 Tel: <code>{order.ordered_by.phone_number}</code>\n"
             f"🏠 Manzil: {order.ordered_by.address}\n"
             f"💳 To'lov usuli: {order.payment_method.capitalize()}\n"
+            f"📦 Buyurtma holati: {order.status}\n"
             f"🕒 Sana: {timezone.localtime(order.created_datetime).strftime('%Y-%m-%d %H:%M')}"
             f"\n\n📦 Buyurtma tafsilotlari:\n"
         )
@@ -64,6 +65,6 @@ async def order_status_handler(callback_query: CallbackQuery):
         order.status = new_status
         order.save()
         await callback_query.message.edit_text(text="Assalomu alaykum. Bu bot sizga Buyurtmalarni avtomatik yuborib boradi.",reply_markup=main_keyboard())
-        await callback_query.answer(text=f"Buyurtma holati '{new_status}' ga o'zgartirildi.", show_alert=True)
+        await callback_query.answer(text=f"Buyurtma holati '{order.status}' ga o'zgartirildi.", show_alert=True)
     except Order.DoesNotExist:
         await callback_query.answer(text="Buyurtma topilmadi.", show_alert=True)

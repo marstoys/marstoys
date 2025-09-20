@@ -1,7 +1,7 @@
 from django.utils import timezone
 from orders_bot.models import TelegramAdminsID
 from orders_bot.bot import bot
-
+from orders_bot.buttons.inline import change_order_status_keyboard
 
 def send_order_message(data):
     """
@@ -28,7 +28,7 @@ def send_order_message(data):
     for tg_id in TelegramAdminsID.objects.all():
         if tg_id:
             try:
-                bot.send_message(chat_id=tg_id.tg_id, text=msg)
+                bot.send_message(chat_id=tg_id.tg_id, text=msg, reply_markup=change_order_status_keyboard(data.get('order_number')))
                 print(f"✅ Yuborildi: {tg_id.tg_id}")
             except Exception as e:
                 print(f"❌ Yuborilmadi: {tg_id.tg_id}")
