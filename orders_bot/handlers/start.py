@@ -29,20 +29,20 @@ async def process_order_number(message: Message, state: FSMContext):
     try:
         order = Order.objects.get(order_number=order_number)
         msg = (
-            f"🆕 Yangi zayafka:\n\n"
-            f"🆔 Buyurtma raqami: {order.order_number}\n"
-            f"👤 Ism: {order.ordered_by.first_name}\n"
-            f"📞 Tel: {order.ordered_by.phone_number}\n"
+            f"🆕 Yangi buyurtma:\n\n"
+            f"🆔 Buyurtma raqami: <copy>{order.order_number}</copy>\n"
+            f"👤 Ism: <copy>{order.ordered_by.first_name}</copy>\n"
+            f"📞 Tel: <copy>{order.ordered_by.phone_number}</copy>\n"
             f"🕒 Sana: {timezone.localtime(order.created_datetime).strftime('%Y-%m-%d %H:%M')}"
             f"\n\n📦 Buyurtma tafsilotlari:\n"
         )
         orderitem = OrderItem.objects.filter(order_id=order.id)
         for item in orderitem:
             msg += (
-                f" - {item.product.name} (x{item.quantity}): {item.calculated_total_price}\n"
+                f" - {item.product.name} (x{item.quantity}): {item.calculated_total_price} - {item.color}\n"
             )
         msg += f"\n💰 Jami to'lov: {sum(item.calculated_total_price for item in orderitem)} UZS"
-        await message.answer(text=msg, reply_markup=change_order_status_keyboard(order.order_number))
+        await message.answer(text=msg, reply_markup=change_order_status_keyboard(order.order_number, parse_mode="HTML"))
     except Order.DoesNotExist:
         await message.answer(text="Kechirasiz, bunday buyurtma raqami topilmadi. Iltimos, qayta urinib ko'ring yoki /start buyrug'ini bosing.", reply_markup=back_keyboard())
 
