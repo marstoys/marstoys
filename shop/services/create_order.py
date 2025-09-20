@@ -4,7 +4,7 @@ from shop.models import Order,OrderItem,Products
 from users.models import CustomUser as User
 from core.exceptions.error_messages import ErrorCodes
 from core.exceptions.exception import CustomApiException
-
+from orders_bot.signals import send_order_message 
 
 def create_order(data,user_id):
     user= User.objects.filter(id=user_id).first()
@@ -19,6 +19,14 @@ def create_order(data,user_id):
         payment_method=payment_method,
     )
     total_price = 0
+    data_to_send={
+            "order_number": order.order_number,
+            "first_name": user.first_name,
+            "phone_number": user.phone_number,
+            "created_datetime": order.created_datetime,
+            "items":[]
+        }
+    
     for item in product_items:
         product_id = item.get('product_id')
         quantity = item.get('quantity', 1)
@@ -31,6 +39,13 @@ def create_order(data,user_id):
             color=color
         )
         total_price += product.discounted_price * Decimal(str(quantity))
+        data_to_send["items"].append({
+            "product_name": product.name,
+            "quantity": quantity,
+            "color": color,
+            "calculated_total_price": product.discounted_price * Decimal(str(quantity))
+        })
+    send_order_message(data_to_send)
     if payment_method == "karta":
             payment_link = click_up.initializer.generate_pay_link(
                 id=order.id,
