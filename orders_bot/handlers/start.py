@@ -27,7 +27,7 @@ async def order_number_handler(callback_query: CallbackQuery, state: FSMContext)
 async def process_order_number(message: Message, state: FSMContext):
     order_number = message.text.strip()
     try:
-        order = Order.objects.get(order_number=order_number)
+        order = Order.objects.get(order_number=str(order_number))
         msg = (
             f"🆕 Yangi buyurtma:\n\n"
             f"🆔 Buyurtma raqami: <copy>{order.order_number}</copy>\n"
@@ -37,12 +37,12 @@ async def process_order_number(message: Message, state: FSMContext):
             f"\n\n📦 Buyurtma tafsilotlari:\n"
         )
         orderitem = OrderItem.objects.filter(order_id=order.id)
-        for item in orderitem:
+        for index, item in enumerate(orderitem):
             msg += (
-                f" - {item.product.name} (x{item.quantity}): {item.calculated_total_price} - {item.color}\n"
+                f" {index + 1}. {item.product.name} (x{item.quantity}): {item.calculated_total_price} - {item.color}\n"
             )
         msg += f"\n💰 Jami to'lov: {sum(item.calculated_total_price for item in orderitem)} UZS"
-        await message.answer(text=msg, reply_markup=change_order_status_keyboard(order.order_number, parse_mode="HTML"))
+        await message.answer(text=msg, reply_markup=change_order_status_keyboard(order.order_number))
     except Order.DoesNotExist:
         await message.answer(text="Kechirasiz, bunday buyurtma raqami topilmadi. Iltimos, qayta urinib ko'ring yoki /start buyrug'ini bosing.", reply_markup=back_keyboard())
 
