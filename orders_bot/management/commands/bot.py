@@ -4,7 +4,7 @@ import asyncio
 from django.core.management.base import BaseCommand
 from orders_bot.handlers import *
 from orders_bot.dispatcher import bot,  dp
-from utils import set_bot_commands
+from orders_bot.utils import set_bot_commands
 
 # Set the default settings module for your Django project
 async def main() -> None:
