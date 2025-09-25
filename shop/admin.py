@@ -1,9 +1,10 @@
+from django.urls import path
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import *
-
+from django.http import HttpResponse, HttpResponseForbidden
 admin.site.site_header = 'E-Commerce Admin'
-
+from django.template.response import TemplateResponse
 class ImageProductsInline(admin.TabularInline):
     model = ImageProducts
     extra = 1
@@ -64,6 +65,28 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 
+class CustomHTMLAdmin(admin.ModelAdmin):
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('', self.admin_site.admin_view(self.custom_view), name='admin-custom-html'),
+        ]
+        return custom_urls + urls
+
+    def custom_view(self, request):
+      
+       
+        return TemplateResponse(request, "shop/index.html",)
+    
+class DummyModel(models.Model):
+    class Meta:
+        verbose_name_plural = "📄 Oyinchoq exel yuklash"
+        managed = False
+        
+
+
+
+admin.site.register(DummyModel, CustomHTMLAdmin)
 admin.site.register(Category)
 admin.site.register(Products, ProductsAdmin)
 admin.site.register(Order, OrderAdmin)

@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Excel upload</title>
+</head>
+<body>
+    <h2>Excel fayl yuklash</h2>
+
+    <input type="file" id="excel-input" accept=".xlsx,.xls">
+    <button id="upload-btn">Yuklash</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const fileInput = document.getElementById("excel-input");
+            const uploadBtn = document.getElementById("upload-btn");
+
+            uploadBtn.addEventListener("click", () => {
+                const file = fileInput.files[0];
+                if (!file) {
+                    alert("Avval fayl tanlang!");
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("file", file);
+
+                fetch("{% url 'upload-excel' %}", {
+                    method: "POST",
+                    body: formData,
+                    
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        alert("Natija: " + JSON.stringify(data));
+                    })
+                    .catch((err) => console.error(err));
+            });
+
+           
+        });
+    </script>
+</body>
+</html>

@@ -45,6 +45,7 @@ def create_order(data,user_id):
             "product_name": product.name,
             "quantity": quantity,
             "color": color,
+            "manufacturer_code":product.manufacturer_code,
             "calculated_total_price": product.discounted_price * Decimal(str(quantity))
         })
     send_order_message(data_to_send)
