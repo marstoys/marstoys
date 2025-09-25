@@ -34,7 +34,7 @@ class Category(SafeBaseModel):
 
 
 class Products(SafeBaseModel):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Kategoriya:",related_name="products")
+    category = models.ForeignKey(Category, null=True,blank=True, on_delete=models.CASCADE, verbose_name="Kategoriya:",related_name="products")
     name = models.CharField(max_length=100,default='ok', verbose_name="O'yinchoq nomi (uzb):")
     price = models.DecimalField(decimal_places=2, max_digits=14, verbose_name="O'yinchoq narxi (Faqat so'mda):")
     discount = models.IntegerField(default=0, verbose_name="O'yinchoq chegirmasi: (ixtiyoriy)")
