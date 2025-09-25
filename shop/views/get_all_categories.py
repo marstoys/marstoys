@@ -14,8 +14,7 @@ class CategoryListSerializer(serializers.Serializer):
 class CategoryListAPIView(APIView):
 
     def get(self, request):
-        lang= request.query_params.get("lang", "uz")
         gender= request.query_params.get("gender", "all")
-        response= get_all_categories(lang, gender)
+        response= get_all_categories(gender)
         serializer=CategoryListSerializer(response, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

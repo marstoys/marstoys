@@ -28,9 +28,8 @@ class GetOrderHistoryAPIView(APIView):
 
     def get(self, request):
         user_id = request.user.id
-        lang = request.query_params.get("lang", "uz")
 
-        response = get_order_history(user_id, lang)
+        response = get_order_history(user_id)
         if response:
             serializer = OrderHistorySerializer(data=response, many=True)
             if serializer.is_valid():

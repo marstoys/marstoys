@@ -7,6 +7,8 @@ class CustomUser(SafeBaseModel):
     last_name = models.CharField(max_length=100 )
     phone_number = models.CharField(unique=True,max_length=12)
     address=models.TextField(null=True, blank=True)
+    lang = models.FloatField(null=True, blank=True)
+    lat = models.FloatField(null=True, blank=True)
     
     @property
     def full_name(self):

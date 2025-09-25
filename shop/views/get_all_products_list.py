@@ -31,9 +31,8 @@ class ProductListAPIView(APIView):
     pagination_class = CustomPagination
     def get(self, request):
         category_id = request.query_params.get("category_id")
-        lang = request.query_params.get("lang", "uz")
 
-        products = get_all_products_list(category_id, lang)
+        products = get_all_products_list(category_id)
         if not products:
             raise CustomApiException(ErrorCodes.NOT_FOUND, message="No products found.")
 

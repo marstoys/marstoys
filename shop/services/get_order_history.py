@@ -7,7 +7,7 @@ from shop.models import  OrderItem,Order
 
 
 
-def get_order_history(user_id,lang="uz"):
+def get_order_history(user_id):
     """
     Fetches the order history for a given user.
     :param user_id: ID of the user whose order history is to be fetched.
@@ -33,7 +33,7 @@ def get_order_history(user_id,lang="uz"):
             order_dict["items"].append({
                 "item_id": item.id,
                 "product_id": item.product.id,
-                "product_name": item.product.name if lang == "uz" else item.product.name_ru if lang == "ru" else item.product.name_en,
+                "product_name": item.product.name ,
                 "price": float(item.product.price),
                 "color": item.color,
                 "quantity": item.quantity,

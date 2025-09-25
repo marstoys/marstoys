@@ -1,9 +1,9 @@
-from shop.models import Products,ImageProducts
+from shop.models import Products
 
 
 
 
-def get_all_products_list(category_id=None, lang="uz"):
+def get_all_products_list(category_id=None):
     """
     Fetches all products, optionally filtered by category.
     """
@@ -17,15 +17,15 @@ def get_all_products_list(category_id=None, lang="uz"):
     for product in queryset:
         product_data = {
             "id": product.id,
-            "name": product.name if lang == "uz" else product.name_ru if lang == "ru" else product.name_en,
-            "category": product.category.name if lang == "uz" else product.category.name_ru if lang == "ru" else product.category.name_en,
+            "name": product.name ,
+            "category": product.category.name ,
             "price": product.price,
             "quantity": product.quantity,
             "discount": product.discount,
             "video_url": product.video_url,
             "discounted_price": product.discounted_price,
             "average_rating": product.average_rating,
-            "description": product.description if lang == "uz" else product.description_ru if lang == "ru" else product.description_en,
+            "description": product.description ,
             "sold_count": product.sold,
             "images": [
                 {

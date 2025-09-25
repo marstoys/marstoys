@@ -3,7 +3,7 @@ from shop.models import Category
 
 
 
-def get_all_categories(lang="uz", gender="all"):
+def get_all_categories( gender="all"):
     categories=Category.objects.all()
     if gender != "all":
         if gender == "male":
@@ -14,7 +14,7 @@ def get_all_categories(lang="uz", gender="all"):
     for category in categories:
         category_data = {
             "id": category.id,
-            "name": category.name if lang == "uz" else category.name_ru if lang == "ru" else category.name_en,
+            "name": category.name ,
             "product_count": category.product_count
         }
         date_info.append(category_data)

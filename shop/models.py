@@ -20,8 +20,6 @@ class Category(SafeBaseModel):
     ]
     gender=models.CharField(choices=GENDER_CHOICES, max_length=6,default='male', verbose_name='Kimlar uchun:')
     name:str = models.CharField(max_length=100,default='ok',verbose_name='Kategory nomi (uzb)')
-    name_ru = models.CharField(max_length=100,default='ok',verbose_name='Kategory nomi (rus)')
-    name_en = models.CharField(max_length=100,default='ok',verbose_name='Kategory nomi (eng)')
 
     @property
     def product_count(self):
@@ -38,13 +36,10 @@ class Category(SafeBaseModel):
 class Products(SafeBaseModel):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Kategoriya:",related_name="products")
     name = models.CharField(max_length=100,default='ok', verbose_name="O'yinchoq nomi (uzb):")
-    name_ru = models.CharField(max_length=100,default='ok', verbose_name="O'yinchoq nomi (rus):")
-    name_en = models.CharField(max_length=100,default='ok', verbose_name="O'yinchoq nomi (eng):")
     price = models.DecimalField(decimal_places=2, max_digits=14, verbose_name="O'yinchoq narxi (Faqat so'mda):")
     discount = models.IntegerField(default=0, verbose_name="O'yinchoq chegirmasi: (ixtiyoriy)")
     description = models.TextField(null=True, blank=True, verbose_name="O'yinchoq xaqida (uzb):")
-    description_ru = models.TextField(null=True, blank=True, verbose_name="O'yinchoq xaqida (rus):")
-    description_en = models.TextField(null=True, blank=True, verbose_name="O'yinchoq xaqida (eng):")
+    manufacturer_code = models.CharField(max_length=100,blank=True,null=True,verbose_name="Sotuvchi kodi:")
     quantity = models.IntegerField(verbose_name="O'yinchoq soni:")
     sku=models.CharField(max_length=100,blank=True, verbose_name="O'yinchoq karobkasidagi kod:")
     video_url = models.URLField(null=True, blank=True, verbose_name="You tubdan video joylash:")
