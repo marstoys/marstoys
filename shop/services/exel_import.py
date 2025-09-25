@@ -22,4 +22,4 @@ def save_excel_to_db(excel_file):
            
         )
 
-    return len(df)  # nechta qator qo‘shilganini qaytaradi
+    return len(df) 
