@@ -33,11 +33,11 @@ def get_order_history(user_id):
             order_dict["items"].append({
                 "item_id": item.id,
                 "product_id": item.product.id,
-                "product_name": item.product.name ,
-                "price": float(item.product.price),
+                "product_name": item.product.name if item.product else None,
+                "price": float(item.product.price) if item.product else None,
                 "color": item.color,
                 "quantity": item.quantity,
-                "image": [img.image.url for img in item.product.images.all()]
+                "image": [img.image.url for img in item.product.images.all()] if item.product else None
             })
 
         result.append(order_dict)

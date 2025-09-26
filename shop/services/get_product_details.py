@@ -16,7 +16,7 @@ def get_product_details(product_id):
     return {
             "id": product.id,
             "name": product.name,
-            "category": product.category.name,
+            "category": product.category.name if product.category else None,
             "price": product.price,
             "quantity": product.quantity,
             "discount": product.discount,
@@ -29,7 +29,7 @@ def get_product_details(product_id):
                     "id": image.id,
                     "image": image.image.url,
                     "color": image.color
-                } for image in product.images.all()
+                } for image in product.images.all() 
             ],
             "sold_count": product.sold      
             }

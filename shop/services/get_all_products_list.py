@@ -18,7 +18,7 @@ def get_all_products_list(category_id=None):
         product_data = {
             "id": product.id,
             "name": product.name ,
-            "category": product.category.name ,
+            "category": product.category.name if product.category else None,
             "price": product.price,
             "quantity": product.quantity,
             "discount": product.discount,

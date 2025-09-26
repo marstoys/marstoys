@@ -12,7 +12,7 @@ def get_product_comments(product_id):
         for comment in comments:
             comment_list.append({
                 "id": comment.id,
-                "first_name": comment.commented_by.first_name,
+                "first_name": comment.commented_by.first_name if comment.commented_by else "Anonymous",
                 "text": comment.comment,
                 "rating": comment.rating,
                 "created_at": comment.created_datetime,

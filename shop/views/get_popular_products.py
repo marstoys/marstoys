@@ -17,7 +17,7 @@ class PopularProducts(APIView):
             product_data = {
                 "id": product.id,
                 "name": product.name ,
-                "category": product.category.name,
+                "category": product.category.name if product.category else None,
                 "price": product.price,
                 "quantity": product.quantity,
                 "discount": product.discount,
