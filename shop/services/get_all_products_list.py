@@ -1,17 +1,22 @@
 from shop.models import Products
+from django.db.models import Q
 
 
 
-
-def get_all_products_list(category_id=None):
+def get_all_products_list(data):
     """
     Fetches all products, optionally filtered by category.
     """
+    category_id = data.get("category_id")
+    search = data.get("search")
     queryset = Products.objects.prefetch_related("images").select_related("category")
     
     if category_id:
         queryset = queryset.filter(category_id=category_id)
-    
+
+    if search:
+        queryset = queryset.filter(Q(name__icontains=search) | Q(description__icontains=search))
+
     products_data = []
     queryset = queryset.order_by('-created_datetime')
     for product in queryset:
