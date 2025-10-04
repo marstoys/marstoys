@@ -9,7 +9,7 @@ from shop.views.get_permission_to_comment import PermissionToCommentAPIView
 from shop.views.get_order_history import GetOrderHistoryAPIView
 from shop.views.get_popular_products import PopularProducts
 from shop.views.exel_import import ExcelUploadView
-
+from shop.views.export_exel_products import ExportExcelProductsView
 
 
 urlpatterns = [
@@ -23,4 +23,5 @@ urlpatterns = [
     path('order-history/',GetOrderHistoryAPIView.as_view(), name='order-history'),
     path('product-comments/<int:product_id>/', ProductComments.as_view(), name='product-comments'),
     path("excel-import/", ExcelUploadView.as_view(), name="excel-import"),
+    path('export-products/', ExportExcelProductsView.as_view(), name='export-products'),
 ]

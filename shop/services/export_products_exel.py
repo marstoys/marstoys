@@ -1,0 +1,58 @@
+import pandas as pd
+from io import BytesIO
+from shop.models import Products
+
+
+def export_products_to_excel():
+    """
+    Products jadvalidan barcha ma'lumotlarni olib,
+    Excel fayl shaklida BytesIO obyektini qaytaradi.
+    """
+    # 1️⃣ Barcha mahsulotlarni olish
+    products = Products.objects.all().values(
+        'id',
+        'category__name',
+        'name',
+        'price',
+        'discount',
+        'description',
+        'manufacturer_code',
+        'quantity',
+        'sku',
+        'video_url',
+        'created_at',
+        'updated_at'
+    )
+
+    if not products.exists():
+        # Agar ma'lumot bo‘lmasa — bo‘sh Excel fayl qaytariladi
+        df = pd.DataFrame(columns=[
+            'ID', 'Kategoriya', "O'yinchoq nomi", "Narxi (so'mda)", "Chegirma (%)",
+            "Tavsif", "Sotuvchi kodi", "Soni", "Karobka kodi",
+            "YouTube video havolasi", "Yaratilgan sana", "Yangilangan sana"
+        ])
+    else:
+        df = pd.DataFrame(products)
+        # Sarlavhalarni o‘zgartirish
+        df.rename(columns={
+            'id': 'ID',
+            'category__name': 'Kategoriya',
+            'name': "O'yinchoq nomi",
+            'price': "Narxi (so'mda)",
+            'discount': "Chegirma (%)",
+            'description': "Tavsif",
+            'manufacturer_code': "Sotuvchi kodi",
+            'quantity': "Soni",
+            'sku': "Karobka kodi",
+            'video_url': "YouTube video havolasi",
+            'created_at': "Yaratilgan sana",
+            'updated_at': "Yangilangan sana",
+        }, inplace=True)
+
+    # 2️⃣ Excel faylni xotirada yaratish
+    buffer = BytesIO()
+    with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Mahsulotlar')
+
+    buffer.seek(0)
+    return buffer
