@@ -43,7 +43,7 @@ async def process_order_number(message: Message, state: FSMContext):
         orderitem = OrderItem.objects.filter(order_id=order.id)
         for index, item in enumerate(orderitem):
             msg += (
-                f" {index + 1}. {item.product.name} (x{item.quantity}): {item.calculated_total_price}\n Rangi - {item.color}\n Karopka raqami - {item.product.manufacturer_code}\n"
+                f" {index + 1}. {item.product.name} (x{item.quantity}): {item.calculated_total_price}\n Rangi - {item.color}\n{f' Karopka raqami - {item.product.manufacturer_code}\n' if item.product.manufacturer_code else ''}"
             )
         msg += f"\n💰 Jami to'lov: {sum(item.calculated_total_price for item in orderitem)} UZS"
         await message.answer(text=msg, reply_markup=change_order_status_keyboard(order.order_number))
