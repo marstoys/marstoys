@@ -35,7 +35,7 @@ def create_order(data,user_id):
         quantity = item.get('quantity', 1)
         color = item.get('color')
         product=Products.objects.filter(id=product_id).first()
-        OrderItem.objects.create(
+        order= OrderItem.objects.create(
             order=order,
             product=product,
             quantity=quantity,
@@ -45,7 +45,7 @@ def create_order(data,user_id):
         data_to_send["items"].append({
             "product_name": product.name,
             "quantity": quantity,
-            "color": color,
+            "color": order.get_color_display(),
             "manufacturer_code":product.manufacturer_code,
             "calculated_total_price": product.discounted_price * Decimal(str(quantity))
         })

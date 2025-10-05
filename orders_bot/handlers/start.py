@@ -61,7 +61,7 @@ async def process_order_number(message: Message, state: FSMContext):
             details_text += (
                 f"{index}. {product.name}\n"
                 f"   📦 Soni: {item.quantity}\n"
-                f"   🎨 Rangi: {item.color}\n"
+                f"   🎨 Rangi: {item.get_color_display()}\n"
                 f"   💰 Narxi: {item.calculated_total_price} UZS\n"
                 f"   {f'📦 Karopka raqami: {product.manufacturer_code}\n' if product.manufacturer_code else ''}\n"
             )

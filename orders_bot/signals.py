@@ -8,23 +8,33 @@ def send_order_message(data):
     Order yaratilib, transaction commit bo'lgandan keyin telegramga xabar yuboradi
     """
     msg = (
-        f"🆕 Yangi buyurtma:\n\n"
-        f"🆔 Buyurtma raqami: <code>{data.get('order_number')}</code>\n"
-        f"👤 Ism: <b>{data.get('first_name')}</b>\n"
-        f"📞 Tel: <code>{data.get('phone_number')}</code>\n"
-        f"🏠 Manzil: {data.get('address')}\n"
-        f"💳 To'lov usuli: {data.get('payment_method').capitalize()}\n"
-        f"💳 To'langanligi : {"Tolangan" if bool(data.get('is_paid')) else "To'lanmagan" }\n"
-        f"🕒 Sana: {timezone.localtime(data.get('created_datetime')).strftime('%Y-%m-%d %H:%M')}"
-        f"\n\n📦 Buyurtma tafsilotlari:\n"
-    )
+    f"🆕 <b>Yangi buyurtma!</b>\n\n"
+    f"📦 <b>Buyurtma ma'lumotlari:</b>\n"
+    f"━━━━━━━━━━━━━━━━━━━━━━━\n"
+    f"🆔 <b>Raqam:</b> <code>{data.get('order_number')}</code>\n"
+    f"👤 <b>Mijoz:</b> {data.get('first_name')}\n"
+    f"📞 <b>Telefon:</b> <code>{data.get('phone_number')}</code>\n"
+    f"🏠 <b>Manzil:</b> {data.get('address')}\n"
+    f"💳 <b>To‘lov usuli:</b> {data.get('payment_method').capitalize()}\n"
+    f"💰 <b>Holat:</b> {'✅ To‘langan' if bool(data.get('is_paid')) else '❌ To‘lanmagan'}\n"
+    f"🕒 <b>Sana:</b> {timezone.localtime(data.get('created_datetime')).strftime('%Y-%m-%d %H:%M')}\n"
+    f"━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+    f"🧸 <b>Buyurtma tarkibi:</b>\n"
+)
 
-    for index, item in enumerate(data.get('items', [])):
+    # Har bir mahsulotni tartibli chiqarish
+    for index, item in enumerate(data.get('items', []), start=1):
         msg += (
-            f" {index + 1}. {item.get('product_name')} (x{item.get('quantity')}): {item.get('calculated_total_price')} \n Rangi - {item.get('color')}\n{ f' Karopka raqami - {item.get("manufacturer_code")}\n' if item.get('manufacturer_code') else ''}"
+            f"\n<b>{index}. {item.get('product_name')}</b>\n"
+            f"   🔢 Soni: {item.get('quantity')}\n"
+            f"   🎨 Rangi: {item.get('color')}\n"
+            f"   💰 Narxi: {item.get('calculated_total_price')} UZS\n"
+            f"   {f'📦 Karopka raqami: {item.get('manufacturer_code')}\n' if item.get('manufacturer_code') else ''}"
         )
 
-    msg += f"\n💰 Jami to'lov: {sum(item.get('calculated_total_price') for item in data.get('items', []))} UZS"
+    # Jami summa
+    total = sum(item.get('calculated_total_price') for item in data.get('items', []))
+    msg += f"\n━━━━━━━━━━━━━━━━━━━━━━━\n💰 <b>Jami to‘lov:</b> {total} UZS"
 
     for tg_id in TelegramAdminsID.objects.all():
         if tg_id:
