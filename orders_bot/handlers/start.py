@@ -54,7 +54,7 @@ async def process_order_number(message: Message):
 
         # 🖼️ Media group yaratamiz
         media_group = MediaGroupBuilder()
-
+        added_images = set() 
         for index, item in enumerate(orderitems, start=1):
             product = item.product
             image = product.images.first()
@@ -70,8 +70,9 @@ async def process_order_number(message: Message):
             )
 
             # Har bir rasmni media groupga qo‘shamiz
-            if image_url:
+            if image_url and image_url not in added_images:
                 media_group.add_photo(media=image_url)
+                added_images.add(image_url)
 
         details_text += f"\n💰 <b>Jami to‘lov:</b> {total_sum} UZS"
 
