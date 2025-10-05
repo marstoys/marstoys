@@ -25,8 +25,9 @@ async def order_number_handler(callback_query: CallbackQuery, state: FSMContext)
 
 
 @dp.message(StateFilter(OrderState.waiting_for_order_number))
-async def process_order_number(message: Message, state: FSMContext):
+async def process_order_number(message: Message):
     order_number = message.text.strip()
+
     try:
         order = Order.objects.get(order_number=str(order_number))
         orderitems = OrderItem.objects.filter(order_id=order.id)
@@ -53,11 +54,13 @@ async def process_order_number(message: Message, state: FSMContext):
 
         # 🖼️ Media group yaratamiz
         media_group = MediaGroupBuilder()
+
         for index, item in enumerate(orderitems, start=1):
             product = item.product
             image = product.images.first()
             image_url = image.image.url if image else None
 
+            # Mahsulot haqida matnni to‘plash
             details_text += (
                 f"{index}. {product.name}\n"
                 f"   📦 Soni: {item.quantity}\n"
@@ -66,26 +69,30 @@ async def process_order_number(message: Message, state: FSMContext):
                 f"   {f'📦 Karopka raqami: {product.manufacturer_code}\n' if product.manufacturer_code else ''}\n"
             )
 
+            # Har bir rasmni media groupga qo‘shamiz
             if image_url:
-                media_group.add(InputMediaPhoto(media=image_url))
+                media_group.add_photo(media=image_url)
 
         details_text += f"\n💰 <b>Jami to‘lov:</b> {total_sum} UZS"
 
-        # 📸 Agar hech bo‘lmasa 1 ta rasm bo‘lsa:
-        if len(media_group.build()) > 0:
-            # oxirgi rasmga caption sifatida text qo‘shamiz
-            media = media_group.build()
-            media[-1].caption = details_text
-            media[-1].parse_mode = "HTML"
+        # 📸 Agar kamida 1 ta rasm bo‘lsa:
+        built_media = media_group.build()
+        if built_media:
+            # faqat BIRINCHI rasmga caption biriktiriladi
+            built_media[0].caption = details_text
+            built_media[0].parse_mode = "HTML"
 
-            await message.answer_media_group(media)
+            await message.answer_media_group(built_media)
         else:
-            # Rasm bo‘lmasa — faqat text
+            # Rasm bo‘lmasa — faqat matn
             await message.answer(details_text, parse_mode="HTML")
 
     except Order.DoesNotExist:
         await message.answer(
-            text="❌ Kechirasiz, bunday buyurtma raqami topilmadi.\nIltimos, qayta urinib ko'ring yoki /start buyrug'ini bosing.",
+            text=(
+                "❌ Kechirasiz, bunday buyurtma raqami topilmadi.\n"
+                "Iltimos, qayta urinib ko‘ring yoki /start buyrug‘ini bosing."
+            ),
             reply_markup=back_keyboard()
         )
 
