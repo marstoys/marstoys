@@ -1,5 +1,6 @@
 from aiogram import F
-from aiogram.types import CallbackQuery,   Message
+from aiogram.types import CallbackQuery,   Message,InputMediaPhoto
+from aiogram.utils.media_group import MediaGroupBuilder
 from aiogram.filters import Command , StateFilter
 from orders_bot.models import  TelegramAdminsID
 from orders_bot.dispatcher import dp
@@ -28,29 +29,65 @@ async def process_order_number(message: Message, state: FSMContext):
     order_number = message.text.strip()
     try:
         order = Order.objects.get(order_number=str(order_number))
-        msg = (
-            f"📦 Buyurtma:\n\n"
-            f"🆔 Buyurtma raqami: <code>{order.order_number}</code>\n"
-            f"👤 Ism: <b>{order.ordered_by.first_name}</b>\n"
-            f"📞 Tel: <code>{order.ordered_by.phone_number}</code>\n"
-            f"🏠 Manzil: {order.ordered_by.address}\n"
-            f"💳 To'lov usuli: {order.payment_method.capitalize()}\n"
-            f"💳 To'langanligi : {"Tolangan" if order.is_paid else "To'lanmagan" }\n"
-            f"📦 Buyurtma holati: {order.get_status_display()}\n"
-            f"🕒 Sana: {timezone.localtime(order.created_datetime).strftime('%Y-%m-%d %H:%M')}"
-            f"\n\n📦 Buyurtma tafsilotlari:\n"
+        orderitems = OrderItem.objects.filter(order_id=order.id)
+
+        if not orderitems.exists():
+            await message.answer("❌ Bu buyurtmada mahsulotlar topilmadi.")
+            return
+
+        total_sum = sum(item.calculated_total_price for item in orderitems)
+
+        # 🧾 Buyurtma haqida to‘liq matn
+        details_text = (
+            f"📦 <b>Buyurtma tafsilotlari</b>\n\n"
+            f"🆔 <b>Buyurtma raqami:</b> <code>{order.order_number}</code>\n"
+            f"👤 <b>Ism:</b> {order.ordered_by.first_name}\n"
+            f"📞 <b>Tel:</b> <code>{order.ordered_by.phone_number}</code>\n"
+            f"🏠 <b>Manzil:</b> {order.ordered_by.address}\n"
+            f"💳 <b>To‘lov usuli:</b> {order.payment_method.capitalize()}\n"
+            f"💰 <b>To‘lov holati:</b> {'✅ To‘langan' if order.is_paid else '❌ To‘lanmagan'}\n"
+            f"📦 <b>Buyurtma holati:</b> {order.get_status_display()}\n"
+            f"🕒 <b>Sana:</b> {timezone.localtime(order.created_datetime).strftime('%Y-%m-%d %H:%M')}\n\n"
+            f"🧸 <b>Buyurtmadagi mahsulotlar:</b>\n\n"
         )
-        orderitem = OrderItem.objects.filter(order_id=order.id)
-        for index, item in enumerate(orderitem):
-            msg += (
-                f" {index + 1}. {item.product.name} (x{item.quantity}): {item.calculated_total_price}\n Rangi - {item.color}\n{f' Karopka raqami - {item.product.manufacturer_code}\n' if item.product.manufacturer_code else ''}"
+
+        # 🖼️ Media group yaratamiz
+        media_group = MediaGroupBuilder()
+        for index, item in enumerate(orderitems, start=1):
+            product = item.product
+            image = product.images.first()
+            image_url = image.image.url if image else None
+
+            details_text += (
+                f"{index}. {product.name}\n"
+                f"   📦 Soni: {item.quantity}\n"
+                f"   🎨 Rangi: {item.color}\n"
+                f"   💰 Narxi: {item.calculated_total_price} UZS\n"
+                f"   {f'📦 Karopka raqami: {product.manufacturer_code}\n' if product.manufacturer_code else ''}\n"
             )
-        msg += f"\n💰 Jami to'lov: {sum(item.calculated_total_price for item in orderitem)} UZS"
-        await message.answer(text=msg, reply_markup=change_order_status_keyboard(order.order_number))
+
+            if image_url:
+                media_group.add(InputMediaPhoto(media=image_url))
+
+        details_text += f"\n💰 <b>Jami to‘lov:</b> {total_sum} UZS"
+
+        # 📸 Agar hech bo‘lmasa 1 ta rasm bo‘lsa:
+        if len(media_group.build()) > 0:
+            # oxirgi rasmga caption sifatida text qo‘shamiz
+            media = media_group.build()
+            media[-1].caption = details_text
+            media[-1].parse_mode = "HTML"
+
+            await message.answer_media_group(media)
+        else:
+            # Rasm bo‘lmasa — faqat text
+            await message.answer(details_text, parse_mode="HTML")
+
     except Order.DoesNotExist:
-        await message.answer(text="Kechirasiz, bunday buyurtma raqami topilmadi. Iltimos, qayta urinib ko'ring yoki /start buyrug'ini bosing.", reply_markup=back_keyboard())
-
-
+        await message.answer(
+            text="❌ Kechirasiz, bunday buyurtma raqami topilmadi.\nIltimos, qayta urinib ko'ring yoki /start buyrug'ini bosing.",
+            reply_markup=back_keyboard()
+        )
 
 @dp.callback_query(F.data == "back")
 async def back_handler(callback_query: CallbackQuery, state: FSMContext):
