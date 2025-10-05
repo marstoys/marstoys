@@ -83,10 +83,18 @@ async def process_order_number(message: Message):
             built_media[0].caption = details_text
             built_media[0].parse_mode = "HTML"
 
-            await message.answer_media_group(built_media)
+            sent_messages = await message.answer_media_group(built_media)
+
+   
+            last_message = sent_messages[-1]
+            await message.reply(
+        "Buyurtma holatini o'zgartirish uchun quyidagi tugmalardan foydalaning:", 
+        reply_markup=change_order_status_keyboard(order.order_number), 
+        reply_to_message_id=last_message.message_id
+    )
         else:
             # Rasm bo‘lmasa — faqat matn
-            await message.answer(details_text, parse_mode="HTML")
+            await message.answer(details_text, parse_mode="HTML",reply_markup=change_order_status_keyboard(order.order_number))
 
     except Order.DoesNotExist:
         await message.answer(
