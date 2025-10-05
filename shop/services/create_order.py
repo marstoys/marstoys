@@ -25,6 +25,7 @@ def create_order(data,user_id):
             "phone_number": user.phone_number,
             "address": user.address,
             "payment_method": order.payment_method,
+            "is_paid": order.is_paid,
             "created_datetime": order.created_datetime,
             "items":[]
         }

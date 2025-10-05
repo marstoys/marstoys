@@ -35,6 +35,7 @@ async def process_order_number(message: Message, state: FSMContext):
             f"📞 Tel: <code>{order.ordered_by.phone_number}</code>\n"
             f"🏠 Manzil: {order.ordered_by.address}\n"
             f"💳 To'lov usuli: {order.payment_method.capitalize()}\n"
+            f"💳 To'langanligi : {"Tolangan" if order.is_paid else "To'lanmagan" }\n"
             f"📦 Buyurtma holati: {order.status}\n"
             f"🕒 Sana: {timezone.localtime(order.created_datetime).strftime('%Y-%m-%d %H:%M')}"
             f"\n\n📦 Buyurtma tafsilotlari:\n"
@@ -42,7 +43,7 @@ async def process_order_number(message: Message, state: FSMContext):
         orderitem = OrderItem.objects.filter(order_id=order.id)
         for index, item in enumerate(orderitem):
             msg += (
-                f" {index + 1}. {item.product.name} (x{item.quantity}): {item.calculated_total_price}\n Rangi - {item.color}\n Karopka raqami - {item.product.manufacturer_code}"
+                f" {index + 1}. {item.product.name} (x{item.quantity}): {item.calculated_total_price}\n Rangi - {item.color}\n Karopka raqami - {item.product.manufacturer_code}\n"
             )
         msg += f"\n💰 Jami to'lov: {sum(item.calculated_total_price for item in orderitem)} UZS"
         await message.answer(text=msg, reply_markup=change_order_status_keyboard(order.order_number))
