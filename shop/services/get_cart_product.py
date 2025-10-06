@@ -29,7 +29,8 @@ def get_cart_product(user_id):
                 {
                     "id": image.id,
                     "image": image.image.url,
-                    "color": image.color
+                    "color": image.color,
+                    "quantity": image.quantity,
                 } for image in item.product.images.all()
             ],
         })

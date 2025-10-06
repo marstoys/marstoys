@@ -12,6 +12,7 @@ class ProductsSerializer(serializers.Serializer):
         id = serializers.IntegerField()
         image = serializers.URLField()
         color = serializers.CharField(max_length=20)
+        quantity = serializers.IntegerField()
     id= serializers.IntegerField()
     name = serializers.CharField(max_length=255)
     category = serializers.CharField(max_length=255)

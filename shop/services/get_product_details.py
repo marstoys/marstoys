@@ -28,7 +28,8 @@ def get_product_details(product_id):
                 {
                     "id": image.id,
                     "image": image.image.url,
-                    "color": image.color
+                    "color": image.color,
+                    "quantity": image.quantity,
                 } for image in product.images.all() 
             ],
             "sold_count": product.sold      
