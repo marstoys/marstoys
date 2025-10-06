@@ -4,7 +4,7 @@ from rest_framework import status
 from shop.services.exel_import import save_excel_to_db
 
 class ExcelUploadView(APIView):
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         excel_file = request.FILES.get("file")
         if not excel_file:
             return Response({"error": "Fayl topilmadi"}, status=status.HTTP_400_BAD_REQUEST)

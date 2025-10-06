@@ -1,7 +1,6 @@
 from django.utils import timezone
 from orders_bot.models import TelegramAdminsID
 from orders_bot.bot import bot
-from orders_bot.buttons.inline import change_order_status_keyboard
 
 def send_order_message(data):
     """

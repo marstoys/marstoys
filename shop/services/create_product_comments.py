@@ -5,19 +5,14 @@ from core.exceptions.exception import CustomApiException
 
 
 
-def create_comment_product(product_id, comment, rating, user):
-    # This function should implement the logic to create a comment for a product.
-    # It is assumed that the necessary models and logic are defined elsewhere in the codebase.
-    product = Products.objects.get(id=product_id)
+def create_comment_product(data, user_id):
+    product = Products.objects.get(id=data.get("product_id"))
     if not product:
         raise CustomApiException(ErrorCodes.NOT_FOUND, "Product not found")
-    user = User.objects.get(id=user.id)
-    if not user:
-        raise CustomApiException(ErrorCodes.NOT_FOUND, "User not found")
     CommentProducts.objects.create(
         product=product,
-        comment=comment,
-        rating=rating,
-        commented_by=user
+        comment=data.get("comment"),
+        rating=data.get("rating"),
+        commented_by_id=user_id
     )
     return True

@@ -25,23 +25,14 @@ class CreateCommentProductAPIView(APIView):
         }
     )
     def post(self, request):
-        product_id = request.data.get("product_id")
-        comment = request.data.get("comment")
-        rating = request.data.get("rating")
+        
         user_id= request.user.id
         user = CustomUser.objects.filter(id=user_id).first()
         if not user:
             raise CustomApiException(ErrorCodes.UNAUTHORIZED,message="User not found.")
-        if not product_id:
-            raise CustomApiException(
-                ErrorCodes.NOT_FOUND,
-                "Product ID is required."
-            )
-
+        
         create_comment_product(
-            product_id=product_id,
-            comment=comment,
-            rating=rating,
-            user=request.user
+            data=request.data,
+            user=user_id
         )
         return Response({"message": "Comment created successfully."}, status=status.HTTP_201_CREATED)
