@@ -56,7 +56,7 @@ class Products(SafeBaseModel):
     @property
     def average_rating(self):
         avg_rating = self.comments.aggregate(Avg('rating'))['rating__avg']
-        return round(avg_rating, 1) if avg_rating else 0
+        return round(avg_rating, 1) if avg_rating else 5.0
     @property
     def sold(self):
         return self.ordered_products.aggregate(Sum("quantity"))[

@@ -1,6 +1,6 @@
 from shop.models import Products
-from django.db.models import Q,Avg
-
+from django.db.models import Q,Avg,Value
+from django.db.models.functions import Coalesce
 
 
 def get_all_products_list(data):
@@ -25,7 +25,9 @@ def get_all_products_list(data):
     if max_price:
         queryset = queryset.filter(price__lte=max_price)
     if min_rating or max_rating:
-        queryset = queryset.annotate(avg_rating=Avg('comments__rating'))
+        queryset = queryset.annotate(
+        avg_rating=Coalesce(Avg('comments__rating'), Value(5.0))
+    )
         if min_rating:
             queryset = queryset.filter(avg_rating__gte=min_rating)
         if max_rating:
