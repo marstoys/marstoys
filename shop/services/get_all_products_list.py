@@ -9,6 +9,10 @@ def get_all_products_list(data):
     """
     category_id = data.get("category_id")
     search = data.get("search")
+    min_price = data.get("min_price")
+    max_price = data.get("max_price")
+    min_rating = data.get("min_rating")
+    max_rating = data.get("max_rating")
     queryset = Products.objects.prefetch_related("images").select_related("category")
     
     if category_id:
@@ -16,6 +20,14 @@ def get_all_products_list(data):
 
     if search:
         queryset = queryset.filter(Q(name__icontains=search) | Q(description__icontains=search))
+    if min_price:
+        queryset = queryset.filter(price__gte=min_price)
+    if max_price:
+        queryset = queryset.filter(price__lte=max_price)
+    if min_rating:
+        queryset = queryset.filter(average_rating__gte=min_rating)
+    if max_rating:
+        queryset = queryset.filter(average_rating__lte=max_rating)
 
     products_data = []
     queryset = queryset.order_by('-created_datetime')

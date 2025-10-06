@@ -60,6 +60,31 @@ class ProductListAPIView(APIView):
                 description="Number of items per page",
                 type=openapi.TYPE_INTEGER
             ),
+            openapi.Parameter(
+                "min_price",
+                openapi.IN_QUERY,
+                description="Minimum price filter",
+                type=openapi.TYPE_NUMBER
+            ),
+            openapi.Parameter(
+                "max_price",
+                openapi.IN_QUERY,
+                description="Maximum price filter",
+                type=openapi.TYPE_NUMBER
+            ),
+            openapi.Parameter(
+                "min_rating",
+                openapi.IN_QUERY,
+                description="Minimum average rating filter",
+                type=openapi.TYPE_NUMBER
+            ),
+            openapi.Parameter(
+                "max_rating",
+                openapi.IN_QUERY,
+                description="Maximum average rating filter",
+                type=openapi.TYPE_NUMBER
+            ),
+            
         ],
         responses={status.HTTP_200_OK: ProductsSerializer(many=True)}
     )
