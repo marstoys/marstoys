@@ -20,13 +20,26 @@ async def start(message: Message) -> None:
 
 @dp.callback_query(F.data == "check_order_number")
 async def order_number_handler(callback_query: CallbackQuery, state: FSMContext):
-    await callback_query.message.edit_text(text="Iltimos, buyurtma raqamini kiriting:", reply_markup=back_keyboard())
+    msg = await callback_query.message.edit_text(text="Iltimos, buyurtma raqamini kiriting:", reply_markup=back_keyboard())
+    await state.update_data(msg=msg.message_id)
     await state.set_state(OrderState.waiting_for_order_number)
 
 @dp.message(StateFilter(OrderState.waiting_for_order_number))
 async def process_order_number(message: Message,state: FSMContext):
     order_number = message.text.strip()
-
+    data = await state.get_data()
+    msg_id = data.get("msg")
+    if msg_id:
+        del data["msg"]
+        await state.update_data(data)
+        try:
+            await bot.delete_message(
+                chat_id=message.chat.id,
+                message_id=msg_id
+            )
+        except Exception:
+            pass
+    
     try:
         order = Order.objects.get(order_number=str(order_number))
         orderitems = OrderItem.objects.filter(order_id=order.id)
