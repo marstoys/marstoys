@@ -110,6 +110,17 @@ async def process_order_number(message: Message,state: FSMContext):
 @dp.callback_query(F.data == "back")
 async def back_handler(callback_query: CallbackQuery, state: FSMContext):
     await callback_query.message.edit_text(text="Assalomu alaykum. Bu bot sizga Buyurtmalarni avtomatik yuborib boradi.",reply_markup=main_keyboard())
+    data = await state.get_data()
+    message_ids = data.get("message_ids", [])
+
+    for msg_id in message_ids:
+        try:
+            await bot.delete_message(
+                chat_id=callback_query.message.chat.id,
+                message_id=msg_id
+            )
+        except Exception:
+            pass
     await state.clear()
 
 @dp.callback_query(F.data.startswith("status_"))
