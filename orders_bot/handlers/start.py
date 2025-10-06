@@ -24,7 +24,7 @@ async def order_number_handler(callback_query: CallbackQuery, state: FSMContext)
     await state.set_state(OrderState.waiting_for_order_number)
 
 @dp.message(StateFilter(OrderState.waiting_for_order_number))
-async def process_order_number(message: Message):
+async def process_order_number(message: Message,state: FSMContext):
     order_number = message.text.strip()
 
     try:
@@ -73,9 +73,10 @@ async def process_order_number(message: Message):
         details_text += f"\n💰 <b>Jami to‘lov:</b> {total_sum} UZS"
 
         built_media = media_group.build()
+        sent_message_ids = []
         if built_media:
             sent_messages = await message.answer_media_group(built_media)
-
+            sent_message_ids = [m.message_id for m in sent_messages]
 
 
             await bot.send_message(
@@ -92,7 +93,10 @@ async def process_order_number(message: Message):
                 parse_mode="HTML",
                 reply_markup=change_order_status_keyboard(order.order_number)
             )
-
+        await state.update_data(
+            order_number=order.order_number,
+            message_ids=sent_message_ids
+        )
     except Order.DoesNotExist:
         await message.answer(
             text=(
@@ -109,9 +113,20 @@ async def back_handler(callback_query: CallbackQuery, state: FSMContext):
     await state.clear()
 
 @dp.callback_query(F.data.startswith("status_"))
-async def order_status_handler(callback_query: CallbackQuery):
+async def order_status_handler(callback_query: CallbackQuery,state: FSMContext):
     new_status = callback_query.data.split("_")[1]
     order_number = callback_query.data.split("_")[-1]
+    data = await state.get_data()
+    message_ids = data.get("message_ids", [])
+
+    for msg_id in message_ids:
+        try:
+            await callback_query.bot.delete_message(
+                chat_id=callback_query.message.chat.id,
+                message_id=msg_id
+            )
+        except Exception:
+            pass  
     try:
         order = Order.objects.get(order_number=order_number)
         order.status = new_status
@@ -120,3 +135,4 @@ async def order_status_handler(callback_query: CallbackQuery):
         await callback_query.answer(text=f"Buyurtma holati '{order.get_status_display()}' ga o'zgartirildi.", show_alert=True)
     except Order.DoesNotExist:
         await callback_query.answer(text="Buyurtma topilmadi.", show_alert=True)
+    await state.clear()
