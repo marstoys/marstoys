@@ -23,7 +23,6 @@ async def order_number_handler(callback_query: CallbackQuery, state: FSMContext)
     await callback_query.message.edit_text(text="Iltimos, buyurtma raqamini kiriting:", reply_markup=back_keyboard())
     await state.set_state(OrderState.waiting_for_order_number)
 
-
 @dp.message(StateFilter(OrderState.waiting_for_order_number))
 async def process_order_number(message: Message):
     order_number = message.text.strip()
@@ -38,7 +37,6 @@ async def process_order_number(message: Message):
 
         total_sum = sum(item.calculated_total_price for item in orderitems)
 
-        # 🧾 Buyurtma haqida to‘liq matn
         details_text = (
             f"📦 <b>Buyurtma tafsilotlari</b>\n\n"
             f"🆔 <b>Buyurtma raqami:</b> <code>{order.order_number}</code>\n"
@@ -54,13 +52,13 @@ async def process_order_number(message: Message):
 
         # 🖼️ Media group yaratamiz
         media_group = MediaGroupBuilder()
-        added_images = set() 
+        added_images = set()  
+
         for index, item in enumerate(orderitems, start=1):
             product = item.product
             image = product.images.first()
             image_url = image.image.url if image else None
 
-            # Mahsulot haqida matnni to‘plash
             details_text += (
                 f"{index}. {product.name}\n"
                 f"   📦 Soni: {item.quantity}\n"
@@ -69,7 +67,6 @@ async def process_order_number(message: Message):
                 f"   {f'📦 Karopka raqami: {product.manufacturer_code}\n' if product.manufacturer_code else ''}\n"
             )
 
-            # Har bir rasmni media groupga qo‘shamiz
             if image_url and image_url not in added_images:
                 media_group.add_photo(media=image_url)
                 added_images.add(image_url)
@@ -79,22 +76,27 @@ async def process_order_number(message: Message):
         # 📸 Agar kamida 1 ta rasm bo‘lsa:
         built_media = media_group.build()
         if built_media:
-            # faqat BIRINCHI rasmga caption biriktiriladi
-            built_media[0].caption = details_text
-            built_media[0].parse_mode = "HTML"
-
+            # barcha rasmlarni caption-siz yuboramiz
             sent_messages = await message.answer_media_group(built_media)
 
-   
+            # oxirgi yuborilgan xabarni olamiz
             last_message = sent_messages[-1]
+
+            # so‘ng shu postga javoban tafsilotlarni tugma bilan yuboramiz
             await message.reply(
-        "Buyurtma holatini o'zgartirish uchun quyidagi tugmalardan foydalaning:", 
-        reply_markup=change_order_status_keyboard(order.order_number), 
-        reply_to_message_id=last_message.message_id
-    )
+                details_text,
+                parse_mode="HTML",
+                reply_markup=change_order_status_keyboard(order.order_number),
+                reply_to_message_id=last_message.message_id
+            )
+
         else:
-            # Rasm bo‘lmasa — faqat matn
-            await message.answer(details_text, parse_mode="HTML",reply_markup=change_order_status_keyboard(order.order_number))
+            # agar rasm bo‘lmasa — faqat matn yuboriladi
+            await message.answer(
+                details_text,
+                parse_mode="HTML",
+                reply_markup=change_order_status_keyboard(order.order_number)
+            )
 
     except Order.DoesNotExist:
         await message.answer(
@@ -104,6 +106,7 @@ async def process_order_number(message: Message):
             ),
             reply_markup=back_keyboard()
         )
+
 
 @dp.callback_query(F.data == "back")
 async def back_handler(callback_query: CallbackQuery, state: FSMContext):
