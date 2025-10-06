@@ -1,12 +1,14 @@
 from users.services.user_otp import send_otp_via_sms,verify_otp
 from users.services.get_user_profile import get_user_profile
 from users.models import CustomUser as User
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import  AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import serializers, status
 from core.exceptions.exception import CustomApiException
 from core.exceptions.error_messages import ErrorCodes
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 class UserProfileSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
@@ -15,9 +17,35 @@ class UserProfileSerializer(serializers.Serializer):
     phone_number = serializers.CharField(max_length=15, required=False)
     address = serializers.CharField(max_length=255, required=False)
 
+class TokenSerializer(serializers.Serializer):
+    access = serializers.CharField()
+    refresh = serializers.CharField()
+
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 
+    @swagger_auto_schema(
+        operation_description="Register a new user",
+        operation_summary="User Registration",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "phone_number": openapi.Schema(type=openapi.TYPE_STRING)
+            }
+        ),
+        manual_parameters=[
+            openapi.Parameter(
+                "phone_number",
+                openapi.IN_BODY,
+                description="User's phone number",
+                type=openapi.TYPE_STRING
+            )
+        ],
+        responses={
+            status.HTTP_200_OK: openapi.Response("OTP sent successfully."),
+            status.HTTP_400_BAD_REQUEST: openapi.Response("Invalid input.")
+        }
+    )
     def post(self, request):
         phone_number = request.data.get('phone_number')
 
@@ -31,6 +59,29 @@ class RegisterView(APIView):
 
 class VerifyOTPAndRegisterView(APIView):
     permission_classes = [AllowAny]
+    @swagger_auto_schema(
+        operation_description="Verify OTP and register the user",
+        operation_summary="Verify OTP",
+        manual_parameters=[
+            openapi.Parameter(
+                "phone_number",
+                openapi.IN_BODY,
+                description="User's phone number",
+                type=openapi.TYPE_STRING
+            ),
+            openapi.Parameter(
+                "otp",
+                openapi.IN_BODY,
+                description="One-Time Password sent to the user's phone",
+                type=openapi.TYPE_STRING
+            )
+        ],
+        responses={
+            status.HTTP_200_OK: TokenSerializer,
+            status.HTTP_400_BAD_REQUEST: openapi.Response("Invalid input or OTP."),
+            status.HTTP_404_NOT_FOUND: openapi.Response("User not found.")
+        }
+    )
 
     def post(self, request):
         phone_number = request.data.get('phone_number')
@@ -44,9 +95,17 @@ class VerifyOTPAndRegisterView(APIView):
         
 class UserProfileAPIView(APIView):
     permission_classes = [AllowAny]
+    @swagger_auto_schema(
+        operation_description="Retrieve the profile of the authenticated user",
+        operation_summary="Get User Profile",
+        responses={
+            status.HTTP_200_OK: UserProfileSerializer,
+            status.HTTP_404_NOT_FOUND: openapi.Response("User profile not found.")
+        }
+    )
 
     def get(self, request):
-        user_id = request.user.id if hasattr(request.user, 'id') else None
+        user_id = request.user.id 
         if not user_id:
             raise CustomApiException(ErrorCodes.USER_DOES_NOT_EXIST, message="Foydalanuvchi topilmadi.")
 
@@ -60,6 +119,16 @@ class UserProfileAPIView(APIView):
 
 class UserUpdateAPIView(APIView):
     permission_classes = [AllowAny]
+    @swagger_auto_schema(
+        operation_description="Update the profile of the authenticated user",
+        operation_summary="Update User Profile",
+        request_body=UserProfileSerializer,
+        responses={
+            status.HTTP_200_OK: UserProfileSerializer,
+            status.HTTP_400_BAD_REQUEST: openapi.Response("Invalid input."),
+            status.HTTP_404_NOT_FOUND: openapi.Response("User not found.")
+        }
+    )
     def put(self, request):
         user_id = request.user.id
         data = request.data

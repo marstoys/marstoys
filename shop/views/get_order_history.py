@@ -2,6 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status,serializers
 from shop.services.get_order_history import get_order_history
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 
 class OrderHistorySerializer(serializers.Serializer):
@@ -24,6 +26,13 @@ class OrderHistorySerializer(serializers.Serializer):
 
 
 class GetOrderHistoryAPIView(APIView):
+    @swagger_auto_schema(
+        operation_description="Retrieve the order history for the authenticated user",
+        operation_summary="Get Order History",
+        responses={
+            status.HTTP_200_OK: OrderHistorySerializer(many=True),
+            status.HTTP_404_NOT_FOUND: openapi.Response("No orders found for the user.")
+        })
    
 
     def get(self, request):

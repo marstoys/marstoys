@@ -2,8 +2,10 @@ from rest_framework.views import APIView
 from shop.services.get_all_products_list import get_all_products_list
 from core.exceptions.exception import CustomApiException
 from core.exceptions.error_messages import ErrorCodes
-from rest_framework import serializers 
+from rest_framework import serializers ,status
 from core.constants import CustomPagination
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 class ProductsSerializer(serializers.Serializer):
     class ProductImages(serializers.Serializer):
@@ -28,6 +30,39 @@ class ProductsSerializer(serializers.Serializer):
 
 class ProductListAPIView(APIView):
     pagination_class = CustomPagination
+    @swagger_auto_schema(
+        operation_description="Retrieve all products with optional filters",
+        operation_summary="Get All Products",
+        manual_parameters=[
+            openapi.Parameter(
+                "category_id",
+                openapi.IN_QUERY,
+                description="Filter by category",
+                type=openapi.TYPE_STRING
+            ),
+          
+            openapi.Parameter(
+                "search",
+                openapi.IN_QUERY,
+                description="Search term for product name or description",
+                type=openapi.TYPE_STRING
+            ),
+            openapi.Parameter(
+                "page",
+                openapi.IN_QUERY,
+                description="Page number for pagination",
+                type=openapi.TYPE_INTEGER
+            ),
+            openapi.Parameter(
+                "page_size",
+                openapi.IN_QUERY,
+                description="Number of items per page",
+                type=openapi.TYPE_INTEGER
+            ),
+        ],
+        responses={status.HTTP_200_OK: ProductsSerializer(many=True)}
+    )
+    
     def get(self, request):
         data = request.query_params
 
