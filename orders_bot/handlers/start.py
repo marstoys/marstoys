@@ -3,7 +3,7 @@ from aiogram.types import CallbackQuery,   Message,InputMediaPhoto
 from aiogram.utils.media_group import MediaGroupBuilder
 from aiogram.filters import Command , StateFilter
 from orders_bot.models import  TelegramAdminsID
-from orders_bot.dispatcher import dp
+from orders_bot.dispatcher import dp,bot
 from shop.models import Order, OrderItem
 from orders_bot.buttons.inline import *
 from aiogram.fsm.context import FSMContext
@@ -76,14 +76,15 @@ async def process_order_number(message: Message):
         if built_media:
             sent_messages = await message.answer_media_group(built_media)
 
-            last_message = sent_messages[0]
 
-            await message.reply(
-                details_text,
-                parse_mode="HTML",
-                reply_markup=change_order_status_keyboard(order.order_number),
-                reply_to_message_id=last_message.message_id
-            )
+
+            await bot.send_message(
+        chat_id=message.chat.id,
+        text=details_text,
+        parse_mode="HTML",
+        reply_markup=change_order_status_keyboard(order.order_number),
+        reply_to_message_id=sent_messages[0].message_id
+    )
 
         else:
             await message.answer(
