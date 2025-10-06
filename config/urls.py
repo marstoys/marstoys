@@ -20,8 +20,9 @@ from django.contrib import admin
 from django.urls import path, include
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
-from rest_framework import permissions
 from payments.views import ClickWebhookAPIView
+from django.conf.urls import handler404, handler500
+from django.shortcuts import render
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -45,3 +46,9 @@ urlpatterns = [
                   path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
                   path("payment/click/update/", ClickWebhookAPIView.as_view()),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+
+def custom_page_not_found(request, exception):
+    return render(request, '404.html', status=404)
+
+handler404 = 'config.urls.custom_page_not_found'
