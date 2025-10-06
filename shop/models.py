@@ -74,6 +74,7 @@ class ImageProducts(SafeBaseModel):
     product = models.ForeignKey(Products, related_name="images", on_delete=models.CASCADE)
     image = CloudinaryField("image")
     color = models.CharField(choices=COLOR_CHOICES, default=COLOR_CHOICES[0][0], max_length=20, verbose_name="O'yinchoq rangi:")
+    quantity = models.IntegerField(default=1, verbose_name="Rangdagi o'yinchoq soni:")
 
     class Meta:
         verbose_name = "Rasm"
