@@ -17,6 +17,13 @@ class UserProfileSerializer(serializers.Serializer):
     phone_number = serializers.CharField(max_length=15, required=False)
     address = serializers.CharField(max_length=255, required=False)
 
+class PhoneNumberSerializer(serializers.Serializer):
+    phone_number = serializers.CharField(description="User's phone number")
+
+class VerifyOTPSerializer(serializers.Serializer):
+    phone_number = serializers.CharField(description="User's phone number")
+    otp = serializers.CharField(description="One-Time Password")
+
 class TokenSerializer(serializers.Serializer):
     access = serializers.CharField()
     refresh = serializers.CharField()
@@ -27,20 +34,7 @@ class RegisterView(APIView):
     @swagger_auto_schema(
         operation_description="Register a new user",
         operation_summary="User Registration",
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                "phone_number": openapi.Schema(type=openapi.TYPE_STRING)
-            }
-        ),
-        manual_parameters=[
-            openapi.Parameter(
-                "phone_number",
-                openapi.IN_BODY,
-                description="User's phone number",
-                type=openapi.TYPE_STRING
-            )
-        ],
+        request_body=PhoneNumberSerializer,
         responses={
             status.HTTP_200_OK: openapi.Response("OTP sent successfully."),
             status.HTTP_400_BAD_REQUEST: openapi.Response("Invalid input.")
@@ -62,20 +56,7 @@ class VerifyOTPAndRegisterView(APIView):
     @swagger_auto_schema(
         operation_description="Verify OTP and register the user",
         operation_summary="Verify OTP",
-        manual_parameters=[
-            openapi.Parameter(
-                "phone_number",
-                openapi.IN_BODY,
-                description="User's phone number",
-                type=openapi.TYPE_STRING
-            ),
-            openapi.Parameter(
-                "otp",
-                openapi.IN_BODY,
-                description="One-Time Password sent to the user's phone",
-                type=openapi.TYPE_STRING
-            )
-        ],
+        request_body=VerifyOTPSerializer,
         responses={
             status.HTTP_200_OK: TokenSerializer,
             status.HTTP_400_BAD_REQUEST: openapi.Response("Invalid input or OTP."),
