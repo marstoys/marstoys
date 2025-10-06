@@ -20,8 +20,8 @@ def export_products_to_excel():
         'quantity',
         'sku',
         'video_url',
-        'created_at',
-        'updated_at'
+        'created_datetime',
+        'modified_datetime',
     )
 
     if not products.exists():
