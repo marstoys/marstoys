@@ -45,8 +45,8 @@ def export_products_to_excel():
             'quantity': "Soni",
             'sku': "Karobka kodi",
             'video_url': "YouTube video havolasi",
-            'created_at': "Yaratilgan sana",
-            'updated_at': "Yangilangan sana",
+            'created_datetime': "Yaratilgan sana",
+            'modified_datetime': "Yangilangan sana",
         }, inplace=True)
 
     # 2️⃣ Excel faylni xotirada yaratish
