@@ -28,6 +28,7 @@ async def order_number_handler(callback_query: CallbackQuery, state: FSMContext)
 async def process_order_number(message: Message,state: FSMContext):
     order_number = message.text.strip()
     data = await state.get_data()
+    await message.delete()
     msg_id = data.get("msg")
     if msg_id:
         del data["msg"]
