@@ -38,7 +38,8 @@ async def process_order_number(message: Message,state: FSMContext):
         total_sum = sum(item.calculated_total_price for item in orderitems)
 
         details_text = (
-            f"📦 <b>Buyurtma tafsilotlari</b>\n\n"
+            f"📦 <b>Buyurtma tafsilotlari</b>\n"
+            f"━━━━━━━━━━━━━━━━━━━━━━━\n"
             f"🆔 <b>Buyurtma raqami:</b> <code>{order.order_number}</code>\n"
             f"👤 <b>Ism:</b> {order.ordered_by.first_name}\n"
             f"📞 <b>Tel:</b> <code>{order.ordered_by.phone_number}</code>\n"
@@ -46,7 +47,8 @@ async def process_order_number(message: Message,state: FSMContext):
             f"💳 <b>To‘lov usuli:</b> {order.payment_method.capitalize()}\n"
             f"💰 <b>To‘lov holati:</b> {'✅ To‘langan' if order.is_paid else '❌ To‘lanmagan'}\n"
             f"📦 <b>Buyurtma holati:</b> {order.get_status_display()}\n"
-            f"🕒 <b>Sana:</b> {timezone.localtime(order.created_datetime).strftime('%Y-%m-%d %H:%M')}\n\n"
+            f"🕒 <b>Sana:</b> {timezone.localtime(order.created_datetime).strftime('%Y-%m-%d %H:%M')}\n"
+            f"━━━━━━━━━━━━━━━━━━━━━━━\n"
             f"🧸 <b>Buyurtmadagi mahsulotlar:</b>\n\n"
         )
 
@@ -70,7 +72,7 @@ async def process_order_number(message: Message,state: FSMContext):
                 media_group.add_photo(media=image_url)
                 added_images.add(image_url)
 
-        details_text += f"\n💰 <b>Jami to‘lov:</b> {total_sum} UZS"
+        details_text += f"\n━━━━━━━━━━━━━━━━━━━━━━━\n💰 <b>Jami to‘lov:</b> {total_sum} UZS"
 
         built_media = media_group.build()
         sent_message_ids = []
