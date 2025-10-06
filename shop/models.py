@@ -154,3 +154,19 @@ class CommentProducts(SafeBaseModel):
 class LikedProducts(SafeBaseModel):
     product = models.ForeignKey(Products, on_delete=models.CASCADE)
     liked_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+
+class Cart(SafeBaseModel):
+    user = models.ForeignKey(User, related_name="carts", on_delete=models.CASCADE)
+    product = models.ForeignKey(Products, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    color = models.CharField(choices=COLOR_CHOICES, default=COLOR_CHOICES[0][0], max_length=20, verbose_name="O'yinchoq rangi:")
+
+    @property
+    def total_price(self):
+        return self.quantity * self.product.discounted_price
+
+    class Meta:
+        verbose_name = "Savatcha"
+        verbose_name_plural = "Savatchalar"
