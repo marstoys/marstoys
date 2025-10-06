@@ -1,5 +1,5 @@
 from shop.models import Products
-from django.db.models import Q
+from django.db.models import Q,Avg
 
 
 
@@ -24,10 +24,12 @@ def get_all_products_list(data):
         queryset = queryset.filter(price__gte=min_price)
     if max_price:
         queryset = queryset.filter(price__lte=max_price)
-    if min_rating:
-        queryset = queryset.filter(average_rating__gte=min_rating)
-    if max_rating:
-        queryset = queryset.filter(average_rating__lte=max_rating)
+    if min_rating or max_rating:
+        queryset = queryset.annotate(avg_rating=Avg('comments__rating'))
+        if min_rating:
+            queryset = queryset.filter(avg_rating__gte=min_rating)
+        if max_rating:
+            queryset = queryset.filter(avg_rating__lte=max_rating)
 
     products_data = []
     queryset = queryset.order_by('-created_datetime')
