@@ -7,7 +7,7 @@ class ExportExcelProductsView(APIView):
     """
     GET -> Excel faylni yuklab olish.
     """
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         excel_buffer = export_products_to_excel()
 
         response = HttpResponse(

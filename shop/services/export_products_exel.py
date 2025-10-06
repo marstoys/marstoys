@@ -25,15 +25,18 @@ def export_products_to_excel():
     )
 
     if not products.exists():
-        # Agar ma'lumot bo‘lmasa — bo‘sh Excel fayl qaytariladi
         df = pd.DataFrame(columns=[
             'ID', 'Kategoriya', "O'yinchoq nomi", "Narxi (so'mda)", "Chegirma (%)",
             "Tavsif", "Sotuvchi kodi", "Soni", "Karobka kodi",
             "YouTube video havolasi", "Yaratilgan sana", "Yangilangan sana"
         ])
     else:
+        
         df = pd.DataFrame(products)
-        # Sarlavhalarni o‘zgartirish
+        for col in ['created_datetime', 'modified_datetime']:
+            if col in df.columns:
+                df[col] = pd.to_datetime(df[col], errors='coerce').dt.tz_localize(None)
+
         df.rename(columns={
             'id': 'ID',
             'category__name': 'Kategoriya',
