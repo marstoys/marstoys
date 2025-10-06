@@ -50,7 +50,6 @@ async def process_order_number(message: Message):
             f"🧸 <b>Buyurtmadagi mahsulotlar:</b>\n\n"
         )
 
-        # 🖼️ Media group yaratamiz
         media_group = MediaGroupBuilder()
         added_images = set()  
 
@@ -73,16 +72,12 @@ async def process_order_number(message: Message):
 
         details_text += f"\n💰 <b>Jami to‘lov:</b> {total_sum} UZS"
 
-        # 📸 Agar kamida 1 ta rasm bo‘lsa:
         built_media = media_group.build()
         if built_media:
-            # barcha rasmlarni caption-siz yuboramiz
             sent_messages = await message.answer_media_group(built_media)
 
-            # oxirgi yuborilgan xabarni olamiz
-            last_message = sent_messages[-1]
+            last_message = sent_messages[0]
 
-            # so‘ng shu postga javoban tafsilotlarni tugma bilan yuboramiz
             await message.reply(
                 details_text,
                 parse_mode="HTML",
@@ -91,7 +86,6 @@ async def process_order_number(message: Message):
             )
 
         else:
-            # agar rasm bo‘lmasa — faqat matn yuboriladi
             await message.answer(
                 details_text,
                 parse_mode="HTML",
