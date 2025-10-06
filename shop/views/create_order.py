@@ -4,6 +4,9 @@ from drf_yasg import openapi
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from shop.services.create_order import create_order
+from users.models import CustomUser
+from core.exceptions.error_messages import ErrorCodes
+from core.exceptions.exception import CustomApiException
 # Create your views here.
 
 
@@ -30,6 +33,9 @@ class OrderCreateAPIView(APIView):
 
     def post(self, request):
         user_id= request.user.id
+        user = CustomUser.objects.filter(id=user_id).first()
+        if not user:
+            raise CustomApiException(ErrorCodes.UNAUTHORIZED,message="User not found.")
         data = request.data
         payment_link = create_order(data,user_id)
         if payment_link:

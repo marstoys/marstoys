@@ -6,7 +6,9 @@ from rest_framework import status,serializers
 from core.exceptions.error_messages import ErrorCodes
 from core.exceptions.exception import CustomApiException
 from shop.services.create_product_comments import create_comment_product
-
+from core.exceptions.error_messages import ErrorCodes
+from core.exceptions.exception import CustomApiException
+from users.models import CustomUser
 class CreateCommentProductSerializer(serializers.Serializer):
     product_id = serializers.IntegerField()
     comment = serializers.CharField(max_length=1000)
@@ -26,6 +28,10 @@ class CreateCommentProductAPIView(APIView):
         product_id = request.data.get("product_id")
         comment = request.data.get("comment")
         rating = request.data.get("rating")
+        user_id= request.user.id
+        user = CustomUser.objects.filter(id=user_id).first()
+        if not user:
+            raise CustomApiException(ErrorCodes.UNAUTHORIZED,message="User not found.")
         if not product_id:
             raise CustomApiException(
                 ErrorCodes.NOT_FOUND,

@@ -4,7 +4,9 @@ from rest_framework import status,serializers
 from shop.services.get_order_history import get_order_history
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-
+from core.exceptions.error_messages import ErrorCodes
+from core.exceptions.exception import CustomApiException
+from users.models import CustomUser
 
 class OrderHistorySerializer(serializers.Serializer):
     class OrderItemSerializer(serializers.Serializer):
@@ -37,6 +39,9 @@ class GetOrderHistoryAPIView(APIView):
 
     def get(self, request):
         user_id = request.user.id
+        user = CustomUser.objects.filter(id=user_id).first()
+        if not user:
+            raise CustomApiException(ErrorCodes.UNAUTHORIZED,message="User not found.")
 
         response = get_order_history(user_id)
         if response:

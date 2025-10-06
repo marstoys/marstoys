@@ -5,8 +5,9 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from shop.services.get_cart_product import get_cart_product
 from shop.views.get_all_products_list import ProductsSerializer
-
-
+from core.exceptions.error_messages import ErrorCodes
+from core.exceptions.exception import CustomApiException
+from users.models import CustomUser
 class GetCartProductAPIView(APIView):
     @swagger_auto_schema(
         operation_description="Retrieve all products in the authenticated user's cart",
@@ -18,6 +19,9 @@ class GetCartProductAPIView(APIView):
     )
     def get(self, request):
         user_id = request.user.id
+        user = CustomUser.objects.filter(id=user_id).first()
+        if not user:
+            raise CustomApiException(ErrorCodes.UNAUTHORIZED,message="User not found.")
         cart_products = get_cart_product(user_id)
         return Response(cart_products, status=status.HTTP_200_OK)
     

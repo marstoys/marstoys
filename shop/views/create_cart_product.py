@@ -4,7 +4,9 @@ from rest_framework.response import Response
 from core.constants import COLOR_CHOICES
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-
+from core.exceptions.error_messages import ErrorCodes
+from core.exceptions.exception import CustomApiException
+from users.models import CustomUser
 
 
 
@@ -28,6 +30,9 @@ class CreateCartProductView(APIView):
     )
     def post(self, request):
         user_id = request.user.id
+        user = CustomUser.objects.filter(id=user_id).first()
+        if not user:
+            raise CustomApiException(ErrorCodes.UNAUTHORIZED,message="User not found.")
         serializer = CreateCartProductSerializer(data=request.data)
         if serializer.is_valid():
             from shop.services.create_cart_product import create_cart_product
