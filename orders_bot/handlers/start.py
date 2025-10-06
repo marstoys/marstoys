@@ -121,7 +121,7 @@ async def order_status_handler(callback_query: CallbackQuery,state: FSMContext):
 
     for msg_id in message_ids:
         try:
-            await callback_query.bot.delete_message(
+            await bot.delete_message(
                 chat_id=callback_query.message.chat.id,
                 message_id=msg_id
             )
