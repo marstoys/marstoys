@@ -18,11 +18,11 @@ class UserProfileSerializer(serializers.Serializer):
     address = serializers.CharField(max_length=255, required=False)
 
 class PhoneNumberSerializer(serializers.Serializer):
-    phone_number = serializers.CharField(description="User's phone number")
+    phone_number = serializers.CharField()
 
 class VerifyOTPSerializer(serializers.Serializer):
-    phone_number = serializers.CharField(description="User's phone number")
-    otp = serializers.CharField(description="One-Time Password")
+    phone_number = serializers.CharField()
+    otp = serializers.CharField()
 
 class TokenSerializer(serializers.Serializer):
     access = serializers.CharField()
