@@ -8,7 +8,7 @@ from core.exceptions.error_messages import ErrorCodes
 
 
 def get_cart_product(user_id):
-    cart_products=Cart.objects.filter(user_id=user_id).select_related("product__category").prefetch_related("images")
+    cart_products=Cart.objects.filter(user_id=user_id).select_related("product__category").prefetch_related("product__images")
     if not cart_products.exists():
         raise CustomApiException(ErrorCodes.NOT_FOUND, message="The cart is empty.")
     data=[]
