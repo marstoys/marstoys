@@ -12,6 +12,7 @@ from users.models import CustomUser
 
 class CartProductsSerializer(serializers.Serializer):
     id= serializers.IntegerField()
+    product_id= serializers.IntegerField()
     name = serializers.CharField(max_length=255)
     category = serializers.CharField(max_length=255)
     price = serializers.DecimalField(max_digits=10, decimal_places=2)

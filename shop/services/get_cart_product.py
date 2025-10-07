@@ -15,6 +15,7 @@ def get_cart_product(user_id):
     for item in cart_products:
         data.append({
             "id": item.id,
+            "product_id": item.product.id,
             "name": item.product.name,
             "category": item.product.category.name if item.product.category else None,
             "price": item.product.price,
