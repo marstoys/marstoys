@@ -1,60 +1,87 @@
 from core.constants import click_up
 from decimal import Decimal
-from shop.models import Order,OrderItem,Products
+from shop.models import Order, OrderItem, Products
 from users.models import CustomUser as User
 from core.exceptions.error_messages import ErrorCodes
 from core.exceptions.exception import CustomApiException
-from orders_bot.signals import send_order_message 
+from orders_bot.signals import send_order_message
 
-def create_order(data,user_id):
-    user= User.objects.filter(id=user_id).first()
+
+def create_order(data, user_id):
+    user = User.objects.filter(id=user_id).first()
     if not user:
         raise CustomApiException(ErrorCodes.NOT_FOUND, "User not found")
-    product_items=data.get('product_items')
-    payment_method=data.get('payment_method', 'naxt')
-    if not product_items:
-        raise CustomApiException(ErrorCodes.NOT_FOUND, "Product items are required")
-    order= Order.objects.create(
+
+    product_items = data.get('product_items')
+    payment_method = data.get('payment_method', 'naxt')
+
+    if not product_items :
+        raise CustomApiException(ErrorCodes.INVALID_INPUT, "Product items are required and must be a list.")
+
+    # 1️⃣ Yangi buyurtma yaratamiz
+    order = Order.objects.create(
         ordered_by=user,
         payment_method=payment_method,
     )
-    total_price = 0
-    data_to_send={
-            "order_number": order.order_number,
-            "first_name": user.first_name,
-            "phone_number": user.phone_number,
-            "address": user.address,
-            "payment_method": order.payment_method,
-            "is_paid": order.is_paid,
-            "created_datetime": order.created_datetime,
-            "items":[]
-        }
-    
+
+    total_price = Decimal("0")
+    data_to_send = {
+        "order_number": order.order_number,
+        "first_name": user.first_name,
+        "phone_number": user.phone_number,
+        "address": user.address,
+        "payment_method": order.payment_method,
+        "is_paid": order.is_paid,
+        "created_datetime": order.created_datetime,
+        "items": []
+    }
+
+    # 2️⃣ color mapping (display → value)
+    color_field = OrderItem._meta.get_field('color')
+    color_display_to_value = {display: value for value, display in color_field.choices}
+
+    # 3️⃣ Har bir mahsulotni OrderItem sifatida qo‘shamiz
     for item in product_items:
         product_id = item.get('product_id')
         quantity = item.get('quantity', 1)
-        color = item.get('color')
-        product=Products.objects.filter(id=product_id).first()
-        order= OrderItem.objects.create(
+        color_display = item.get('color')
+
+        if not product_id or not color_display:
+            raise CustomApiException(ErrorCodes.INVALID_INPUT, message="Product ID and color are required.")
+
+        # Displaydan value ga o‘tkazamiz ("Qizil" → "red")
+        color_value = color_display_to_value.get(color_display, color_display)
+
+        product = Products.objects.filter(id=product_id).first()
+        if not product:
+            raise CustomApiException(ErrorCodes.NOT_FOUND, f"Product with id {product_id} not found")
+
+        order_item = OrderItem.objects.create(
             order=order,
             product=product,
             quantity=quantity,
-            color=color
+            color=color_value
         )
+
         total_price += product.discounted_price * Decimal(str(quantity))
         data_to_send["items"].append({
             "product_name": product.name,
             "quantity": quantity,
-            "color": order.get_color_display(),
-            "manufacturer_code":product.manufacturer_code,
+            "color": order_item.get_color_display(),  # display ko‘rinishda
+            "manufacturer_code": product.manufacturer_code,
             "calculated_total_price": product.discounted_price * Decimal(str(quantity))
         })
+
+    # 4️⃣ Telegram signaliga ma’lumot jo‘natamiz
     send_order_message(data_to_send)
+
+    # 5️⃣ To‘lov turi "karta" bo‘lsa — Click havola yaratamiz
     if payment_method == "karta":
-            payment_link = click_up.initializer.generate_pay_link(
-                id=order.id,
-                amount=total_price,
-                return_url="https://toysmars.uz"
-            )
-            return payment_link
+        payment_link = click_up.initializer.generate_pay_link(
+            id=order.id,
+            amount=total_price,
+            return_url="https://toysmars.uz"
+        )
+        return payment_link
+
     return None

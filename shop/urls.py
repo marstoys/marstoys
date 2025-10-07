@@ -12,7 +12,7 @@ from shop.views.exel_import import ExcelUploadView
 from shop.views.export_exel_products import ExportExcelProductsView
 from shop.views.get_cart_product import GetCartProductAPIView
 from shop.views.create_cart_product import CreateCartProductView
-
+from shop.views.delete_cart_products import DeleteCartProductsAPIView
 urlpatterns = [
     path('categories/', CategoryListAPIView.as_view(), name='categories'),
     path('products/', ProductListAPIView.as_view(), name='products'),
@@ -27,4 +27,5 @@ urlpatterns = [
     path('export-products/', ExportExcelProductsView.as_view(), name='export-products'),
     path('get-cart-products/', GetCartProductAPIView.as_view(), name='cart-products'),
     path('create-cart-product/', CreateCartProductView.as_view(), name='create-cart-product'),
+    path("delete-cart-products/",DeleteCartProductsAPIView.as_view(),name='delete-cart-products')
 ]

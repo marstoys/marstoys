@@ -4,16 +4,20 @@ from core.exceptions.error_messages import ErrorCodes
 
 
 
-
-
-def create_cart_product(user_id,data):
+def create_cart_product(user_id, data):
     product_id = data.get('product_id')
     quantity = data.get('quantity', 1)
-    color = data.get('color', 'white')
+    color_display = data.get('color')
 
     if not product_id:
         raise CustomApiException(ErrorCodes.INVALID_INPUT, message="Product ID is required.")
-        
+    if not color_display:
+        raise CustomApiException(ErrorCodes.INVALID_INPUT, message="Color is required.")    
+
+    color_field = Cart._meta.get_field('color')
+    color_display_to_value = {display: value for value, display in color_field.choices}
+    color_value = color_display_to_value.get(color_display, color_display)
+
     try:
         product = Products.objects.get(id=product_id)
     except Products.DoesNotExist:
@@ -22,7 +26,7 @@ def create_cart_product(user_id,data):
     cart_product, created = Cart.objects.get_or_create(
         user_id=user_id,
         product=product,
-        color=color,
+        color=color_value,
         defaults={'quantity': quantity}
     )
 
