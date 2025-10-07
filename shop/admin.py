@@ -2,8 +2,6 @@ from django.urls import path
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import *
-from django.http import HttpResponse, HttpResponseForbidden
-admin.site.site_header = 'E-Commerce Admin'
 from django.template.response import TemplateResponse
 class ImageProductsInline(admin.TabularInline):
     model = ImageProducts
@@ -88,6 +86,7 @@ class DummyModel(models.Model):
 
 admin.site.register(DummyModel, CustomHTMLAdmin)
 admin.site.register(Category)
+admin.site.register(Cart)
 admin.site.register(Products, ProductsAdmin)
 admin.site.register(Order, OrderAdmin)
 
