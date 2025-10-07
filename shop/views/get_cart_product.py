@@ -1,4 +1,4 @@
-from rest_framework import  status
+from rest_framework import  status,serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
@@ -8,12 +8,29 @@ from shop.views.get_all_products_list import ProductsSerializer
 from core.exceptions.error_messages import ErrorCodes
 from core.exceptions.exception import CustomApiException
 from users.models import CustomUser
+
+
+class CartProductsSerializer(serializers.Serializer):
+    id= serializers.IntegerField()
+    name = serializers.CharField(max_length=255)
+    category = serializers.CharField(max_length=255)
+    price = serializers.DecimalField(max_digits=10, decimal_places=2)
+    quantity= serializers.IntegerField()
+    discount = serializers.IntegerField()
+    video_url = serializers.URLField(required=False, allow_blank=True)
+    discounted_price = serializers.DecimalField(max_digits=10, decimal_places=2)
+    average_rating = serializers.DecimalField(max_digits=3, decimal_places=1)
+    description = serializers.CharField()
+    image = serializers.URLField(allow_null=True)
+    color = serializers.CharField(max_length=20)
+    sold_count = serializers.IntegerField()
+
 class GetCartProductAPIView(APIView):
     @swagger_auto_schema(
         operation_description="Retrieve all products in the authenticated user's cart",
         operation_summary="Get Cart Products",
         responses={
-            status.HTTP_200_OK: ProductsSerializer(many=True),
+            status.HTTP_200_OK: CartProductsSerializer(many=True),
             status.HTTP_404_NOT_FOUND: openapi.Response("The cart is empty.")
         }
     )
@@ -23,5 +40,5 @@ class GetCartProductAPIView(APIView):
         if not user:
             raise CustomApiException(ErrorCodes.UNAUTHORIZED,message="User not found.")
         cart_products = get_cart_product(user_id)
-        return Response(cart_products, status=status.HTTP_200_OK)
-    
+        serializer = CartProductsSerializer(cart_products, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

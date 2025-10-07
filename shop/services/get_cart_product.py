@@ -25,13 +25,8 @@ def get_cart_product(user_id):
             "average_rating": item.product.average_rating,
             "description": item.product.description,
             "sold_count": item.product.sold,
-            "images": [
-                {
-                    "id": image.id,
-                    "image": image.image.url,
-                    "color": image.color,
-                    "quantity": image.quantity,
-                } for image in item.product.images.all()
-            ],
+            "color": item.get_color_display(),
+            "image": item.product.images.filter(color=item.color).first().image.url if item.product.images.filter(color=item.color).exists() else None,
+            
         })
     return data
