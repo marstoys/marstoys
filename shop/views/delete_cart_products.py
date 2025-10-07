@@ -35,9 +35,9 @@ class DeleteCartProductsAPIView(APIView):
         user = CustomUser.objects.filter(id=user_id).first()
         if not user:
             raise CustomApiException(ErrorCodes.UNAUTHORIZED,message="User not found.")
-        serializer = DeleteCartProductSerializer(data=request.data)
+        serializer = DeleteCartProductSerializer(data=request.data, many=True)
         if serializer.is_valid():
-            delete_grouped_cart_products(user_id=user_id,datas=serializer.data)
+            delete_grouped_cart_products(user_id=user_id,datas=serializer.validated_data)
             return Response({"message": "Product deleted from cart successfully."}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
