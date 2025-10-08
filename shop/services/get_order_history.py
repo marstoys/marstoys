@@ -35,7 +35,7 @@ def get_order_history(user_id):
                 "product_id": item.product.id,
                 "product_name": item.product.name if item.product else None,
                 "price": float(item.product.price) if item.product else None,
-                "color": item.color,
+                "color": item.get_color_display(),
                 "quantity": item.quantity,
                 "image": [img.image.url for img in item.product.images.all()] if item.product else None
             })
