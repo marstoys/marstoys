@@ -1,6 +1,6 @@
 from core.constants import click_up
 from decimal import Decimal
-from shop.models import Order, OrderItem, Products
+from shop.models import Order, OrderItem, Products,Cart
 from users.models import CustomUser as User
 from core.exceptions.error_messages import ErrorCodes
 from core.exceptions.exception import CustomApiException
@@ -43,7 +43,7 @@ def create_order(data, user_id):
     # 3️⃣ Har bir mahsulotni OrderItem sifatida qo‘shamiz
     for item in product_items:
         product_id = item.get('product_id')
-        quantity = item.get('quantity', 1)
+        quantity = item.get('quantity')
         color_display = item.get('color')
 
         if not product_id or not color_display:
@@ -62,6 +62,9 @@ def create_order(data, user_id):
             quantity=quantity,
             color=color_value
         )
+        cart_item = Cart.objects.filter(product_id=product.id, user_id=user.id,color=color_value).first()
+        if cart_item:
+            cart_item.delete()
 
         total_price += product.discounted_price * Decimal(str(quantity))
         data_to_send["items"].append({
