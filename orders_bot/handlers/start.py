@@ -158,26 +158,29 @@ async def order_status_handler(callback_query: CallbackQuery,state: FSMContext):
             )
         except Exception:
             pass  
-    try:
-        if new_status == 'cancelled':
-            order = Order.objects.get(order_number=order_number,status="pending",is_paid=False)
-            if not order:
-                await callback_query.answer(text="❌ Faqat 'Kutilayotgan' va 'to'lanmagan' buyurtmalarni bekor qilish mumkin.", show_alert=True)
-                await state.clear()
-                return
-            order.status = "cancelled"
-            order.save()
-            orderitems = OrderItem.objects.filter(order_id=order.id)
-            for item in orderitems:
-                image = ImageProducts.objects.filter(product_id=item.product.id,color=item.color).first()
-                image.quantity += item.quantity
-                image.save()
-        else:
-            order = Order.objects.get(order_number=order_number)
-            order.status = new_status
-            order.save()
-        await callback_query.message.edit_text(text="Assalomu alaykum. Bu bot sizga Buyurtmalarni avtomatik yuborib boradi.",reply_markup=main_keyboard())
-        await callback_query.answer(text=f"Buyurtma holati '{order.get_status_display()}' ga o'zgartirildi.", show_alert=True)
-    except Order.DoesNotExist:
-        await callback_query.answer(text="Buyurtma topilmadi.", show_alert=True)
+    
+    if new_status == 'cancelled':
+        order = Order.objects.get(order_number=order_number,status="pending",is_paid=False)
+        if not order:
+            await callback_query.answer(text="❌ Faqat 'Kutilayotgan' va 'to'lanmagan' buyurtmalarni bekor qilish mumkin.", show_alert=True)
+            await state.clear()
+            return
+        order.status = "cancelled"
+        order.save()
+        orderitems = OrderItem.objects.filter(order_id=order.id)
+        for item in orderitems:
+            image = ImageProducts.objects.filter(product_id=item.product.id,color=item.color).first()
+            image.quantity += item.quantity
+            image.save()
+    else:
+        order = Order.objects.get(order_number=order_number)
+        if not order:
+            await callback_query.answer(text="❌ Buyurtma topilmadi.", show_alert=True)
+            await state.clear()
+            return
+        order.status = new_status
+        order.save()
+    await callback_query.message.edit_text(text="Assalomu alaykum. Bu bot sizga Buyurtmalarni avtomatik yuborib boradi.",reply_markup=main_keyboard())
+    await callback_query.answer(text=f"Buyurtma holati '{order.get_status_display()}' ga o'zgartirildi.", show_alert=True)
+
     await state.clear()
