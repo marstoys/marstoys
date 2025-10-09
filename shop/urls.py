@@ -13,6 +13,7 @@ from shop.views.export_exel_products import ExportExcelProductsView
 from shop.views.get_cart_product import GetCartProductAPIView
 from shop.views.create_cart_product import CreateCartProductView
 from shop.views.delete_cart_products import DeleteCartProductsAPIView
+from shop.views.cancel_order import CancelOrderView
 urlpatterns = [
     path('categories/', CategoryListAPIView.as_view(), name='categories'),
     path('products/', ProductListAPIView.as_view(), name='products'),
@@ -22,6 +23,7 @@ urlpatterns = [
     path('comment-permission/', PermissionToCommentAPIView.as_view(), name='comment-premission'),
     path('order-product/', OrderCreateAPIView.as_view(), name='order-product'),
     path('order-history/',GetOrderHistoryAPIView.as_view(), name='order-history'),
+    path('cancel-order/', CancelOrderView.as_view(), name='cancel-order'),
     path('product-comments/<int:product_id>/', ProductComments.as_view(), name='product-comments'),
     path("excel-import/", ExcelUploadView.as_view(), name="excel-import"),
     path('export-products/', ExportExcelProductsView.as_view(), name='export-products'),
