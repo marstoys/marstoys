@@ -18,7 +18,7 @@ def get_product_details(product_id):
             "name": product.name,
             "category": product.category.name if product.category else None,
             "price": product.price,
-            "quantity": product.quantity,
+            "quantity": 0,
             "discount": product.discount,
             "video_url": product.video_url,
             "discounted_price": product.discounted_price,

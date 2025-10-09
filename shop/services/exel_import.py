@@ -14,7 +14,6 @@ def save_excel_to_db(excel_file):
             name=row.get("product_name"),
             sku = row.get("sku"),
             price=row.get("price (so'm)"),
-            quantity=row.get("quantity"),
            manufacturer_code =row.get("manufacturer_code"),
            discount=row.get("discount (foizda)"),
            description=row.get("description"),
