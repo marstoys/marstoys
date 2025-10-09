@@ -53,7 +53,7 @@ class OrderItemInline(admin.TabularInline):
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ("order_number", "ordered_by_name", "payment_method", "is_paid", "status", "created_datetime")
+    list_display = ("order_number", "ordered_by_name", "colored_payment_method", "colored_is_paid", "colored_status", "created_datetime")
     list_filter = ("status", "is_paid", "payment_method")
     search_fields = ("ordered_by__first_name", "order_number")
     readonly_fields = ("ordered_by", "payment_method", "is_paid", "order_number", "created_datetime", "modified_datetime")
@@ -62,6 +62,54 @@ class OrderAdmin(admin.ModelAdmin):
     def ordered_by_name(self, obj):
         return obj.ordered_by.first_name if obj.ordered_by else "No User"
     ordered_by_name.short_description = "Buyurtmachi"
+
+    def colored_payment_method(self, obj):
+        if obj.payment_method.lower() == "naxt":
+            color = "green"
+        elif obj.payment_method.lower() == "karta":
+            color = "#4dabf7"  # light blue
+        else:
+            color = "#888"  # gray fallback
+    
+        return format_html(
+            '<span style="color: white; background-color: {}; padding: 4px 10px; border-radius: 6px; font-weight: 600;">{}</span>',
+            color,
+            obj.payment_method.capitalize()
+        )
+    def colored_is_paid(self, obj):
+        if obj.is_paid:
+            return format_html(
+                '<span style="background-color:#2ecc71; color:white; padding:3px 8px; border-radius:6px; font-weight:600;">✅ To‘landi</span>'
+            )
+        return format_html(
+            '<span style="background-color:#e74c3c; color:white; padding:3px 8px; border-radius:6px; font-weight:600;">❌ To‘lanmagan</span>'
+        )
+    colored_is_paid.short_description = "To‘lov holati"
+    def colored_status(self, obj):
+        status = obj.status.lower() if obj.status else ""
+        colors = {
+            "pending": "#f1c40f",       # sariq
+            "delivering": "#3498db",    # moviy
+            "delivered": "#2ecc71",     # yashil
+            "cancelled": "#e74c3c",     # qizil
+        }
+        labels = {
+            "pending": "⏳ Kutilmoqda",
+            "delivering": "🚚 Yetkazilmoqda",
+            "delivered": "✅ Yetkazib berildi",
+            "cancelled": "❌ Bekor qilindi",
+        }
+        color = colors.get(status, "#7f8c8d")
+        label = labels.get(status, status.capitalize())
+
+        return format_html(
+            '<span style="background-color:{}; color:white; padding:3px 10px; border-radius:6px; font-weight:600;">{}</span>',
+            color,
+            label,
+        )
+    colored_status.short_description = "Buyurtma holati"
+    colored_payment_method.short_description = "To‘lov turi"
+
 
 
 
