@@ -3,7 +3,6 @@ from core.exceptions.exception import CustomApiException
 from core.exceptions.error_messages import ErrorCodes
 
 
-
 def create_cart_product(user_id, data):
     product_id = data.get('product_id')
     quantity = data.get('quantity')
@@ -11,8 +10,10 @@ def create_cart_product(user_id, data):
 
     if not product_id:
         raise CustomApiException(ErrorCodes.INVALID_INPUT, message="Product ID is required.")
+    if quantity is None:
+        raise CustomApiException(ErrorCodes.INVALID_INPUT, message="Quantity is required.")
     if not color_display:
-        raise CustomApiException(ErrorCodes.INVALID_INPUT, message="Color is required.")    
+        raise CustomApiException(ErrorCodes.INVALID_INPUT, message="Color is required.")
 
     color_field = Cart._meta.get_field('color')
     color_display_to_value = {display: value for value, display in color_field.choices}
@@ -27,11 +28,17 @@ def create_cart_product(user_id, data):
         user_id=user_id,
         product=product,
         color=color_value,
-        defaults={'quantity': quantity}
+        defaults={'quantity': max(quantity, 0)}  
     )
 
     if not created:
-        cart_product.quantity += quantity
+        new_quantity = cart_product.quantity + quantity
+
+        if new_quantity <= 0:
+            cart_product.delete()
+            return True
+
+        cart_product.quantity = new_quantity
         cart_product.save()
 
     return True
