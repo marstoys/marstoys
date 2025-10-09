@@ -13,7 +13,7 @@ from shop.services.create_cart_product import create_cart_product
 
 class CreateCartProductSerializer(serializers.Serializer):
     product_id = serializers.IntegerField()
-    quantity = serializers.IntegerField(min_value=1)
+    quantity = serializers.IntegerField()
     color = serializers.ChoiceField(choices=[choice[1] for choice in COLOR_CHOICES])
     
     
