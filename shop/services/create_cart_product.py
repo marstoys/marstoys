@@ -6,7 +6,7 @@ from core.exceptions.error_messages import ErrorCodes
 
 def create_cart_product(user_id, data):
     product_id = data.get('product_id')
-    quantity = data.get('quantity', 1)
+    quantity = data.get('quantity')
     color_display = data.get('color')
 
     if not product_id:
