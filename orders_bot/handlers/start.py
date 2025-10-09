@@ -4,7 +4,7 @@ from aiogram.utils.media_group import MediaGroupBuilder
 from aiogram.filters import Command , StateFilter
 from orders_bot.models import  TelegramAdminsID
 from orders_bot.dispatcher import dp,bot
-from shop.models import Order, OrderItem
+from shop.models import Order, OrderItem,ImageProducts
 from orders_bot.buttons.inline import *
 from aiogram.fsm.context import FSMContext
 from orders_bot.state import OrderState
@@ -155,9 +155,17 @@ async def order_status_handler(callback_query: CallbackQuery,state: FSMContext):
         except Exception:
             pass  
     try:
-        order = Order.objects.get(order_number=order_number)
-        order.status = new_status
-        order.save()
+        if new_status == 'canceled':
+            order = Order.objects.get(order_number=order_number,status="pending",is_paid=False)
+            orderitems = OrderItem.objects.filter(order_id=order.id)
+            for item in orderitems:
+                image = ImageProducts.objects.filter(product_id=item.product.id,color=item.color).first()
+                image.quantity += item.quantity
+                image.save()
+        else:
+            order = Order.objects.get(order_number=order_number)
+            order.status = new_status
+            order.save()
         await callback_query.message.edit_text(text="Assalomu alaykum. Bu bot sizga Buyurtmalarni avtomatik yuborib boradi.",reply_markup=main_keyboard())
         await callback_query.answer(text=f"Buyurtma holati '{order.get_status_display()}' ga o'zgartirildi.", show_alert=True)
     except Order.DoesNotExist:

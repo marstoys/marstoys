@@ -42,3 +42,27 @@ def send_order_message(data):
                 print(f"✅ Yuborildi: {tg_id.tg_id}")
             except Exception as e:
                 print(f"❌ Yuborilmadi: {tg_id.tg_id}")
+
+
+def send_order_cancellation_message(data):
+    """
+    Order bekor qilindi, transaction commit bo'lgandan keyin telegramga xabar yuboradi
+    """
+    msg = (
+    f"❌ <b>Buyurtma bekor qilindi!</b>\n\n"
+    f"📦 <b>Buyurtma ma'lumotlari:</b>\n"
+    f"━━━━━━━━━━━━━━━━━━━━━━━\n"
+    f"🆔 <b>Raqam:</b> <code>{data.get('order_number')}</code>\n"
+    f"👤 <b>Mijoz:</b> {data.get('first_name')}\n"
+    f"📞 <b>Telefon:</b> <code>{data.get('phone_number')}</code>\n"
+    f"🏠 <b>Manzil:</b> {data.get('address')}\n"
+    f"💳 <b>To‘lov usuli:</b> {data.get('payment_method').capitalize()}\n"
+    f"🕒 <b>Sana:</b> {timezone.localtime(data.get('created_datetime')).strftime('%Y-%m-%d %H:%M')}\n"
+)
+    for tg_id in TelegramAdminsID.objects.all():
+        if tg_id:
+            try:
+                bot.send_message(chat_id=tg_id.tg_id, text=msg)
+                print(f"✅ Yuborildi: {tg_id.tg_id}")
+            except Exception as e:
+                print(f"❌ Yuborilmadi: {tg_id.tg_id}")
