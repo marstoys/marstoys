@@ -44,7 +44,7 @@ async def process_order_number(message: Message,state: FSMContext):
     try:
         order = Order.objects.get(order_number=str(order_number))
         if order.status == 'cancelled':
-            await message.answer(text="❌ Bu buyurtma bekor qilingan.",show_alert=True)
+            await message.answer(text="❌ Bu buyurtma bekor qilingan.",reply_markup=back_keyboard())
             await state.clear()
             return
         orderitems = OrderItem.objects.filter(order_id=order.id)
