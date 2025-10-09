@@ -76,6 +76,54 @@ SIMPLE_JWT = {
     "USER_ID_FIELD": "id",
     "USER_ID_CLAIM": "user_id",
 }
+JAZZMIN_SETTINGS = {
+    "site_title": "O'yinchoqlar Do'koni",
+    "site_header": "🧸 O'yinchoq Admin",
+    "site_brand": "ToyStore",
+    "welcome_sign": "ToyStore boshqaruv tizimiga xush kelibsiz 🎠",
+    "copyright": "© 2025 ToyStore",
+
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "hide_apps": [],
+    "hide_models": [],
+    "order_with_respect_to": [ "users","shop"],
+
+    "icons": {
+        "shop.Category": "fas fa-list",
+        "shop.Products": "fas fa-box-open",
+        "shop.Order": "fas fa-shopping-cart",
+        "shop.OrderItem": "fas fa-boxes",
+        "shop.Cart": "fas fa-shopping-basket",
+        "users.CustomUser": "fas fa-user",
+    },
+   
+    "topmenu_links": [
+        {"name": "Asosiy sayt", "url": "/", "new_window": True},
+        {"app": "shop"},
+    ],
+
+    
+}
+
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "lumen",
+    "footer_small_text": False,
+    "body_small_text": False,
+    "theme_switcher": True,
+
+     "brand_colour": "navbar-dark",
+    "accent": "accent-lightblue",
+    "navbar": "navbar-dark",
+    "no_navbar_border": True,
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": True,
+    "sidebar_nav_compact_style": True,
+    "actions_sticky_top": True,
+}
 
 MIDDLEWARE = [
 'whitenoise.middleware.WhiteNoiseMiddleware',
