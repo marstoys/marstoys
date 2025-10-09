@@ -161,6 +161,10 @@ async def order_status_handler(callback_query: CallbackQuery,state: FSMContext):
     try:
         if new_status == 'cancelled':
             order = Order.objects.get(order_number=order_number,status="pending",is_paid=False)
+            if not order:
+                await callback_query.answer(text="❌ Faqat 'Kutilayotgan' va 'to'lanmagan' buyurtmalarni bekor qilish mumkin.", show_alert=True)
+                await state.clear()
+                return
             orderitems = OrderItem.objects.filter(order_id=order.id)
             for item in orderitems:
                 image = ImageProducts.objects.filter(product_id=item.product.id,color=item.color).first()
