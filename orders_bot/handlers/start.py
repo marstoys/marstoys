@@ -161,6 +161,8 @@ async def order_status_handler(callback_query: CallbackQuery,state: FSMContext):
     try:
         if new_status == 'cancelled':
             order = Order.objects.get(order_number=order_number,status="pending",is_paid=False)
+            order.status = "cancelled"
+            order.save()
             if not order:
                 await callback_query.answer(text="❌ Faqat 'Kutilayotgan' va 'to'lanmagan' buyurtmalarni bekor qilish mumkin.", show_alert=True)
                 await state.clear()
