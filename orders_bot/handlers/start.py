@@ -43,7 +43,7 @@ async def process_order_number(message: Message,state: FSMContext):
     
     try:
         order = Order.objects.get(order_number=str(order_number))
-        if order.status == 'canceled':
+        if order.status == 'cancelled':
             await message.answer(text="❌ Bu buyurtma bekor qilingan.",show_alert=True)
             await state.clear()
             return
@@ -159,7 +159,7 @@ async def order_status_handler(callback_query: CallbackQuery,state: FSMContext):
         except Exception:
             pass  
     try:
-        if new_status == 'canceled':
+        if new_status == 'cancelled':
             order = Order.objects.get(order_number=order_number,status="pending",is_paid=False)
             orderitems = OrderItem.objects.filter(order_id=order.id)
             for item in orderitems:

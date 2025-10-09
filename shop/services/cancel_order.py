@@ -6,7 +6,7 @@ from orders_bot.signals import send_order_cancellation_message
 def cancel_order(user_id, order_id):
     try:
         order = Order.objects.get(id=order_id, ordered_by=user_id,status="pending",is_paid=False)
-        order.status = "canceled"
+        order.status = "cancelled"
         order.save()
         order_items = OrderItem.objects.filter(order_id=order.id)
         for item in order_items:
