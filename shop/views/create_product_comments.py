@@ -35,6 +35,6 @@ class CreateCommentProductAPIView(APIView):
             raise CustomApiException(ErrorCodes.BAD_REQUEST, message=serializer.errors)
         create_comment_product(
             data=serializer.validated_data,
-            user=user_id
+            user_id=user_id
         )
         return Response({"message": "Comment created successfully."}, status=status.HTTP_201_CREATED)

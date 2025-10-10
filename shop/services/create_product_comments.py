@@ -10,7 +10,7 @@ def create_comment_product(data, user_id):
     if not product:
         raise CustomApiException(ErrorCodes.NOT_FOUND, "Product not found")
     CommentProducts.objects.create(
-        product=product,
+        product_id=product.id,
         comment=data.get("comment"),
         rating=data.get("rating"),
         commented_by_id=user_id
