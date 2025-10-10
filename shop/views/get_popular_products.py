@@ -43,3 +43,4 @@ class PopularProducts(APIView):
 
         serializer = ProductsSerializer(products_data, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
