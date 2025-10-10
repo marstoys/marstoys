@@ -30,9 +30,11 @@ class CreateCommentProductAPIView(APIView):
         user = CustomUser.objects.filter(id=user_id).first()
         if not user:
             raise CustomApiException(ErrorCodes.UNAUTHORIZED,message="User not found.")
-        
+        serializer = CreateCommentProductSerializer(data=request.data)
+        if not serializer.is_valid():
+            raise CustomApiException(ErrorCodes.BAD_REQUEST, message=serializer.errors)
         create_comment_product(
-            data=request.data,
+            data=serializer.validated_data,
             user=user_id
         )
         return Response({"message": "Comment created successfully."}, status=status.HTTP_201_CREATED)
