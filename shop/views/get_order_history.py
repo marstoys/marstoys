@@ -21,7 +21,7 @@ class OrderHistorySerializer(serializers.Serializer):
     order_id = serializers.IntegerField()
     status = serializers.CharField()
     payment_method = serializers.CharField()
-    payment_link = serializers.CharField(allow_null=True, required=False)
+    payment_link = serializers.CharField()
     is_paid = serializers.BooleanField()
     items = OrderItemSerializer(many=True)
     total_price = serializers.FloatField()
