@@ -34,7 +34,7 @@ class PopularProducts(APIView):
                 "images": [ {
                     "id": image.id,
                     "image": image.image.url,
-                    "color": image.color,
+                    "color": image.get_color_display(),
                     "quantity": image.quantity,
                     } for image in product.images.all()],
                 "sold_count": product.sold
