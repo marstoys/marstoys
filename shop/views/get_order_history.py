@@ -16,6 +16,7 @@ class OrderHistorySerializer(serializers.Serializer):
         price = serializers.FloatField()
         quantity = serializers.IntegerField()
         color = serializers.CharField()
+        total_price = serializers.FloatField()
         image = serializers.ListField(child=serializers.URLField())
     order_id = serializers.IntegerField()
     status = serializers.CharField()
