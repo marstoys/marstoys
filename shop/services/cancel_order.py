@@ -20,7 +20,16 @@ def cancel_order(user_id, order_id):
             "address": order.ordered_by.address,
             "payment_method": order.payment_method,
             "created_datetime": order.created_datetime,
+            "items": []
         }
+        for item in order_items:
+            data["items"].append({
+                "product_name": item.product.name,
+                "quantity": item.quantity,
+                "color": item.color,
+                "calculated_total_price": item.quantity * item.product.discounted_price,
+                "manufacturer_code": item.product.manufacturer_code,
+            })
         send_order_cancellation_message(data)
         
         return True
