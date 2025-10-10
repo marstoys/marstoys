@@ -83,6 +83,8 @@ def create_order(data, user_id):
             amount=total_price,
             return_url="https://toysmars.uz"
         )
+        order.payment_link = payment_link
+        order.save()
         return payment_link
 
     return None
