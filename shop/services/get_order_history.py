@@ -27,10 +27,13 @@ def get_order_history(user_id):
             "payment_method": order.payment_method,
             "is_paid": order.is_paid,
             "payment_link": order.payment_link if not order.is_paid and order.payment_method=="karta" else None,
-            "items": []
+            "items": [],
+            "total_price":0
         }
         order_items=OrderItem.objects.filter(order_id=order.id)
+        total_price = 0
         for item in order_items:
+            total_price += item.product.price * item.quantity
             order_dict["items"].append({
                 "item_id": item.id,
                 "product_id": item.product.id,
@@ -40,7 +43,7 @@ def get_order_history(user_id):
                 "quantity": item.quantity,
                 "image": [img.image.url for img in item.product.images.all()] if item.product else None
             })
-
+        order_dict["total_price"] = total_price
         result.append(order_dict)
 
     return result
