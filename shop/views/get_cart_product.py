@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from shop.services.get_cart_product import get_cart_product
-from shop.views.get_all_products_list import ProductsSerializer
 from core.exceptions.error_messages import ErrorCodes
 from core.exceptions.exception import CustomApiException
 from users.models import CustomUser
@@ -17,6 +16,7 @@ class CartProductsSerializer(serializers.Serializer):
     category = serializers.CharField(max_length=255)
     price = serializers.DecimalField(max_digits=10, decimal_places=2)
     quantity= serializers.IntegerField()
+    sklad_quantity = serializers.IntegerField()
     discount = serializers.IntegerField()
     video_url = serializers.URLField(required=False, allow_blank=True)
     discounted_price = serializers.DecimalField(max_digits=10, decimal_places=2)
