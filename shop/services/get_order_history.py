@@ -26,7 +26,7 @@ def get_order_history(user_id):
             "status": order.status,
             "payment_method": order.payment_method,
             "is_paid": order.is_paid,
-            "payment_link": order.payment_link if not order.is_paid and order.payment_method=="karta" else None,
+            "payment_link": order.payment_link if not order.is_paid and order.payment_method.lower() == "karta" else None,
             "items": [],
             "total_price":0
         }
