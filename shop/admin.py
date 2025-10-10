@@ -56,7 +56,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ("order_number", "ordered_by_name", "colored_payment_method", "colored_is_paid", "colored_status", "created_datetime")
     list_filter = ("status", "is_paid", "payment_method")
     search_fields = ("ordered_by__first_name", "order_number")
-    readonly_fields = ("ordered_by", "payment_method", "is_paid", "order_number", "created_datetime", "modified_datetime")
+    readonly_fields = ("ordered_by", "payment_method", "payment_link", "is_paid", "order_number", "created_datetime", "modified_datetime")
     inlines = [OrderItemInline]
 
     def ordered_by_name(self, obj):
