@@ -23,6 +23,7 @@ class OrderHistorySerializer(serializers.Serializer):
     payment_link = serializers.CharField(allow_null=True, required=False)
     is_paid = serializers.BooleanField()
     items = OrderItemSerializer(many=True)
+    total_price = serializers.FloatField()
 
 
 
