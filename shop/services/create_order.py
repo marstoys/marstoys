@@ -79,7 +79,7 @@ def create_order(data, user_id):
 
     if payment_method == "karta":
         payment_link = click_up.initializer.generate_pay_link(
-            id=order.id,
+            id=order.uuid,
             amount=total_price,
             return_url="https://toysmars.uz"
         )
