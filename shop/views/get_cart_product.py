@@ -22,7 +22,7 @@ class CartProductsSerializer(serializers.Serializer):
     discounted_price = serializers.DecimalField(max_digits=10, decimal_places=2)
     average_rating = serializers.DecimalField(max_digits=3, decimal_places=1)
     description = serializers.CharField()
-    image = serializers.URLField(allow_null=True)
+    images = serializers.ListField(child=serializers.URLField(), allow_null=True)
     color = serializers.CharField(max_length=20)
     sold_count = serializers.IntegerField()
 

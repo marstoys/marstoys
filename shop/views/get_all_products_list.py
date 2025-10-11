@@ -8,11 +8,11 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 class ProductsSerializer(serializers.Serializer):
-    class ProductImages(serializers.Serializer):
+    class ProductColors(serializers.Serializer):
         id = serializers.IntegerField()
-        image = serializers.URLField()
         color = serializers.CharField(max_length=20)
         quantity = serializers.IntegerField()
+        images = serializers.ListField(child=serializers.URLField())
     id= serializers.IntegerField()
     name = serializers.CharField(max_length=255)
     category = serializers.CharField(max_length=255)
@@ -23,7 +23,7 @@ class ProductsSerializer(serializers.Serializer):
     discounted_price = serializers.DecimalField(max_digits=10, decimal_places=2)
     average_rating = serializers.DecimalField(max_digits=3, decimal_places=1)
     description = serializers.CharField()
-    images = ProductImages(many=True)
+    colors = ProductColors(many=True)
     sold_count = serializers.IntegerField()
 
 

@@ -26,7 +26,7 @@ def create_cart_product(user_id, data):
 
     cart_product, created = Cart.objects.get_or_create(
         user_id=user_id,
-        product=product,
+        product_id=product.id,
         color=color_value,
         defaults={'quantity': max(quantity, 0)}  
     )

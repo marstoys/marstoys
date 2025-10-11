@@ -31,12 +31,12 @@ class PopularProducts(APIView):
                 "discounted_price": product.discounted_price,
                 "average_rating": product.average_rating,
                 "description": product.description ,
-                "images": [ {
-                    "id": image.id,
-                    "image": image.image.url,
-                    "color": image.get_color_display(),
-                    "quantity": image.quantity,
-                    } for image in product.images.all()],
+                "colors": [ {
+                    "id": color.id,
+                    "color": color.get_color_display(),
+                    "quantity": color.quantity,
+                    "images": [img.image.url for img in color.images.all()]
+                    } for color in product.colors.all()],
                 "sold_count": product.sold
             }
             products_data.append(product_data)

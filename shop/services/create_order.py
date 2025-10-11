@@ -1,6 +1,6 @@
 from core.constants import click_up
 from decimal import Decimal
-from shop.models import ImageProducts, Order, OrderItem, Products,Cart
+from shop.models import ProductColor, Order, OrderItem, Products,Cart
 from users.models import CustomUser as User
 from core.exceptions.error_messages import ErrorCodes
 from core.exceptions.exception import CustomApiException
@@ -53,23 +53,23 @@ def create_order(data, user_id):
 
         order_item = OrderItem.objects.create(
             order=order,
-            product=product,
+            product_id=product.id,
             quantity=quantity,
             color=color_value
         )
         cart_item = Cart.objects.filter(product_id=product.id, user_id=user.id,color=color_value).first()
         if cart_item:
             cart_item.delete()
-        image = ImageProducts.objects.filter(product_id=product.id,color=color_value).first()
-        if image:
-            image.quantity-=quantity
-            image.save()
+        product_color = ProductColor.objects.filter(product_id=product.id,color=color_value).first()
+        if product_color:
+            product_color.quantity -= quantity
+            product_color.save()
     
         total_price += product.discounted_price * Decimal(str(quantity))
         data_to_send["items"].append({
             "product_name": product.name,
             "quantity": quantity,
-            "color": order_item.get_color_display(),  # display ko‘rinishda
+            "color": order_item.get_color_display(),  
             "manufacturer_code": product.manufacturer_code,
             "calculated_total_price": product.discounted_price * Decimal(str(quantity))
         })

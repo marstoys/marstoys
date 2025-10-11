@@ -13,7 +13,7 @@ def get_all_products_list(data):
     max_price = data.get("max_price")
     min_rating = data.get("min_rating")
     max_rating = data.get("max_rating")
-    queryset = Products.objects.prefetch_related("images").select_related("category")
+    queryset = Products.objects.prefetch_related("colors").select_related('colors__images',"category")
     
     if category_id:
         queryset = queryset.filter(category_id=category_id)
@@ -48,14 +48,15 @@ def get_all_products_list(data):
             "average_rating": product.average_rating,
             "description": product.description ,
             "sold_count": product.sold,
-            "images": [
-                {
-                    "id": image.id,
-                    "image": image.image.url,
-                    "color": image.get_color_display(),
-                    "quantity": image.quantity,
-                } for image in product.images.all()
-            ],
+            "colors": [
+            {
+                "id": product_color.id,
+                "color": product_color.get_color_display(),
+                "quantity": product_color.quantity,
+                "images": [img.image.url for img in product_color.images.all()]
+            }
+            for product_color in product.colors.all()
+        ],
         }        
         products_data.append(product_data)
 

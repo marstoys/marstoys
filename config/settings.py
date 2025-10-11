@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_filters',
     "core",
-    "orders_bot"
+    "orders_bot",
+    "nested_admin"
 ]
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',

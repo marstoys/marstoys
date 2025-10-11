@@ -69,11 +69,39 @@ class Products(SafeBaseModel):
         verbose_name_plural = "Mahsulotlar"
 
 
+class ProductColor(SafeBaseModel):
+    product = models.ForeignKey(
+        Products,
+        on_delete=models.CASCADE,
+        related_name="colors"
+    )
+    color = models.CharField(
+        choices=COLOR_CHOICES,
+        max_length=20,
+        verbose_name="O'yinchoq rangi:"
+    )
+    quantity = models.PositiveIntegerField(default=1, verbose_name="O‘sha rangdagi soni:")
+    images = models.ManyToManyField(
+        'ImageProducts',
+        blank=True,
+        related_name="color_variants"
+    )
+
+    def __str__(self):
+        return f"{self.product.name} - {self.color}"
+
+    class Meta:
+        verbose_name = "Mahsulot rangi"
+        verbose_name_plural = "Mahsulot ranglari"
+
+
 class ImageProducts(SafeBaseModel):
-    product = models.ForeignKey(Products, related_name="images", on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, blank=True, null=True, verbose_name="Rasm nomi (ixtiyoriy):")
     image = CloudinaryField("image")
-    color = models.CharField(choices=COLOR_CHOICES, default=COLOR_CHOICES[0][0], max_length=20, verbose_name="O'yinchoq rangi:")
-    quantity = models.IntegerField(default=1, verbose_name="Rangdagi o'yinchoq soni:")
+    
+    
+    def __str__(self):
+        return self.name if self.name else f"Rasm {self.id}"
 
     class Meta:
         verbose_name = "Rasm"
