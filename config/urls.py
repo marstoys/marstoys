@@ -36,7 +36,6 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-                path('nested_admin/', include('nested_admin.urls')),
                 path('admin/', admin.site.urls),
                 path('shop/', include('shop.urls')),
                 path('users/', include('users.urls')),
