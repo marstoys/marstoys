@@ -93,9 +93,12 @@ JAZZMIN_SETTINGS = {
         "shop.Category": "fas fa-list",
         "shop.Products": "fas fa-box-open",
         "shop.Order": "fas fa-shopping-cart",
+        "shop.ProductColor":"fas fa-palette",
+        "shop.ImageProducts":"fas fa-images",
         "shop.OrderItem": "fas fa-boxes",
         "shop.Cart": "fas fa-shopping-basket",
         "users.CustomUser": "fas fa-user",
+        "shop.DummyModel": "fas fa-dice",
     },
    
     "topmenu_links": [
