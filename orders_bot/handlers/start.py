@@ -76,7 +76,7 @@ async def process_order_number(message: Message,state: FSMContext):
         for index, item in enumerate(orderitems, start=1):
             product = item.product
             colors = product.colors.filter(color=item.color).first()
-            image_url = colors.images.first() if colors.images else None
+            image_url = colors.images.first().image.url if colors.images else None
 
             details_text += (
                 f"{index}. {product.name}\n"
