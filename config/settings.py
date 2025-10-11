@@ -55,7 +55,6 @@ INSTALLED_APPS = [
     'django_filters',
     "core",
     "orders_bot",
-    "nested_admin"
 ]
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
