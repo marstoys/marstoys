@@ -47,7 +47,7 @@ async def process_order_number(message: Message,state: FSMContext):
             await message.answer(text="❌ Bu buyurtma bekor qilingan.",reply_markup=back_keyboard())
             await state.clear()
             return
-        orderitems = OrderItem.objects.filter(order_id=order.id)
+        orderitems = OrderItem.objects.filter(order_id=order.id).prefetch_related('product__colors__images')
 
         if not orderitems.exists():
             await message.answer("❌ Bu buyurtmada mahsulotlar topilmadi.")
@@ -75,8 +75,8 @@ async def process_order_number(message: Message,state: FSMContext):
 
         for index, item in enumerate(orderitems, start=1):
             product = item.product
-            images = product.images.filter(color=item.color).first()
-            image_url = images.image.url if images else None
+            colors = product.colors.filter(color=item.color).first()
+            image_url = colors.images.first() if colors.images else None
 
             details_text += (
                 f"{index}. {product.name}\n"
