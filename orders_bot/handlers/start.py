@@ -4,7 +4,7 @@ from aiogram.utils.media_group import MediaGroupBuilder
 from aiogram.filters import Command , StateFilter
 from orders_bot.models import  TelegramAdminsID
 from orders_bot.dispatcher import dp,bot
-from shop.models import Order, OrderItem,ImageProducts
+from shop.models import Order, OrderItem,ProductColor
 from orders_bot.buttons.inline import *
 from aiogram.fsm.context import FSMContext
 from orders_bot.state import OrderState
@@ -167,9 +167,9 @@ async def order_status_handler(callback_query: CallbackQuery,state: FSMContext):
             return
         orderitems = OrderItem.objects.filter(order_id=order.id)
         for item in orderitems:
-            image = ImageProducts.objects.filter(product_id=item.product.id,color=item.color).first()
-            image.quantity += item.quantity
-            image.save()
+            product_color = ProductColor.objects.filter(product_id=item.product.id,color=item.color).first()
+            product_color.quantity += item.quantity
+            product_color.save()
     else:
         order = Order.objects.filter(order_number=order_number).first()
         if not order:
