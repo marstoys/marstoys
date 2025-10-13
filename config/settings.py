@@ -81,8 +81,6 @@ JAZZMIN_SETTINGS = {
     "site_header": "🧸 O'yinchoq Admin",
     "site_brand": "ToyStore",
     "site_logo": "images/logo.jpg",
-    "login_logo": "images/logo.jpg",
-    "login_logo_dark": "images/logo.jpg",
     "site_logo_classes": "img-circle",
     "welcome_sign": "ToyStore boshqaruv tizimiga xush kelibsiz 🎠",
     "copyright": "© 2025 ToyStore",
