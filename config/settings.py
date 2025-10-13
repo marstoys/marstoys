@@ -88,6 +88,9 @@ JAZZMIN_SETTINGS = {
     "hide_apps": [],
     "hide_models": [],
     "order_with_respect_to": [ "users","shop"],
+    "models_order": {
+        "shop": ["Category", "Products", "Order", "OrderItem","CommentProducts","Cart","ProductColor","ImageProducts"],  # Tartibni shu yerda belgilaysan
+    },
 
     "icons": {
         "shop.Category": "fas fa-list",
