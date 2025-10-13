@@ -103,7 +103,7 @@ JAZZMIN_SETTINGS = {
     },
    
     "topmenu_links": [
-        {"name": "Asosiy sayt", "url": "/", "new_window": True},
+        {"name": "Asosiy sayt", "url": "https://www.toysmars.uz", "new_window": True},
         {"app": "shop"},
     ],
 
