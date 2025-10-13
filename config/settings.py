@@ -80,6 +80,10 @@ JAZZMIN_SETTINGS = {
     "site_title": "O'yinchoqlar Do'koni",
     "site_header": "🧸 O'yinchoq Admin",
     "site_brand": "ToyStore",
+    "site_logo": "images/logo.jpg",
+    "login_logo": "images/logo.jpg",
+    "login_logo_dark": "images/logo.jpg",
+    "site_logo_classes": "img-circle",
     "welcome_sign": "ToyStore boshqaruv tizimiga xush kelibsiz 🎠",
     "copyright": "© 2025 ToyStore",
 
@@ -88,7 +92,9 @@ JAZZMIN_SETTINGS = {
     "hide_apps": [],
     "hide_models": [],
     "order_with_respect_to": [ "users","users.CustomUser","users.UserOtp","shop","shop.Category", "shop.Products", "shop.Order", "shop.OrderItem","shop.CommentProducts","shop.Cart","shop.ProductColor","shop.ImageProducts"],
-
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+    "use_google_fonts_cdn": True,
 
     "icons": {
         "shop.Category": "fas fa-list",
