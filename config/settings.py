@@ -98,6 +98,7 @@ JAZZMIN_SETTINGS = {
         "shop.OrderItem": "fas fa-boxes",
         "shop.Cart": "fas fa-shopping-basket",
         "users.CustomUser": "fas fa-user",
+        "users.UserOtp": "fas fa-key",
         "shop.DummyModel": "fas fa-dice",
     },
    

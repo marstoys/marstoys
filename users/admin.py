@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser
+from .models import CustomUser,UserOtp
 
 class CustomUserAdmin(admin.ModelAdmin):
     model = CustomUser
@@ -18,3 +18,4 @@ class CustomUserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(UserOtp)
