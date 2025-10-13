@@ -87,10 +87,8 @@ JAZZMIN_SETTINGS = {
     "navigation_expanded": True,
     "hide_apps": [],
     "hide_models": [],
-    "order_with_respect_to": [ "users","shop"],
-    "models_order": {
-        "shop": ["Category", "Products", "Order", "OrderItem","CommentProducts","Cart","ProductColor","ImageProducts"],  # Tartibni shu yerda belgilaysan
-    },
+    "order_with_respect_to": [ "users","users.CustomUser","users.UserOtp","shop","shop.Category", "shop.Products", "shop.Order", "shop.OrderItem","shop.CommentProducts","shop.Cart","shop.ProductColor","shop.ImageProducts"],
+
 
     "icons": {
         "shop.Category": "fas fa-list",
