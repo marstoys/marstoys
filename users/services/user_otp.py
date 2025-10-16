@@ -1,23 +1,26 @@
 import requests
 import random
-from decouple import config
+from core.constants import get_eskiz_token
 from users.models import UserOtp, CustomUser as User
 from rest_framework_simplejwt.tokens import RefreshToken
 from core.exceptions.exception import CustomApiException
 from core.exceptions.error_messages import ErrorCodes
-
+from sms_service.models import SMSToken
 
 
 
 def send_otp_via_sms(phone_number):
-    
     otp = str(random.randint(10000, 99999))
     UserOtp.objects.create(phone_number=phone_number, otp_code=otp)
 
+    eskiz_api_token = SMSToken.objects.filter(is_active=True).first()
+    if not eskiz_api_token:
+        token = get_eskiz_token()
+    else:
+        token = eskiz_api_token.token
+
     url = "https://notify.eskiz.uz/api/message/sms/send"
-    headers = {
-        "Authorization": f"Bearer {config('ESKIZ_API_TOKEN')}"
-    }
+    headers = {"Authorization": f"Bearer {token}"}
     payload = {
         "mobile_phone": phone_number,
         "message": f"Mars Toys websaytiga kirish uchun tasdiqlash kodingiz: {otp}",
@@ -27,11 +30,19 @@ def send_otp_via_sms(phone_number):
 
     try:
         response = requests.post(url, json=payload, headers=headers)
-        print(response.json())
+        data = response.json()
+
+        if data.get("message") == "Expired":
+            new_token = get_eskiz_token()
+            headers["Authorization"] = f"Bearer {new_token}"
+            response = requests.post(url, json=payload, headers=headers)
+            print("Token yangilandi va SMS qayta yuborildi:", response.json())
+
         response.raise_for_status()
         return True
-    except requests.exceptions.RequestException:
-        print(requests.exceptions.RequestException)
+
+    except requests.exceptions.RequestException as e:
+        print("Xatolik:", e)
         return False
 
 

@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'django_filters',
     "core",
     "orders_bot",
+    "sms_service"
 ]
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
