@@ -55,11 +55,13 @@ class ProductsAdmin(admin.ModelAdmin):
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
-    readonly_fields = ("product", "color", "quantity", "product_image", "calculated_total_price")
+    exclude = ("price",)
+    readonly_fields = ("product", "color", "quantity", "calculated_total_price", "product_image")
 
     def calculated_total_price(self, obj):
-        return f"{obj.quantity * obj.price:,} so’m"
+        return f"{obj.quantity * (obj.price or 0):,.0f} so’m"
     calculated_total_price.short_description = "Jami narx"
+
 
     def product_image(self, obj):
         color = obj.product.colors.first()
