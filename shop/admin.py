@@ -58,7 +58,7 @@ class OrderItemInline(admin.TabularInline):
     readonly_fields = ("product", "color", "quantity", "product_image", "calculated_total_price")
 
     def calculated_total_price(self, obj):
-        return f"{obj.quantity * obj.product.discounted_price:,} so’m"
+        return f"{obj.quantity * obj.price:,} so’m"
     calculated_total_price.short_description = "Jami narx"
 
     def product_image(self, obj):

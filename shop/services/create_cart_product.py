@@ -28,6 +28,7 @@ def create_cart_product(user_id, data):
         user_id=user_id,
         product_id=product.id,
         color=color_value,
+        price=product.discounted_price,
         defaults={'quantity': max(quantity, 0)}  
     )
 

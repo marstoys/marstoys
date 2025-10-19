@@ -19,7 +19,7 @@ def get_cart_product(user_id):
             "product_id": item.product.id,
             "name": item.product.name,
             "category": item.product.category.name if item.product.category else None,
-            "price": item.product.price,
+            "price": item.price,
             "quantity": item.quantity,
             "sklad_quantity": product_color.quantity if product_color else 0,
             "discount": item.product.discount,

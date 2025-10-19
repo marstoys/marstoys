@@ -158,10 +158,11 @@ class OrderItem(SafeBaseModel):
     product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name="ordered_products",verbose_name="O'yinchoq nomi:")
     quantity = models.PositiveIntegerField(default=1, verbose_name='Buyurtma soni:')
     color = models.CharField(choices=COLOR_CHOICES, default=COLOR_CHOICES[0][0], max_length=20, verbose_name="O'yinchoq rangi:")
+    price = models.DecimalField(decimal_places=2, max_digits=14, verbose_name="Buyurtma vaqtidagi o'yinchoq narxi (so'mda):")
    
     @property
     def calculated_total_price(self):
-        return self.quantity * self.product.discounted_price
+        return self.quantity * self.price
     class Meta:
         verbose_name = "Buyurtmadagi o'yinchoq"
         verbose_name_plural = "Buyurtmadagi o'yinchoqlar"
@@ -189,10 +190,11 @@ class Cart(SafeBaseModel):
     product = models.ForeignKey(Products, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     color = models.CharField(choices=COLOR_CHOICES, default=COLOR_CHOICES[0][0], max_length=20, verbose_name="O'yinchoq rangi:")
+    price = models.DecimalField(decimal_places=2, max_digits=14, verbose_name="Savatchaga qo'shilgan vaqtdagi o'yinchoq narxi (so'mda):")
 
     @property
     def total_price(self):
-        return self.quantity * self.product.discounted_price
+        return self.quantity * self.price
 
     class Meta:
         verbose_name = "Savatcha"

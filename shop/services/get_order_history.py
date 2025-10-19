@@ -40,11 +40,11 @@ def get_order_history(user_id):
                 "item_id": item.id,
                 "product_id": item.product.id,
                 "product_name": item.product.name if item.product else None,
-                "price": float(item.product.price) if item.product else None,
+                "price": float(item.price) ,
                 "color": item.get_color_display(),
                 "quantity": item.quantity,
                 "images": [img.image.url for img in product_color.images.all()] if product_color else [],
-                "total_price": float(item.quantity * item.product.price if item.product else None)
+                "total_price": float(item.quantity * item.price)
             })
         order_dict["total_price"] = total_price
         result.append(order_dict)

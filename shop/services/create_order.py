@@ -55,7 +55,8 @@ def create_order(data, user_id):
             order=order,
             product_id=product.id,
             quantity=quantity,
-            color=color_value
+            color=color_value,
+            price=product.discounted_price,
         )
         cart_item = Cart.objects.filter(product_id=product.id, user_id=user.id,color=color_value).first()
         if cart_item:
