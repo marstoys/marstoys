@@ -87,12 +87,16 @@ class OrderAdmin(admin.ModelAdmin):
         "ordered_by",
         "payment_method",
         "payment_link",
-        "is_paid",
         "order_number",
         "created_datetime",
         "modified_datetime",
     )
     inlines = [OrderItemInline]
+    def get_readonly_fields(self, request, obj=None):
+        readonly = list(self.readonly_fields)
+        if not obj or obj.payment_method != "naxt":
+            readonly.append("is_paid")
+        return readonly
 
     def ordered_by_name(self, obj):
         return obj.ordered_by.first_name if obj.ordered_by else "No User"
