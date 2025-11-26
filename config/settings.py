@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 import matplotlib
-import cloudinary.api
+import cloudinary
 from pathlib import Path
 from decouple import config
 from datetime import timedelta
