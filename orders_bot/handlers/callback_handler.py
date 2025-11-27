@@ -71,5 +71,70 @@ async def view_cart_handler(callback_query: CallbackQuery, state: FSMContext):
         total_price += order.price * order.quantity
         text += f"{i+1}. {order.product.name} - {order.color} - {order.quantity} ta - {order.price} \n"
     text += f"\nJami: {total_price} so'm"
-    await callback_query.message.edit_text(text, reply_markup=back_keyboard())
+    await callback_query.message.edit_text(text, reply_markup=clear_cart_keyboard())
         
+@dp.callback_query(F.data == "clear_cart")
+async def clear_cart_handler(callback_query: CallbackQuery, state: FSMContext):
+    user = CustomUser.objects.filter(tg_id=callback_query.from_user.id).first()
+    if not user:
+        await callback_query.message.edit_text("Botdan foydalanish uchun ro'yxatdan o'tishingiz kerak.\nIltimos, ismingizni kiriting:",reply_markup=None)
+        await state.set_state(RegisterState.first_name)
+        return
+    Cart.objects.filter(user_id=user.id).delete()
+    await callback_query.message.edit_text("🛒 Sizning savatchingiz tozalandi.", reply_markup=back_keyboard())
+
+@dp.callback_query(F.data == "view_profile")
+async def view_profile_handler(callback_query: CallbackQuery, state: FSMContext):
+    user = CustomUser.objects.filter(tg_id=callback_query.from_user.id).first()
+    if not user:
+        await callback_query.message.edit_text("Botdan foydalanish uchun ro'yxatdan o'tishingiz kerak.\nIltimos, ismingizni kiriting:",reply_markup=None)
+        await state.set_state(RegisterState.first_name)
+        return
+    text = (
+        f"👤 <b>Profil ma'lumotlari:</b>\n\n"
+        f"Username: @{callback_query.from_user.username if callback_query.from_user.username else 'Kiritilmagan'}\n"
+        f"Ism: {user.first_name}\n"
+        f"Telefon raqam: {user.phone_number if user.phone_number else 'Kiritilmagan'}\n"
+        f"Manzil: {user.address if user.address else 'Kiritilmagan'}\n"
+        
+    )
+    await callback_query.message.edit_text(text, reply_markup=change_info_keyboard())
+    
+    
+    
+@dp.callback_query(F.data == "view_info")
+async def view_info_handler(callback_query: CallbackQuery, state: FSMContext):
+    await callback_query.message.edit_text(text="Kerakli bo'limni tanlang ⬇️", reply_markup=info_keyboard())
+    
+
+@dp.callback_query(F.data == "change_profile_info")
+async def change_profile_info_handler(callback_query: CallbackQuery, state: FSMContext):
+    await callback_query.message.edit_text("Iltimos, ismingizni kiriting:")
+    await state.set_state(RegisterState.first_name)
+    return
+
+@dp.callback_query(F.data == "leave_comment")
+async def leave_comment_handler(callback_query: CallbackQuery, state: FSMContext):
+    await callback_query.message.edit_text("Iltimos, izohingizni kiriting:")
+    await state.set_state(OrderState.leave_feedback)
+    return
+
+@dp.callback_query(F.data == "delivery_terms")
+async def delivery_terms_handler(callback_query: CallbackQuery, state: FSMContext):
+    text = (
+        "🚚 <b>Yetkazib berish shartlari:</b>\n\n"
+        "1. Buyurtmalar 1-3 ish kuni ichida yetkazib beriladi.\n"
+        "2. Yetkazib berish narxi manzilga qarab o'zgaradi.\n"
+        "3. Buyurtma tasdiqlangandan so'ng, bekor qilish mumkin emas.\n"
+        "4. Qo'shimcha ma'lumot uchun biz bilan bog'laning."
+    )
+    await callback_query.message.edit_text(text, reply_markup=back_keyboard())
+    
+@dp.callback_query(F.data == "contacts")
+async def contacts_handler(callback_query: CallbackQuery, state: FSMContext):
+    text = (
+        "☎️ <b>Kontaktlar:</b>\n\n"
+        "Telefon: +998 90 123 45 67\n"
+        "Email: support@example.com\n"
+        "Manzil: Toshkent, O'zbekiston")
+    await callback_query.message.edit_text(text, reply_markup=back_keyboard())

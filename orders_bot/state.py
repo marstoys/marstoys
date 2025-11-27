@@ -13,3 +13,4 @@ class MenuState(StatesGroup):
 
 class OrderState(StatesGroup):
     waiting_for_order_number = State()
+    leave_feedback = State()

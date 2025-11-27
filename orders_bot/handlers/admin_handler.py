@@ -9,6 +9,8 @@ from aiogram.fsm.context import FSMContext
 from orders_bot.state import OrderState
 from django.utils import timezone
 
+from users.models import CustomUser
+
 
 
 
@@ -160,4 +162,24 @@ async def order_status_handler(callback_query: CallbackQuery,state: FSMContext):
     await callback_query.message.edit_text(text="Assalomu alaykum. Bu bot sizga Buyurtmalarni avtomatik yuborib boradi.",reply_markup=admin_keyboard())
     await callback_query.answer(text=f"Buyurtma holati '{order.get_status_display()}' ga o'zgartirildi.", show_alert=True)
 
+    await state.clear()
+    
+    
+@dp.message(StateFilter(OrderState.leave_feedback))
+async def leave_feedback_handler(message: Message, state: FSMContext):
+    feedback_text = message.text.strip()
+    await message.answer("✅ Fikringiz uchun rahmat!", reply_markup=main_menu_keyboard())
+    users = CustomUser.objects.filter(role="admin")
+    for admin in users:
+        try:
+            await bot.send_message(
+                chat_id=admin.tg_id,
+                text=(
+                    f"📝 Foydalanuvchi fikri:\n\n"
+                    f"{feedback_text}\n\n"
+                    f"👤 Foydalanuvchi: <a href=\"tg://user?id={message.from_user.id}\">{message.from_user.full_name}</a>"
+                )
+            )
+        except Exception as e:
+            print(f"❌ Xatolik adminga fikr yuborishda: {e}")
     await state.clear()

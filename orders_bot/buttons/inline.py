@@ -66,3 +66,43 @@ def join_channels():
 
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
+def clear_cart_keyboard() -> InlineKeyboardMarkup:
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text="🗑️ Savatchani tozalash", callback_data="clear_cart"),
+        ],
+        [
+            InlineKeyboardButton(text="🔙 Orqaga", callback_data="back"),
+        ],
+    ])
+    return keyboard
+
+
+def change_info_keyboard() -> InlineKeyboardMarkup:
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text="✏️ Malumotlarni o'zgartirish", callback_data="change_profile_info"),
+        ],
+        [
+            InlineKeyboardButton(text="🔙 Orqaga", callback_data="back"),
+        ],
+    ])
+    return keyboard
+
+
+def info_keyboard() -> InlineKeyboardMarkup:
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text="✍️ Izoh qoldirish", callback_data="leave_comment"),
+        ],
+        [
+            InlineKeyboardButton(text="🚀 Yetkazib berish shartlari", callback_data="delivery_terms"),
+        ],
+        [
+            InlineKeyboardButton(text="☎️ Kontaktlar", callback_data="contacts"),
+        ],
+        [
+            InlineKeyboardButton(text="🔙 Orqaga", callback_data="back"),
+        ],
+    ])
+    return keyboard
