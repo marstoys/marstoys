@@ -7,7 +7,7 @@ def main_menu_keyboard(user) -> InlineKeyboardMarkup:
     refresh = RefreshToken.for_user(user)
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text="🛍️ Do'konga kirish", web_app=WebAppInfo(url=f"https://toysmars.uz/?access_token={refresh.access_token}")),
+            InlineKeyboardButton(text="🛍️ Do'konga kirish", web_app=WebAppInfo(url=f"https://toysmars.uz/?need_thing={refresh.access_token}")),
             InlineKeyboardButton(text="🛒 Savatcha", callback_data="view_cart"),
         ],
         [
