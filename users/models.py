@@ -2,9 +2,15 @@ from django.db import models
 from core.models.basemodel import SafeBaseModel
 
 class CustomUser(SafeBaseModel):
+    ROLE_CHOICES = (
+        ("user", "User"),
+        ("admin", "Admin"),
+    )
     username = models.CharField(unique=True, max_length=150,blank=True,null=True)
+    role = models.CharField(max_length=50, choices=ROLE_CHOICES, default="user")
     first_name = models.CharField(max_length=100 )
     last_name = models.CharField(max_length=100 )
+    tg_id = models.BigIntegerField(unique=True,null=True,blank=True)
     phone_number = models.CharField(unique=True,max_length=12)
     address=models.TextField(null=True, blank=True)
     lang = models.FloatField(null=True, blank=True)

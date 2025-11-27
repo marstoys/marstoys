@@ -8,7 +8,7 @@ from orders_bot.utils import set_bot_commands
 
 # Set the default settings module for your Django project
 async def main() -> None:
-    await set_bot_commands(bot)
+    await set_bot_commands()
     await dp.start_polling(bot)
 
 

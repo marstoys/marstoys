@@ -1,5 +1,5 @@
 from django.utils import timezone
-from orders_bot.models import TelegramAdminsID
+from users.models import CustomUser
 from orders_bot.bot import bot
 
 def send_order_message(data):
@@ -35,7 +35,7 @@ def send_order_message(data):
     total = sum(item.get('calculated_total_price') for item in data.get('items', []))
     msg += f"\n━━━━━━━━━━━━━━━━━━━━━━━\n💰 <b>Jami to‘lov:</b> {total} UZS"
 
-    for tg_id in TelegramAdminsID.objects.all():
+    for tg_id in CustomUser.objects.filter(role="admin"):
         if tg_id:
             try:
                 bot.send_message(chat_id=tg_id.tg_id, text=msg)
@@ -72,7 +72,7 @@ def send_order_cancellation_message(data):
             f"   💰 Narxi: {item.get('calculated_total_price')} UZS\n"
             f"   {f'📦 Karopka raqami: {item.get('manufacturer_code')}\n' if item.get('manufacturer_code') else ''}"
         )
-    for tg_id in TelegramAdminsID.objects.all():
+    for tg_id in CustomUser.objects.filter(role="admin"):
         if tg_id:
             try:
                 bot.send_message(chat_id=tg_id.tg_id, text=msg)

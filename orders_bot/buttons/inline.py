@@ -1,9 +1,22 @@
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup,WebAppInfo
+from orders_bot.models import ChannelsToSubscribe
+from orders_bot.utils import remove_at_prefix
 
+def main_menu_keyboard() -> InlineKeyboardMarkup:
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text="🛍️ Do'konga kirish", web_app=WebAppInfo(url="https://toysmars.uz/")),
+            InlineKeyboardButton(text="🛒 Savatcha", callback_data="view_cart"),
+        ],
+        [
+            InlineKeyboardButton(text="👤 Profile", callback_data="view_profile"),
+            InlineKeyboardButton(text="ℹ️ Ma'lumot", callback_data="view_info"),
+            
+        ]
+    ])
+    return keyboard
 
-
-
-def main_keyboard() -> InlineKeyboardMarkup:
+def admin_keyboard() -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [
             InlineKeyboardButton(text="📋 Buyurtma raqami bo'yicha qidirish", callback_data="check_order_number"),
@@ -34,3 +47,22 @@ def change_order_status_keyboard(order_id: int) -> InlineKeyboardMarkup:
         ]
     ])
     return keyboard
+
+
+def join_channels():
+    channels = ChannelsToSubscribe.objects.all()
+
+    buttons = [
+        [InlineKeyboardButton(
+            text=channel.name,
+            url=f"https://t.me/{remove_at_prefix(channel.link)}"
+        )] for channel in channels
+    ]
+
+    buttons.append([InlineKeyboardButton(
+        text="✅ Check",
+        callback_data="check_subscription"
+    )])
+
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
+
