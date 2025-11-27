@@ -61,12 +61,12 @@ async def process_phone_number(message: Message, state: FSMContext):
         user.last_name = (await state.get_data())['last_name']
         user.save()
     else:
-        CustomUser.objects.create(
+        user = CustomUser.objects.create(
         tg_id=message.from_user.id,
         first_name=(await state.get_data())['first_name'],
         last_name=(await state.get_data())['last_name'],
         phone_number=phone_number,
         username=message.from_user.username if message.from_user.username else ""
     )
-    await message.answer(text="Ro'yxatdan muvaffaqiyatli o'tdingiz! Endi botdan foydalanishingiz mumkin.", reply_markup=main_menu_keyboard())
+    await message.answer(text="Ro'yxatdan muvaffaqiyatli o'tdingiz! Endi botdan foydalanishingiz mumkin.", reply_markup=main_menu_keyboard(user))
     

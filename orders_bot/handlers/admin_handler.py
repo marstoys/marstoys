@@ -168,7 +168,8 @@ async def order_status_handler(callback_query: CallbackQuery,state: FSMContext):
 @dp.message(StateFilter(OrderState.leave_feedback))
 async def leave_feedback_handler(message: Message, state: FSMContext):
     feedback_text = message.text.strip()
-    await message.answer("✅ Fikringiz uchun rahmat!", reply_markup=main_menu_keyboard())
+    user = CustomUser.objects.filter(tg_id=message.from_user.id).first()
+    await message.answer("✅ Fikringiz uchun rahmat!", reply_markup=main_menu_keyboard(user))
     users = CustomUser.objects.filter(role="admin")
     for admin in users:
         try:

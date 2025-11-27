@@ -1,11 +1,13 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup,WebAppInfo
 from orders_bot.models import ChannelsToSubscribe
 from orders_bot.utils import remove_at_prefix
+from rest_framework_simplejwt.tokens import RefreshToken
 
-def main_menu_keyboard() -> InlineKeyboardMarkup:
+def main_menu_keyboard(user) -> InlineKeyboardMarkup:
+    refresh = RefreshToken.for_user(user)
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text="🛍️ Do'konga kirish", web_app=WebAppInfo(url="https://toysmars.uz/")),
+            InlineKeyboardButton(text="🛍️ Do'konga kirish", web_app=WebAppInfo(url=f"https://toysmars.uz/?access_token={refresh.access_token}")),
             InlineKeyboardButton(text="🛒 Savatcha", callback_data="view_cart"),
         ],
         [

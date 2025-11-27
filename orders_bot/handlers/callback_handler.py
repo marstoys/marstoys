@@ -15,7 +15,7 @@ async def back_handler(callback_query: CallbackQuery, state: FSMContext):
     await callback_query.answer()
     user = CustomUser.objects.filter(tg_id=callback_query.from_user.id).first()
     if user and user.role == "user":
-        await callback_query.message.edit_text(text="Asosiy menu",reply_markup=main_menu_keyboard())
+        await callback_query.message.edit_text(text="Asosiy menu",reply_markup=main_menu_keyboard(user))
         return
     await callback_query.message.edit_text(text="Assalomu alaykum. Bu bot sizga Buyurtmalarni avtomatik yuborib boradi.",reply_markup=admin_keyboard())
     data = await state.get_data()
@@ -50,7 +50,8 @@ async def check_subscription(callback: CallbackQuery, state: FSMContext):
         text = "❌ Iltimos, barcha kanallarga obuna bo'ling va tekshirish tugmasini bosing."
         await callback.message.edit_text(text=text, reply_markup=join_channels())
         return
-    await callback.message.edit_text(text="✅ Botdan foydalanishingiz mumkin.", reply_markup=main_menu_keyboard())
+    user = CustomUser.objects.filter(tg_id=user_id).first()
+    await callback.message.edit_text(text="✅ Botdan foydalanishingiz mumkin.", reply_markup=main_menu_keyboard(user))
 
 
 
@@ -93,9 +94,9 @@ async def view_profile_handler(callback_query: CallbackQuery, state: FSMContext)
     text = (
         f"👤 <b>Profil ma'lumotlari:</b>\n\n"
         f"Username: @{callback_query.from_user.username if callback_query.from_user.username else 'Kiritilmagan'}\n"
-        f"Ism: {user.first_name}\n"
+        f"Ism: {user.first_name if user.first_name else "Kiritilmagan"} \n"
+        f"Familiya: {user.last_name if user.last_name else 'Kiritilmagan'}\n"
         f"Telefon raqam: {user.phone_number if user.phone_number else 'Kiritilmagan'}\n"
-        f"Manzil: {user.address if user.address else 'Kiritilmagan'}\n"
         
     )
     await callback_query.message.edit_text(text, reply_markup=change_info_keyboard())

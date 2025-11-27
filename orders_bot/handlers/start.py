@@ -26,7 +26,7 @@ async def start(message: Message,state: FSMContext) -> None:
     if user.role == "admin":
         await message.answer("Siz admin panelidasiz.",reply_markup=admin_keyboard())
         return
-    await message.answer(text="Assalomu alaykum. Bu bot sizga Buyurtmalarni avtomatik yuborib boradi.",reply_markup=main_menu_keyboard())
+    await message.answer(text="Assalomu alaykum. Bu bot sizga Buyurtmalarni avtomatik yuborib boradi.",reply_markup=main_menu_keyboard(user))
 
 
 @dp.message(F.text == "admin_panel")
@@ -43,5 +43,5 @@ async def user_panel(message: Message):
     user = CustomUser.objects.filter(tg_id=tg_id).first()
     user.role = "user"
     user.save()
-    await message.answer("Siz endi foydalanuvchi panelidasiz.",reply_markup=main_menu_keyboard())
+    await message.answer("Siz endi foydalanuvchi panelidasiz.",reply_markup=main_menu_keyboard(user))
     
