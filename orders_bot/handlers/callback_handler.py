@@ -36,11 +36,14 @@ async def order_number_handler(callback_query: CallbackQuery, state: FSMContext)
 @dp.callback_query(F.data == "check_subscription")
 async def check_subscription(callback: CallbackQuery, state: FSMContext):
     user_id = callback.from_user.id
+    await callback.answer()
+    await callback.message.edit_text(text="🔄 Obunalar tekshirilmoqda...",reply_markup=None)
     subscription_results = await check_user_subscription(user_id)
     if not subscription_results:
         text = "❌ Iltimos, barcha kanallarga obuna bo'ling va tekshirish tugmasini bosing."
-        await callback.answer(text=text, show_alert=True)
+        await callback.message.edit_text(text=text, reply_markup=join_channels())
         return
+    await callback.message.answer(text="✅ Botdan foydalanishingiz mumkin.", reply_markup=main_menu_keyboard())
 
 
 
