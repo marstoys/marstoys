@@ -135,7 +135,7 @@ async def delivery_terms_handler(callback_query: CallbackQuery, state: FSMContex
 async def contacts_handler(callback_query: CallbackQuery, state: FSMContext):
     text = (
         "☎️ <b>Kontaktlar:</b>\n\n"
-        "Telefon: +998 90 123 45 67\n"
-        "Email: support@example.com\n"
-        "Manzil: Toshkent, O'zbekiston")
+        "Telefon: +998 91 487 21 12\n"
+        "Email: eldorbekjuraev1993@gmail.com\n"
+        "Manzil: Andijon, Jaxon Bozor\nO‘rikzor bozori, Gilam bozor / Samarbonu 39A/1")
     await callback_query.message.edit_text(text, reply_markup=back_keyboard())
