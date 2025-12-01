@@ -16,7 +16,7 @@ class PopularProducts(APIView):
     )
 
     def get(self, request):
-        popular_products = Products.objects.order_by("-created_datetime")[:8]
+        popular_products = Products.objects.order_by("-created_datetime")[:30]
         products_data=[]
         for product in popular_products:
             available_colors = [
