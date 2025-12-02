@@ -1,23 +1,14 @@
 from aiogram import F
-from aiogram.types import CallbackQuery,   Message
-from aiogram.utils.media_group import MediaGroupBuilder
+from django.utils import timezone
+from users.models import CustomUser
+from orders_bot.state import OrderState
 from aiogram.filters import  StateFilter
 from orders_bot.dispatcher import dp,bot
-from shop.models import Order, OrderItem,ProductColor
 from orders_bot.buttons.inline import *
 from aiogram.fsm.context import FSMContext
-from orders_bot.state import OrderState
-from django.utils import timezone
-
-from users.models import CustomUser
-
-
-
-
-
-
-
-
+from aiogram.types import CallbackQuery,   Message
+from shop.models import Order, OrderItem,ProductColor
+from aiogram.utils.media_group import MediaGroupBuilder
 
 
 

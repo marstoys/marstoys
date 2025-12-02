@@ -4,7 +4,6 @@ from shop.models import Products
 from rest_framework import status
 from shop.views.get_all_products_list import ProductsSerializer
 from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
 
 
 

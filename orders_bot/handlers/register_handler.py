@@ -1,15 +1,14 @@
 import re
 from aiogram.types import  Message
-from aiogram.filters import StateFilter
-from users.models import  CustomUser
 from users.models import CustomUser
+from users.models import  CustomUser
 from orders_bot.dispatcher import dp
-from orders_bot.buttons.inline import *
-from aiogram.fsm.context import FSMContext
-from orders_bot.state import RegisterState
-from django.utils import timezone
-from orders_bot.utils import format_phone_number, is_valid_full_name
 from orders_bot.buttons.reply import *
+from orders_bot.buttons.inline import *
+from aiogram.filters import StateFilter
+from orders_bot.state import RegisterState
+from aiogram.fsm.context import FSMContext
+from orders_bot.utils import format_phone_number, is_valid_full_name
 
 @dp.message(StateFilter(RegisterState.first_name))
 async def process_first_name(message: Message, state: FSMContext):

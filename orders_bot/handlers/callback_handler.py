@@ -1,13 +1,13 @@
 from aiogram import F
-from aiogram.types import CallbackQuery
+from shop.models import Cart
+from users.models import CustomUser
 from orders_bot.state import OrderState
-from orders_bot.utils import check_user_subscription
-from orders_bot.dispatcher import dp,bot
+from aiogram.types import CallbackQuery
 from orders_bot.buttons.inline import *
+from orders_bot.dispatcher import dp,bot
 from aiogram.fsm.context import FSMContext
 from orders_bot.state import RegisterState
-from users.models import CustomUser
-from shop.models import Cart
+from orders_bot.utils import check_user_subscription
 
 
 @dp.callback_query(F.data == "back")
@@ -41,7 +41,7 @@ async def order_number_handler(callback_query: CallbackQuery, state: FSMContext)
 
 
 @dp.callback_query(F.data == "check_subscription")
-async def check_subscription(callback: CallbackQuery, state: FSMContext):
+async def check_subscription(callback: CallbackQuery):
     user_id = callback.from_user.id
     await callback.answer()
     await callback.message.edit_text(text="🔄 Obunalar tekshirilmoqda...",reply_markup=None)
@@ -72,7 +72,7 @@ async def view_cart_handler(callback_query: CallbackQuery, state: FSMContext):
         total_price += order.price * order.quantity
         text += f"{i+1}. {order.product.name} - {order.color} - {order.quantity} ta - {order.price} \n"
     text += f"\nJami: {total_price} so'm"
-    await callback_query.message.edit_text(text, reply_markup=clear_cart_keyboard())
+    await callback_query.message.edit_text(text, reply_markup=cart_keyboard())
         
 @dp.callback_query(F.data == "clear_cart")
 async def clear_cart_handler(callback_query: CallbackQuery, state: FSMContext):
@@ -101,10 +101,10 @@ async def view_profile_handler(callback_query: CallbackQuery, state: FSMContext)
     )
     await callback_query.message.edit_text(text, reply_markup=change_info_keyboard())
     
-    
+
     
 @dp.callback_query(F.data == "view_info")
-async def view_info_handler(callback_query: CallbackQuery, state: FSMContext):
+async def view_info_handler(callback_query: CallbackQuery):
     await callback_query.message.edit_text(text="Kerakli bo'limni tanlang ⬇️", reply_markup=info_keyboard())
     
 
@@ -114,14 +114,16 @@ async def change_profile_info_handler(callback_query: CallbackQuery, state: FSMC
     await state.set_state(RegisterState.first_name)
     return
 
+
 @dp.callback_query(F.data == "leave_comment")
 async def leave_comment_handler(callback_query: CallbackQuery, state: FSMContext):
     await callback_query.message.edit_text("Iltimos, izohingizni kiriting:")
     await state.set_state(OrderState.leave_feedback)
     return
 
+
 @dp.callback_query(F.data == "delivery_terms")
-async def delivery_terms_handler(callback_query: CallbackQuery, state: FSMContext):
+async def delivery_terms_handler(callback_query: CallbackQuery):
     text = (
         "🚚 <b>Yetkazib berish shartlari:</b>\n\n"
         "1. Buyurtmalar 1-3 ish kuni ichida yetkazib beriladi.\n"
@@ -130,12 +132,16 @@ async def delivery_terms_handler(callback_query: CallbackQuery, state: FSMContex
         "4. Qo'shimcha ma'lumot uchun biz bilan bog'laning."
     )
     await callback_query.message.edit_text(text, reply_markup=back_keyboard())
-    
+
+
 @dp.callback_query(F.data == "contacts")
-async def contacts_handler(callback_query: CallbackQuery, state: FSMContext):
+async def contacts_handler(callback_query: CallbackQuery):
     text = (
         "☎️ <b>Kontaktlar:</b>\n\n"
         "Telefon: +998 91 487 21 12\n"
         "Email: eldorbekjuraev1993@gmail.com\n"
         "Manzil: Andijon, Jaxon Bozor\nO‘rikzor bozori, Gilam bozor / Samarbonu 39A/1")
     await callback_query.message.edit_text(text, reply_markup=back_keyboard())
+    
+
+    

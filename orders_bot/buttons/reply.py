@@ -2,9 +2,6 @@ from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 
 
 
-
-
-
 def back():
     keyboard1 = KeyboardButton(text = "🔙 Orqaga")
     design = [[keyboard1]]

@@ -1,7 +1,7 @@
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup,WebAppInfo
-from orders_bot.models import ChannelsToSubscribe
 from orders_bot.utils import remove_at_prefix
+from orders_bot.models import ChannelsToSubscribe
 from rest_framework_simplejwt.tokens import RefreshToken
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup,WebAppInfo
 
 def main_menu_keyboard(user) -> InlineKeyboardMarkup:
     refresh = RefreshToken.for_user(user)
@@ -68,8 +68,15 @@ def join_channels():
 
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
-def clear_cart_keyboard() -> InlineKeyboardMarkup:
+def cart_keyboard(user) -> InlineKeyboardMarkup:
+    refresh = RefreshToken.for_user(user)
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text="📲 Buyurtmani rasmiylashtirish", web_app=WebAppInfo(url=f"https://www.toysmars.uz/checkout/?need_thing={refresh.access_token}")),
+        ],
+        [
+            InlineKeyboardButton(text="📦 Mening buyurtmalarim", web_app=WebAppInfo(url=f"https://toysmars.uz/my-order/?need_thing={refresh.access_token}")),
+        ],
         [
             InlineKeyboardButton(text="🗑️ Savatchani tozalash", callback_data="clear_cart"),
         ],

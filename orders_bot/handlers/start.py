@@ -1,13 +1,13 @@
 from aiogram import F
 from aiogram.types import Message
-from aiogram.filters import Command , StateFilter
-from orders_bot.utils import check_user_subscription
 from users.models import CustomUser
-from orders_bot.models import ChannelsToSubscribe
 from orders_bot.dispatcher import dp
 from orders_bot.buttons.inline import *
 from aiogram.fsm.context import FSMContext
 from orders_bot.state import  RegisterState
+from aiogram.filters import Command, StateFilter
+from orders_bot.models import ChannelsToSubscribe
+from orders_bot.utils import check_user_subscription
 
 @dp.message(Command("start"),StateFilter(None))
 async def start(message: Message,state: FSMContext) -> None:
