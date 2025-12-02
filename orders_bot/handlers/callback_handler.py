@@ -15,9 +15,9 @@ async def back_handler(callback_query: CallbackQuery, state: FSMContext):
     await callback_query.answer()
     user = CustomUser.objects.filter(tg_id=callback_query.from_user.id).first()
     if user and user.role == "user":
-        await callback_query.message.edit_text(text="Asosiy menu",reply_markup=main_menu_keyboard(user))
+        await callback_query.message.edit_text(text="📌 Asosiy menu",reply_markup=main_menu_keyboard(user))
         return
-    await callback_query.message.edit_text(text="Assalomu alaykum. Bu bot sizga Buyurtmalarni avtomatik yuborib boradi.",reply_markup=admin_keyboard())
+    await callback_query.message.edit_text(text="✨ Assalomu alaykum!\n📦 Ushbu bot orqali buyurtmalaringiz sizga avtomatik tarzda, tez va qulay yetkazib berib boriladi.\n🔔 Har bir yangi buyurtma haqida darhol xabardor bo‘lib boring!",reply_markup=admin_keyboard())
     data = await state.get_data()
     message_ids = data.get("message_ids", [])
 
@@ -35,7 +35,7 @@ async def back_handler(callback_query: CallbackQuery, state: FSMContext):
 
 @dp.callback_query(F.data == "check_order_number")
 async def order_number_handler(callback_query: CallbackQuery, state: FSMContext):
-    msg = await callback_query.message.edit_text(text="Iltimos, buyurtma raqamini kiriting:", reply_markup=back_keyboard())
+    msg = await callback_query.message.edit_text(text="📦 Buyurtma raqamini kiriting, iltimos:", reply_markup=back_keyboard())
     await state.update_data(msg=msg.message_id)
     await state.set_state(OrderState.waiting_for_order_number)
 
@@ -59,7 +59,7 @@ async def check_subscription(callback: CallbackQuery):
 async def view_cart_handler(callback_query: CallbackQuery, state: FSMContext):
     user = CustomUser.objects.filter(tg_id=callback_query.from_user.id).first()
     if not user:
-        await callback_query.message.edit_text("Botdan foydalanish uchun ro'yxatdan o'tishingiz kerak.\nIltimos, ismingizni kiriting:",reply_markup=None)
+        await callback_query.message.edit_text(text="Botdan foydalanish uchun ro'yxatdan o'tishingiz kerak. ✨\nIltimos, ismingizni kiriting: 👇",reply_markup=None)
         await state.set_state(RegisterState.first_name)
         return
     orders = Cart.objects.filter(user_id=user.id).select_related('product')
@@ -70,35 +70,36 @@ async def view_cart_handler(callback_query: CallbackQuery, state: FSMContext):
     total_price = 0
     for i, order in enumerate(orders):
         total_price += order.price * order.quantity
-        text += f"{i+1}. {order.product.name} - {order.color} - {order.quantity} ta - {order.price} \n"
-    text += f"\nJami: {total_price} so'm"
+        text += f"🛒 {i+1}. {order.product.name} — 🎨 {order.color} — 🔢 {order.quantity} ta — 💰 {order.price} so'm\n"
+    text += f"\n⭐ Jami: {total_price} so'm"
+
     await callback_query.message.edit_text(text, reply_markup=cart_keyboard(user))
         
 @dp.callback_query(F.data == "clear_cart")
 async def clear_cart_handler(callback_query: CallbackQuery, state: FSMContext):
     user = CustomUser.objects.filter(tg_id=callback_query.from_user.id).first()
     if not user:
-        await callback_query.message.edit_text("Botdan foydalanish uchun ro'yxatdan o'tishingiz kerak.\nIltimos, ismingizni kiriting:",reply_markup=None)
+        await callback_query.message.edit_text(text="Botdan foydalanish uchun ro'yxatdan o'tishingiz kerak. ✨\nIltimos, ismingizni kiriting: 👇",reply_markup=None)
         await state.set_state(RegisterState.first_name)
         return
     Cart.objects.filter(user_id=user.id).delete()
-    await callback_query.message.edit_text("🛒 Sizning savatchingiz tozalandi.", reply_markup=back_keyboard())
+    await callback_query.message.edit_text(text="🛒 Sizning savatchingiz tozalandi.", reply_markup=back_keyboard())
 
 @dp.callback_query(F.data == "view_profile")
 async def view_profile_handler(callback_query: CallbackQuery, state: FSMContext):
     user = CustomUser.objects.filter(tg_id=callback_query.from_user.id).first()
     if not user:
-        await callback_query.message.edit_text("Botdan foydalanish uchun ro'yxatdan o'tishingiz kerak.\nIltimos, ismingizni kiriting:",reply_markup=None)
+        await callback_query.message.edit_text(text="Botdan foydalanish uchun ro'yxatdan o'tishingiz kerak. ✨\nIltimos, ismingizni kiriting: 👇",reply_markup=None)
         await state.set_state(RegisterState.first_name)
         return
     text = (
-        f"👤 <b>Profil ma'lumotlari:</b>\n\n"
-        f"Username: @{callback_query.from_user.username if callback_query.from_user.username else 'Kiritilmagan'}\n"
-        f"Ism: {user.first_name if user.first_name else "Kiritilmagan"} \n"
-        f"Familiya: {user.last_name if user.last_name else 'Kiritilmagan'}\n"
-        f"Telefon raqam: {user.phone_number if user.phone_number else 'Kiritilmagan'}\n"
-        
-    )
+    f"👤 <b>Profil ma'lumotlari:</b>\n\n"
+    f"🆔 Username: @{callback_query.from_user.username if callback_query.from_user.username else 'Kiritilmagan'}\n"
+    f"👨‍💼 Ism: {user.first_name if user.first_name else 'Kiritilmagan'}\n"
+    f"👨‍👩‍👧 Familiya: {user.last_name if user.last_name else 'Kiritilmagan'}\n"
+    f"📞 Telefon raqam: {user.phone_number if user.phone_number else 'Kiritilmagan'}\n"
+)
+
     await callback_query.message.edit_text(text, reply_markup=change_info_keyboard())
     
 
@@ -110,14 +111,14 @@ async def view_info_handler(callback_query: CallbackQuery):
 
 @dp.callback_query(F.data == "change_profile_info")
 async def change_profile_info_handler(callback_query: CallbackQuery, state: FSMContext):
-    await callback_query.message.edit_text("Iltimos, ismingizni kiriting:")
+    await callback_query.message.edit_text(text="Iltimos, ismingizni kiriting:")
     await state.set_state(RegisterState.first_name)
     return
 
 
 @dp.callback_query(F.data == "leave_comment")
 async def leave_comment_handler(callback_query: CallbackQuery, state: FSMContext):
-    await callback_query.message.edit_text("Iltimos, izohingizni kiriting:")
+    await callback_query.message.edit_text(text="Iltimos, izohingizni kiriting:")
     await state.set_state(OrderState.leave_feedback)
     return
 
