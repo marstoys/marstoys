@@ -72,7 +72,7 @@ async def view_cart_handler(callback_query: CallbackQuery, state: FSMContext):
         total_price += order.price * order.quantity
         text += f"{i+1}. {order.product.name} - {order.color} - {order.quantity} ta - {order.price} \n"
     text += f"\nJami: {total_price} so'm"
-    await callback_query.message.edit_text(text, reply_markup=cart_keyboard())
+    await callback_query.message.edit_text(text, reply_markup=cart_keyboard(user))
         
 @dp.callback_query(F.data == "clear_cart")
 async def clear_cart_handler(callback_query: CallbackQuery, state: FSMContext):

@@ -26,7 +26,7 @@ async def start(message: Message,state: FSMContext) -> None:
     if user.role == "admin":
         await message.answer("Siz admin panelidasiz.",reply_markup=admin_keyboard())
         return
-    await message.answer(text="Assalomu alaykum. Bu bot sizga Buyurtmalarni avtomatik yuborib boradi.",reply_markup=main_menu_keyboard(user))
+    await message.answer(text="Assalomu alaykum. Bot orqali siz o'yinchoqlarni buyurtma qilishingiz mumkin.",reply_markup=main_menu_keyboard(user))
 
 
 @dp.message(F.text == "admin_panel")
