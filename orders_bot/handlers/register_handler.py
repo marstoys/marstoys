@@ -1,5 +1,5 @@
 import re
-from aiogram.types import  Message
+from aiogram.types import  Message,ReplyKeyboardRemove
 from users.models import CustomUser
 from users.models import  CustomUser
 from orders_bot.dispatcher import dp
@@ -67,5 +67,8 @@ async def process_phone_number(message: Message, state: FSMContext):
         phone_number=phone_number,
         username=message.from_user.username if message.from_user.username else ""
     )
+    await message.answer(text="📲",
+    reply_markup=ReplyKeyboardRemove()
+)
     await message.answer(text="Ro'yxatdan muvaffaqiyatli o'tdingiz! Endi botdan foydalanishingiz mumkin.", reply_markup=main_menu_keyboard(user))
     
