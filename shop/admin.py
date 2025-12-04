@@ -12,6 +12,7 @@ from .models import (
     Cart,
     Order,
     OrderItem,
+    BillzToken,
 )
 from django.db import models
 
@@ -181,6 +182,7 @@ class DummyModel(models.Model):
 admin.site.register(DummyModel, CustomHTMLAdmin)
 admin.site.register(Category)
 admin.site.register(Cart)
+admin.site.register(BillzToken)
 admin.site.register(Products, ProductsAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(ImageProducts)
