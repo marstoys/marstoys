@@ -23,7 +23,7 @@ class ProductColorInline(admin.StackedInline):
 
 
 class ProductsAdmin(admin.ModelAdmin):
-    list_display = ("name", "category", "colored_price", "product_image", "discount",)
+    list_display = ("name", "category", "sku", "colored_price", "product_image", "discount",)
     list_filter = ("category",)
     search_fields = ("name",)
     inlines = [ProductColorInline]
