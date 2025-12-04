@@ -9,23 +9,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        body {
-            background: #f4f6f9;
-        }
-        .card-custom {
-            border-radius: 12px;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-        }
-        .product-img {
-            border-radius: 10px;
-            border: 1px solid #ddd;
-        }
-        .label-bold {
-            font-weight: 600;
-        }
+        body { background: #f4f6f9; }
+        .card-custom { border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+        .product-img { border-radius: 10px; border: 1px solid #ddd; }
+        .preview-box { width: 90px; height: 90px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; margin-right: 8px; }
+        .preview-box img { width: 100%; height: 100%; object-fit: cover; }
+        .label-bold { font-weight: 600; }
     </style>
-
 </head>
+
 <body>
 
 <div class="container py-5">
@@ -44,7 +36,6 @@
     </div>
 
 
-    <!-- RESULT CARD -->
     <div id="result-card" class="card card-custom p-4 mt-4 d-none">
         <div class="row">
 
@@ -52,53 +43,56 @@
                 <img id="preview" src="" width="100%" class="product-img mb-3">
 
                 <div class="mt-3">
-                    <label class="label-bold">Qo'shimcha rasmlar (multiple):</label>
+                    <label class="label-bold">Qo‘shimcha rasmlar:</label>
                     <input type="file" id="images" class="form-control" multiple accept="image/*">
                 </div>
-            </div>
 
+                <!-- RASMLAR KO‘RINADIGAN JOY -->
+                <div id="image-preview-container" class="d-flex flex-wrap mt-3"></div>
+
+            </div>
 
             <div class="col-md-8">
 
                 <div class="mb-3">
-                    <label for="category" class="label-bold">Kategoriya:</label>
+                    <label class="label-bold">Kategoriya:</label>
                     <select id="category" class="form-control">
                         <option value="">Kategoriya tanlang...</option>
                     </select>
                 </div>
 
                 <div class="mb-3">
-                    <label for="name" class="label-bold">Mahsulot nomi:</label>
+                    <label class="label-bold">Mahsulot nomi:</label>
                     <input type="text" id="name" class="form-control">
                 </div>
 
                 <div class="mb-3">
-                    <label for="wholesale" class="label-bold">O'yinchoq narxi:</label>
+                    <label class="label-bold">O'yinchoq narxi:</label>
                     <input type="number" id="wholesale" class="form-control">
                 </div>
 
                 <div class="mb-3">
-                    <label for="discount" class="label-bold">O'yinchoq chegirmasi:</label>
-                    <input type="number" value="0" id="discount" class="form-control">
+                    <label class="label-bold">Chegirma:</label>
+                    <input type="number" id="discount" value="0" class="form-control">
                 </div>
 
                 <div class="mb-3">
-                    <label for="description" class="label-bold">Mahsulot tavsifi:</label>
-                    <textarea id="description" class="form-control" rows="4"></textarea>
+                    <label class="label-bold">Tavsif:</label>
+                    <textarea id="description" class="form-control" rows="3"></textarea>
                 </div>
 
                 <div class="mb-3">
-                    <label for="sku" class="label-bold">SKU:</label>
+                    <label class="label-bold">SKU:</label>
                     <input type="text" id="sku" class="form-control">
                 </div>
 
                 <div class="mb-3">
-                    <label for="qty" class="label-bold">Skladdagi qoldiq:</label>
+                    <label class="label-bold">Qoldiq:</label>
                     <input type="number" id="qty" class="form-control">
                 </div>
 
                 <div class="mb-3">
-                    <label for="video" class="label-bold">Video URL:</label>
+                    <label class="label-bold">Video URL:</label>
                     <input type="text" id="video" class="form-control">
                 </div>
 
@@ -107,160 +101,180 @@
         </div>
 
         <button id="save-btn" class="btn btn-success w-100 mt-3 btn-lg">🚀 Mahsulotni yaratish</button>
-    </div>
 
+    </div>
 </div>
 
 
-<!-- JS -->
 <script>
 
-    const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfcGxhdGZvcm1faWQiOiI3ZDRhNGMzOC1kZDg0LTQ5MDItYjc0NC0wNDg4YjgwYTRjMDEiLCJjb21wYW55X2lkIjoiMzIyNjRmZWUtMDY0My00ZmQ2LWJlYWQtOTgxMzkwNGNmMzM4IiwiZGF0YSI6IiIsImV4cCI6MTc2NjEyMzMwNSwiaWF0IjoxNzY0ODI3MzA1LCJpZCI6ImNiZWY1ODAyLTFkZTktNDFmMi05NzM3LWMwYmE4MTliM2ZkOCIsInVzZXJfaWQiOiJiMTI4NTcxMC0wNDExLTQ4MTktYjgxNi0xMDcwYzgyYzZmMWEifQ.a77DDTOl942f3kWSomPHY53gsO_2eIG9F0QmNZumt9Q";
-    const SHOP_ID = "6f09911e-e338-451a-82b9-d4d058ea4a8f";
+const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfcGxhdGZvcm1faWQiOiI3ZDRhNGMzOC1kZDg0LTQ5MDItYjc0NC0wNDg4YjgwYTRjMDEiLCJjb21wYW55X2lkIjoiMzIyNjRmZWUtMDY0My00ZmQ2LWJlYWQtOTgxMzkwNGNmMzM4IiwiZGF0YSI6IiIsImV4cCI6MTc2NjEyMzMwNSwiaWF0IjoxNzY0ODI3MzA1LCJpZCI6ImNiZWY1ODAyLTFkZTktNDFmMi05NzM3LWMwYmE4MTliM2ZkOCIsInVzZXJfaWQiOiJiMTI4NTcxMC0wNDExLTQ4MTktYjgxNi0xMDcwYzgyYzZmMWEifQ.a77DDTOl942f3kWSomPHY53gsO_2eIG9F0QmNZumt9Q";
+const SHOP_ID = "6f09911e-e338-451a-82b9-d4d058ea4a8f";
 
-    // ============================
-    // 1) Kategoriyalarni yuklash
-    // ============================
-    function loadCategories() {
-        fetch("https://api.toysmars.uz/shop/categories/")
-        .then(res => res.json())
-        .then(categories => {
-            const select = document.getElementById("category");
+loadCategories();
 
-            categories.forEach(cat => {
-                let opt = document.createElement("option");
-                opt.value = cat.id;
-                opt.textContent = cat.name;
-                select.appendChild(opt);
-            });
-
-        })
-        .catch(err => console.error("Kategoriya yuklashda xato:", err));
-    }
-
-    loadCategories();
+// ====================
+//  Kategoriyalar
+// ====================
+function loadCategories() {
+    fetch("https://api.toysmars.uz/shop/categories/")
+    .then(r => r.json())
+    .then(data => {
+        const sel = document.getElementById("category");
+        data.forEach(cat => {
+            let o = document.createElement("option");
+            o.value = cat.id;
+            o.textContent = cat.name;
+            sel.appendChild(o);
+        });
+    });
+}
 
 
-    // ============================
-    // 2) SKU bo'yicha Billzdan qidirish
-    // ============================
-    document.getElementById("find-btn").addEventListener("click", function () {
+// ============================
+//  SKU qidirish
+// ============================
+document.getElementById("find-btn").onclick = function () {
+    let sku = document.getElementById("sku-input").value.trim();
+    if (!sku) return alert("SKU kiriting!");
 
-        let sku = document.getElementById("sku-input").value.trim();
-        if (!sku) return alert("SKU kiriting!");
-
-        const payload = {
+    fetch("https://api-admin.billz.ai/v2/product-search-with-filters", {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + TOKEN,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
             shop_ids: [SHOP_ID],
             skus: [sku],
             status: "all",
             limit: 10,
             page: 1
-        };
+        }),
+    })
+    .then(r => r.json())
+    .then(data => {
 
-        fetch("https://api-admin.billz.ai/v2/product-search-with-filters", {
-            method: "POST",
-            headers: {
-                "Authorization": "Bearer " + TOKEN,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload),
-        })
-        .then(res => res.json())
-        .then(data => {
+        if (!data.products?.length) return alert("Mahsulot topilmadi!");
 
-            if (!data.products || data.products.length === 0)
-                return alert("Mahsulot topilmadi!");
+        let product = data.products.find(p =>
+            p.product_supplier_stock.some(s => s.shop_id === SHOP_ID)
+        );
 
-            let result = null;
+        if (!product) return alert("Bu SKU ushbu skladda mavjud emas!");
 
-            data.products.forEach(product => {
-                const stock = product.product_supplier_stock.find(
-                    s => s.shop_id === SHOP_ID
-                );
+        const stock = product.product_supplier_stock.find(s => s.shop_id === SHOP_ID);
 
-                if (stock) {
-                    result = {
-                        name: product.name,
-                        sku: product.sku,
-                        image: product.main_image_url,
-                        qty: stock.measurement_value,
-                        wholesale: stock.wholesale_price,
-                    };
-                }
-            });
+        document.getElementById("name").value = product.name;
+        document.getElementById("sku").value = product.sku;
+        document.getElementById("qty").value = stock.measurement_value;
+        document.getElementById("wholesale").value = stock.wholesale_price;
 
-            if (!result)
-                return alert("Bu SKU ushbu skladda yo‘q!");
+        document.getElementById("preview").src = product.main_image_url;
 
-            document.getElementById("name").value = result.name;
-            document.getElementById("sku").value = result.sku;
-            document.getElementById("qty").value = result.qty;
-            document.getElementById("wholesale").value = result.wholesale;
+        // DEFAULT RASMNI PREVIEW-LISTGA QO‘SHAMIZ
+        showPreviewImages([product.main_image_url]);
 
-            document.getElementById("preview").src = result.image;
+        document.getElementById("result-card").classList.remove("d-none");
+    });
+};
 
-            document.getElementById("result-card").classList.remove("d-none");
 
-        })
-        .catch(err => console.error(err));
+// ============================
+//  Rasm preview ko‘rsatish
+// ============================
+function showPreviewImages(urls = [], files = []) {
+    const box = document.getElementById("image-preview-container");
+    box.innerHTML = "";
 
+    // Billz rasmi
+    urls.forEach(url => {
+        let div = document.createElement("div");
+        div.className = "preview-box";
+        div.innerHTML = `<img src="${url}">`;
+        box.appendChild(div);
     });
 
+    // User rasmlari
+    [...files].forEach(file => {
+        let div = document.createElement("div");
+        div.className = "preview-box";
 
+        let reader = new FileReader();
+        reader.onload = e => div.innerHTML = `<img src="${e.target.result}">`;
+        reader.readAsDataURL(file);
 
-    // ============================
-    // 3) Mahsulotni yaratish (Billz rasm + user rasm)
-    // ============================
-    document.getElementById("save-btn").addEventListener("click", async function () {
-
-        let formData = new FormData();
-
-        formData.append("category_id", document.getElementById("category").value);
-        formData.append("product_name", document.getElementById("name").value);
-        formData.append("price", document.getElementById("wholesale").value);
-        formData.append("discount", document.getElementById("discount").value);
-        formData.append("quantity", document.getElementById("qty").value);
-        formData.append("description", document.getElementById("description").value);
-        formData.append("sku", document.getElementById("sku").value);
-        formData.append("video_url", document.getElementById("video").value);
-
-        // 1️⃣ Billz rasmini filega aylantiramiz
-        const billzUrl = document.getElementById("preview").src;
-
-        if (billzUrl) {
-            const res = await fetch(billzUrl);
-            const blob = await res.blob();
-            const billzFile = new File([blob], "billz_image.jpg", { type: blob.type });
-            formData.append("images", billzFile);
-        }
-
-        // 2️⃣ User yuklagan rasmlar
-        let userFiles = document.getElementById("images").files;
-        for (let img of userFiles) {
-            formData.append("images", img);
-        }
-
-        // 3️⃣ APIga yuborish
-        fetch("https://api.toysmars.uz/shop/create-product/", {
-            method: "POST",
-            body: formData
-        })
-        .then(r => r.json())
-        .then(resp => {
-            console.log(resp);
-
-            if (resp.status === "success")
-                alert("Mahsulot muvaffaqiyatli yaratildi!");
-            else
-                alert("Xato: " + JSON.stringify(resp));
-
-        })
-        .catch(err => {
-            console.error(err);
-            alert("Xatolik yuz berdi!");
-        });
-
+        box.appendChild(div);
     });
+}
+
+
+// ============================
+//  User rasm yuklaganda preview
+// ============================
+document.getElementById("images").onchange = function () {
+    const billzImg = document.getElementById("preview").src;
+    const files = document.getElementById("images").files;
+    showPreviewImages([billzImg], files);
+};
+
+
+// ============================
+//  Create Product
+// ============================
+document.getElementById("save-btn").onclick = async function () {
+
+    const btn = document.getElementById("save-btn");
+    btn.disabled = true;
+    btn.textContent = "⏳ Saqlanmoqda...";
+
+    let formData = new FormData();
+
+    formData.append("category_id", document.getElementById("category").value);
+    formData.append("product_name", document.getElementById("name").value);
+    formData.append("price", document.getElementById("wholesale").value);
+    formData.append("discount", document.getElementById("discount").value);
+    formData.append("quantity", document.getElementById("qty").value);
+    formData.append("description", document.getElementById("description").value);
+    formData.append("sku", document.getElementById("sku").value);
+    formData.append("video_url", document.getElementById("video").value);
+
+    // Billz rasmi
+    const billzUrl = document.getElementById("preview").src;
+    const response = await fetch(billzUrl);
+    const blob = await response.blob();
+    const file = new File([blob], "billz.jpg", { type: blob.type });
+    formData.append("images", file);
+
+    // User rasmlari
+    for (let img of document.getElementById("images").files) {
+        formData.append("images", img);
+    }
+
+    fetch("https://api.toysmars.uz/shop/create-product/", {
+        method: "POST",
+        body: formData
+    })
+    .then(r => r.json())
+    .then(res => {
+
+        if (res.status === "success") {
+            alert("Mahsulot yaratildi!");
+        } else {
+            alert("❌ Xato: " + JSON.stringify(res));
+        }
+
+        btn.disabled = false;
+        btn.textContent = "🚀 Mahsulotni yaratish";
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Server xatosi!");
+
+        btn.disabled = false;
+        btn.textContent = "🚀 Mahsulotni yaratish";
+    });
+};
 
 </script>
 
