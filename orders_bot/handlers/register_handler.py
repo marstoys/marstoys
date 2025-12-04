@@ -1,5 +1,4 @@
 import re
-from aiogram.types import  Message,ReplyKeyboardRemove
 from users.models import CustomUser
 from users.models import  CustomUser
 from orders_bot.dispatcher import dp
@@ -8,6 +7,7 @@ from orders_bot.buttons.inline import *
 from aiogram.filters import StateFilter
 from orders_bot.state import RegisterState
 from aiogram.fsm.context import FSMContext
+from aiogram.types import  Message,ReplyKeyboardRemove
 from orders_bot.utils import format_phone_number, is_valid_full_name
 
 @dp.message(StateFilter(RegisterState.first_name))

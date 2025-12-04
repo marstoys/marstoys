@@ -29,7 +29,7 @@ def get_cart_product(user_id):
             "description": item.product.description,
             "sold_count": item.product.sold,
             "color": item.get_color_display(),
-            "images": [img.image.url for img in product_color.images.all()] if product_color else [],
+            "images": [img.make_https for img in product_color.images.all()] if product_color else [],
             
         })
     return data

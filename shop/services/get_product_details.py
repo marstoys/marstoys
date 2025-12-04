@@ -29,7 +29,7 @@ def get_product_details(product_id):
                     "id": color.id,
                     "color": color.get_color_display(),
                     "quantity": color.quantity,
-                    "images": [img.image.url for img in color.images.all()]
+                    "images": [img.make_https for img in color.images.all()]
                 } for color in product.colors.all()
             ],
             "sold_count": product.sold      

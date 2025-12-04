@@ -102,7 +102,12 @@ class ImageProducts(SafeBaseModel):
     
     def __str__(self):
         return self.name if self.name else f"Rasm {self.id}"
-
+    
+    @property
+    def make_https(self):
+        if self.image and self.image.url:
+            return self.image.url.replace("http://", "https://")
+        return None
     class Meta:
         verbose_name = "Rasm"
         verbose_name_plural = "Rasmlar"
