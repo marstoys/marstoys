@@ -3,6 +3,8 @@ from django.utils.html import format_html
 from django.urls import path
 from django.template.response import TemplateResponse
 
+from shop.services.get_valid_token import get_valid_token
+
 from .models import (
     Category,
     Products,
@@ -160,9 +162,11 @@ class CustomHTMLAdmin(admin.ModelAdmin):
         return custom_urls + urls
 
     def custom_view(self, request):
+        token = get_valid_token()
         context = dict(
             self.admin_site.each_context(request),
             title="📄 Excel eksport sahifasi",
+            token = token,
         )
         return TemplateResponse(request, "shop/index.html", context)
 

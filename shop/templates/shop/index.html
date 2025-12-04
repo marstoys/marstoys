@@ -108,7 +108,7 @@
 
 <script>
 
-const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfcGxhdGZvcm1faWQiOiI3ZDRhNGMzOC1kZDg0LTQ5MDItYjc0NC0wNDg4YjgwYTRjMDEiLCJjb21wYW55X2lkIjoiMzIyNjRmZWUtMDY0My00ZmQ2LWJlYWQtOTgxMzkwNGNmMzM4IiwiZGF0YSI6IiIsImV4cCI6MTc2NjEyMzMwNSwiaWF0IjoxNzY0ODI3MzA1LCJpZCI6ImNiZWY1ODAyLTFkZTktNDFmMi05NzM3LWMwYmE4MTliM2ZkOCIsInVzZXJfaWQiOiJiMTI4NTcxMC0wNDExLTQ4MTktYjgxNi0xMDcwYzgyYzZmMWEifQ.a77DDTOl942f3kWSomPHY53gsO_2eIG9F0QmNZumt9Q";
+const TOKEN = "{{ token }}";
 const SHOP_ID = "6f09911e-e338-451a-82b9-d4d058ea4a8f";
 
 loadCategories();
@@ -245,11 +245,9 @@ function resetFormAfterSuccess() {
 
     // previewlarni tozalash
     document.getElementById("preview").src = "";
-    document.getElementById("image-preview-box").innerHTML = "";
+    document.getElementById("image-preview-container").innerHTML = "";
 
     // Billz + user oldindan tayyorlangan fayllarni tozalash
-    billzFileReady = null;
-    userImagesReady = [];
 
     // SKU qidirish qismiga qaytish
     document.getElementById("result-card").classList.add("d-none");
@@ -297,11 +295,14 @@ document.getElementById("save-btn").onclick = async function () {
     const httpStatus = r.status;    // <-- 201 shu yerda bo‘ladi
     const res = await r.json();     // JSON ichida status bo‘lmaydi!
 
-    if (httpStatus === 201) {
-        alert("✅ Mahsulot muvaffaqiyatli yaratildi!");
-        resetFormAfterSuccess();
-        return;
-    }
+     if (httpStatus === 201) {
+            alert("✅ Mahsulot muvaffaqiyatli yaratildi!");
+            resetFormAfterSuccess();
+
+            btn.disabled = false;
+            btn.textContent = "🚀 Mahsulotni yaratish";
+            return;
+        }
 
     alert("❌ Xato: " + JSON.stringify(res));
 

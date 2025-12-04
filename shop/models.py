@@ -178,3 +178,16 @@ class Cart(SafeBaseModel):
     class Meta:
         verbose_name = "Savatcha"
         verbose_name_plural = "Savatchalar"
+        
+        
+class BillzToken(SafeBaseModel):
+    access_token = models.TextField(verbose_name="Billz tokeni:")
+    expires_in = models.IntegerField(default=0, verbose_name="Token amal qilish muddati (soniya):")
+    
+    
+    def __str__(self):
+        return f"Billz Token {self.id}"
+    
+    class Meta:
+        verbose_name = "Billz Token"
+        verbose_name_plural = "Billz Tokenlar"
