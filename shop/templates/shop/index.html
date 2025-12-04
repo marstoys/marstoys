@@ -290,29 +290,31 @@ document.getElementById("save-btn").onclick = async function () {
     }
 
     fetch("https://api.toysmars.uz/shop/create-product/", {
-        method: "POST",
-        body: formData
-    })
-    .then(r => r.json())
-    .then(res => {
+    method: "POST",
+    body: formData
+})
+.then(async r => {
+    const httpStatus = r.status;    // <-- 201 shu yerda bo‘ladi
+    const res = await r.json();     // JSON ichida status bo‘lmaydi!
 
-        if (res.status === 201) {
+    if (httpStatus === 201) {
         alert("✅ Mahsulot muvaffaqiyatli yaratildi!");
         resetFormAfterSuccess();
         return;
-    } else {
-        alert("❌ Xato: " + JSON.stringify(res));
     }
-        btn.disabled = false;
-        btn.textContent = "🚀 Mahsulotni yaratish";
-    })
-    .catch(err => {
-        console.error(err);
-        alert("Server xatosi!");
 
-        btn.disabled = false;
-        btn.textContent = "🚀 Mahsulotni yaratish";
-    });
+    alert("❌ Xato: " + JSON.stringify(res));
+
+    btn.disabled = false;
+    btn.textContent = "🚀 Mahsulotni yaratish";
+})
+.catch(err => {
+    console.error(err);
+    alert("❌ Server xatosi!");
+
+    btn.disabled = false;
+    btn.textContent = "🚀 Mahsulotni yaratish";
+});
 };
 
 </script>
