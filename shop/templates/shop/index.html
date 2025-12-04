@@ -31,7 +31,7 @@
                 <input type="text" id="sku-input" class="form-control form-control-lg" placeholder="SKU kiriting...">
                 <button id="find-btn" class="btn btn-primary btn-lg">Topish</button>
             </div>
-
+            <p class="error-text text-danger"></p>
         </div>
     </div>
 
@@ -135,8 +135,14 @@ function loadCategories() {
 //  SKU qidirish
 // ============================
 document.getElementById("find-btn").onclick = function () {
+
     let sku = document.getElementById("sku-input").value.trim();
-    if (!sku) return alert("SKU kiriting!");
+    const dangerText = document.querySelector(".error-text");
+    dangerText.textContent = "";
+    if (!sku) {
+        dangerText.textContent = "Iltimos, SKU kiriting!";
+        return;
+    }
 
     fetch("https://api-admin.billz.ai/v2/product-search-with-filters", {
         method: "POST",
@@ -161,7 +167,10 @@ document.getElementById("find-btn").onclick = function () {
             p.product_supplier_stock.some(s => s.shop_id === SHOP_ID)
         );
 
-        if (!product) return alert("Bu SKU ushbu skladda mavjud emas!");
+        if (!product) {
+            dangerText.textContent = "Bu SKU bilan mahsulot topilmadi!";
+            return;
+        }
 
         const stock = product.product_supplier_stock.find(s => s.shop_id === SHOP_ID);
 
@@ -217,6 +226,35 @@ document.getElementById("images").onchange = function () {
     const files = document.getElementById("images").files;
     showPreviewImages([billzImg], files);
 };
+function resetFormAfterSuccess() {
+
+    // Kategoriya
+    document.getElementById("category").value = "";
+
+    // Text inputlar
+    document.getElementById("name").value = "";
+    document.getElementById("wholesale").value = "";
+    document.getElementById("discount").value = "0";
+    document.getElementById("description").value = "";
+    document.getElementById("sku").value = "";
+    document.getElementById("qty").value = "";
+    document.getElementById("video").value = "";
+
+    // User images input
+    document.getElementById("images").value = "";
+
+    // previewlarni tozalash
+    document.getElementById("preview").src = "";
+    document.getElementById("image-preview-box").innerHTML = "";
+
+    // Billz + user oldindan tayyorlangan fayllarni tozalash
+    billzFileReady = null;
+    userImagesReady = [];
+
+    // SKU qidirish qismiga qaytish
+    document.getElementById("result-card").classList.add("d-none");
+    document.getElementById("sku-input").value = "";
+}
 
 
 // ============================
@@ -258,12 +296,12 @@ document.getElementById("save-btn").onclick = async function () {
     .then(r => r.json())
     .then(res => {
 
-        if (res.status === "success") {
-            alert("Mahsulot yaratildi!");
-        } else {
-            alert("❌ Xato: " + JSON.stringify(res));
-        }
-
+        if (response.status === 201) {
+        alert("✅ Mahsulot muvaffaqiyatli yaratildi!");
+        resetFormAfterSuccess();
+    } else {
+        alert("❌ Xato: " + JSON.stringify(res));
+    }
         btn.disabled = false;
         btn.textContent = "🚀 Mahsulotni yaratish";
     })
