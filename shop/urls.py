@@ -14,9 +14,13 @@ from shop.views.get_cart_product import GetCartProductAPIView
 from shop.views.create_cart_product import CreateCartProductView
 from shop.views.delete_cart_products import DeleteCartProductsAPIView
 from shop.views.cancel_order import CancelOrderView
+from shop.views.create_products import CreateProductView
+
+
 urlpatterns = [
     path('categories/', CategoryListAPIView.as_view(), name='categories'),
     path('products/', ProductListAPIView.as_view(), name='products'),
+    path('create-product/', CreateProductView.as_view(), name='create-product'),
     path('new-products/', PopularProducts.as_view(), name='popular-products'),
     path('product-details/', ProductDetailsAPIView.as_view(), name='product-details'),
     path('comment-create/', CreateCommentProductAPIView.as_view(), name='comment-create'),
