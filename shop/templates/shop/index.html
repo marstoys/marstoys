@@ -54,6 +54,13 @@
 
             <div class="col-md-8">
 
+                 <div class="mb-3">
+                    <label class="label-bold">Kategoriya:</label>
+                    <select id="category" class="form-control">
+                        <option value="">Kategoriya tanlang...</option>
+                    </select>
+                </div>
+
                 <div class="mb-3">
                     <label class="label-bold">Mahsulot nomi:</label>
                     <input type="text" id="name" class="form-control">
@@ -91,7 +98,24 @@
 <script>
     const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfcGxhdGZvcm1faWQiOiI3ZDRhNGMzOC1kZDg0LTQ5MDItYjc0NC0wNDg4YjgwYTRjMDEiLCJjb21wYW55X2lkIjoiMzIyNjRmZWUtMDY0My00ZmQ2LWJlYWQtOTgxMzkwNGNmMzM4IiwiZGF0YSI6IiIsImV4cCI6MTc2NjEyMzMwNSwiaWF0IjoxNzY0ODI3MzA1LCJpZCI6ImNiZWY1ODAyLTFkZTktNDFmMi05NzM3LWMwYmE4MTliM2ZkOCIsInVzZXJfaWQiOiJiMTI4NTcxMC0wNDExLTQ4MTktYjgxNi0xMDcwYzgyYzZmMWEifQ.a77DDTOl942f3kWSomPHY53gsO_2eIG9F0QmNZumt9Q"; // Billz API token
     const SHOP_ID = "6f09911e-e338-451a-82b9-d4d058ea4a8f"; // SKLAD ANDIJON
+function loadCategories() {
+        fetch("https://api.toysmars.uz/shop/categories/")
+        .then(res => res.json())
+        .then(categories => {
+            const select = document.getElementById("category");
 
+            categories.forEach(cat => {
+                let opt = document.createElement("option");
+                opt.value = cat.id;        // value = ID
+                opt.textContent = cat.name; // text = name
+                select.appendChild(opt);
+            });
+
+        })
+        .catch(err => console.error("Kategoriya yuklashda xato:", err));
+    }
+
+    loadCategories();
     document.getElementById("find-btn").addEventListener("click", function () {
         let sku = document.getElementById("sku-input").value.trim();
 
@@ -128,7 +152,7 @@
 
             // Sklad bo‘yicha filter
             data.products.forEach(product => {
-                const supplierStock = product.product_supply_stock.find(
+                const supplierStock = product.product_supplier_stock.find(
                     s => s.shop_id === SHOP_ID
                 );
 
@@ -138,7 +162,7 @@
                         sku: product.sku,
                         image: product.main_image_url,
                         qty: supplierStock.measurement_value,
-                        wholesale: supplierStock.supply_price
+                        wholesale: supplierStock.wholesale_price  
                     };
                 }
             });
