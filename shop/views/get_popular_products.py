@@ -23,7 +23,7 @@ class PopularProducts(APIView):
                 "id": product_color.id,
                 "color": product_color.get_color_display(),
                 "quantity": product_color.quantity,
-                "images": [img.image.url for img in product_color.images.all()]
+                "images": [img.make_https for img in product_color.images.all()]
             }
             for product_color in product.colors.all() if product_color.quantity > 0
         ]
