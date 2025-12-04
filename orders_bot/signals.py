@@ -28,7 +28,7 @@ def send_order_message(data):
             f"   🔢 Soni: {item.get('quantity')}\n"
             f"   🎨 Rangi: {item.get('color')}\n"
             f"   💰 Narxi: {item.get('calculated_total_price')} UZS\n"
-            f"   {f'📦 Karopka raqami: {item.get('manufacturer_code')}\n' if item.get('manufacturer_code') else ''}"
+            f"   {f'📦 Karopka raqami: {item.get('sku')}\n' if item.get('sku') else ''}"
         )
 
     # Jami summa
@@ -70,7 +70,7 @@ def send_order_cancellation_message(data):
             f"   🔢 Soni: {item.get('quantity')}\n"
             f"   🎨 Rangi: {item.get('color')}\n"
             f"   💰 Narxi: {item.get('calculated_total_price')} UZS\n"
-            f"   {f'📦 Karopka raqami: {item.get('manufacturer_code')}\n' if item.get('manufacturer_code') else ''}"
+            f"   {f'📦 Karopka raqami: {item.get('sku')}\n' if item.get('sku') else ''}"
         )
     for tg_id in CustomUser.objects.filter(role="admin"):
         if tg_id:

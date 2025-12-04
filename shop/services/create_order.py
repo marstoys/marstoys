@@ -71,7 +71,7 @@ def create_order(data, user_id):
             "product_name": product.name,
             "quantity": quantity,
             "color": order_item.get_color_display(),  
-            "manufacturer_code": product.manufacturer_code,
+            "sku": product.sku,
             "calculated_total_price": product.discounted_price * Decimal(str(quantity))
         })
 

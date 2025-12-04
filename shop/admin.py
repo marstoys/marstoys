@@ -56,15 +56,15 @@ class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
     exclude = ("price",)
-    readonly_fields = ("product", "manufacturer_code","color", "quantity", "calculated_total_price", "product_image")
+    readonly_fields = ("product", "sku","color", "quantity", "calculated_total_price", "product_image")
 
     def calculated_total_price(self, obj):
         return f"{obj.quantity * (obj.price or 0):,.0f} so’m"
     calculated_total_price.short_description = "Jami narx"
 
-    def manufacturer_code(self, obj):
-        return obj.product.manufacturer_code if obj.product else "—"
-    manufacturer_code.short_description = "Ishlab chiqaruvchi kodi"
+    def sku(self, obj):
+        return obj.product.sku if obj.product else "—"
+    sku.short_description = "Ishlab chiqaruvchi kodi"
 
     def product_image(self, obj):
         color = obj.product.colors.first()

@@ -3,43 +3,173 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Excel upload</title>
+    <title>SKU orqali mahsulot qidirish</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f4f6f9;
+        }
+        .card-custom {
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+        }
+        .product-img {
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+        .label-bold {
+            font-weight: 600;
+        }
+    </style>
+
 </head>
 <body>
-    <h2>Excel fayl yuklash</h2>
 
-    <input type="file" id="excel-input" accept=".xlsx,.xls">
-    <button id="upload-btn">Yuklash</button>
+<div class="container py-5">
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const fileInput = document.getElementById("excel-input");
-            const uploadBtn = document.getElementById("upload-btn");
+    <div class="row justify-content-center">
+        <div class="col-md-6">
 
-            uploadBtn.addEventListener("click", () => {
-                const file = fileInput.files[0];
-                if (!file) {
-                    alert("Avval fayl tanlang!");
-                    return;
+            <h2 class="text-center mb-4">📦 SKU orqali mahsulotni topish</h2>
+
+            <div class="input-group mb-4">
+                <input type="text" id="sku-input" class="form-control form-control-lg" placeholder="SKU kiriting...">
+                <button id="find-btn" class="btn btn-primary btn-lg">Topish</button>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- RESULT CARD -->
+    <div id="result-card" class="card card-custom p-4 mt-4 d-none">
+        <div class="row">
+
+            <div class="col-md-4 text-center">
+                <img id="preview" src="" width="100%" class="product-img mb-3">
+            </div>
+
+            <div class="col-md-8">
+
+                <div class="mb-3">
+                    <label class="label-bold">Mahsulot nomi:</label>
+                    <input type="text" id="name" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label class="label-bold">SKU:</label>
+                    <input type="text" id="sku" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label class="label-bold">Rasm URL:</label>
+                    <input type="text" id="image" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label class="label-bold">Skladdagi qoldiq (measurement_value):</label>
+                    <input type="number" id="qty" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label class="label-bold">Wholesale price (supply_price):</label>
+                    <input type="number" id="wholesale" class="form-control">
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+<!-- JS -->
+<script>
+    const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfcGxhdGZvcm1faWQiOiI3ZDRhNGMzOC1kZDg0LTQ5MDItYjc0NC0wNDg4YjgwYTRjMDEiLCJjb21wYW55X2lkIjoiMzIyNjRmZWUtMDY0My00ZmQ2LWJlYWQtOTgxMzkwNGNmMzM4IiwiZGF0YSI6IiIsImV4cCI6MTc2NjEyMzMwNSwiaWF0IjoxNzY0ODI3MzA1LCJpZCI6ImNiZWY1ODAyLTFkZTktNDFmMi05NzM3LWMwYmE4MTliM2ZkOCIsInVzZXJfaWQiOiJiMTI4NTcxMC0wNDExLTQ4MTktYjgxNi0xMDcwYzgyYzZmMWEifQ.a77DDTOl942f3kWSomPHY53gsO_2eIG9F0QmNZumt9Q"; // Billz API token
+    const SHOP_ID = "6f09911e-e338-451a-82b9-d4d058ea4a8f"; // SKLAD ANDIJON
+
+    document.getElementById("find-btn").addEventListener("click", function () {
+        let sku = document.getElementById("sku-input").value.trim();
+
+        if (!sku) {
+            alert("SKU kiriting!");
+            return;
+        }
+
+        const payload = {
+            shop_ids: [SHOP_ID],
+            skus: [sku],
+            status: "all",
+            limit: 10,
+            page: 1
+        };
+
+        fetch("https://api-admin.billz.ai/v2/product-search-with-filters", {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + TOKEN,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+        })
+        .then(res => res.json())
+        .then(data => {
+
+            if (!data.products || data.products.length === 0) {
+                alert("Mahsulot topilmadi!");
+                return;
+            }
+
+            let result = null;
+
+            // Sklad bo‘yicha filter
+            data.products.forEach(product => {
+                const supplierStock = product.product_supply_stock.find(
+                    s => s.shop_id === SHOP_ID
+                );
+
+                if (supplierStock) {
+                    result = {
+                        name: product.name,
+                        sku: product.sku,
+                        image: product.main_image_url,
+                        qty: supplierStock.measurement_value,
+                        wholesale: supplierStock.supply_price
+                    };
                 }
-
-                const formData = new FormData();
-                formData.append("file", file);
-
-                fetch("https://api.toysmars.uz/shop/excel-import/", {
-                    method: "POST",
-                    body: formData,
-                    
-                })
-                    .then((res) => res.json())
-                    .then((data) => {
-                        alert("Natija: " + JSON.stringify(data));
-                    })
-                    .catch((err) => console.error(err));
             });
 
-           
+            if (!result) {
+                alert("Bu SKU ushbu skladda yo'q!");
+                return;
+            }
+
+            // Fill inputs
+            document.getElementById("name").value = result.name;
+            document.getElementById("sku").value = result.sku;
+            document.getElementById("image").value = result.image;
+            document.getElementById("qty").value = result.qty;
+            document.getElementById("wholesale").value = result.wholesale;
+
+            // Image preview
+            document.getElementById("preview").src = result.image;
+
+            // Show card
+            document.getElementById("result-card").classList.remove("d-none");
+
+        })
+        .catch(err => {
+            console.error("Error:", err);
+            alert("Xatolik yuz berdi!");
         });
-    </script>
+
+    });
+</script>
+
+
 </body>
 </html>

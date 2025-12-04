@@ -39,7 +39,6 @@ class Products(SafeBaseModel):
     price = models.DecimalField(decimal_places=2, max_digits=14, verbose_name="O'yinchoq narxi (Faqat so'mda):")
     discount = models.IntegerField(default=0, verbose_name="O'yinchoq chegirmasi: (ixtiyoriy)")
     description = models.TextField(null=True, blank=True, verbose_name="O'yinchoq xaqida (uzb):")
-    manufacturer_code = models.CharField(max_length=100,blank=True,null=True,verbose_name="Sotuvchi kodi:")
     sku=models.CharField(max_length=100,blank=True, verbose_name="O'yinchoq karobkasidagi kod:")
     video_url = models.URLField(null=True, blank=True, verbose_name="You tubdan video joylash:")
 

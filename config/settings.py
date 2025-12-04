@@ -244,8 +244,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CLICK_SERVICE_ID = config("CLICK_SERVICE_ID")
 CLICK_MERCHANT_ID = config("CLICK_MERCHANT_ID")
 CLICK_SECRET_KEY = config("CLICK_SECRET_KEY")
+
 CLICK_ACCOUNT_MODEL = "shop.models.Order"
 CLICK_AMOUNT_FIELD = "total_price"
+
 CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", "").split(",")
 CORS_ALLOW_METHODS = [
     "GET",

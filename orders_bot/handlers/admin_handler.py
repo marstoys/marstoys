@@ -71,7 +71,7 @@ async def process_order_number(message: Message,state: FSMContext):
                 f"   📦 Soni: {item.quantity}\n"
                 f"   🎨 Rangi: {item.get_color_display()}\n"
                 f"   💰 Narxi: {item.calculated_total_price} UZS\n"
-                f"   {f'📦 Karopka raqami: {product.manufacturer_code}\n' if product.manufacturer_code else ''}\n"
+                f"   {f'📦 Karopka raqami: {product.sku}\n' if product.sku else ''}\n"
             )
 
             if image_url and image_url not in added_images:

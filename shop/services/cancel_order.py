@@ -28,7 +28,7 @@ def cancel_order(user_id, order_id):
                 "quantity": item.quantity,
                 "color": item.color,
                 "calculated_total_price": item.quantity * item.product.discounted_price,
-                "manufacturer_code": item.product.manufacturer_code,
+                "sku": item.product.sku,
             })
         send_order_cancellation_message(data)
         
