@@ -15,10 +15,6 @@ def create_cart_product(user_id, data):
     if not color_display:
         raise CustomApiException(ErrorCodes.INVALID_INPUT, message="Color is required.")
 
-    color_field = Cart._meta.get_field('color')
-    color_display_to_value = {display: value for value, display in color_field.choices}
-    color_value = color_display_to_value.get(color_display, color_display)
-
     try:
         product = Products.objects.get(id=product_id)
     except Products.DoesNotExist:
@@ -27,7 +23,6 @@ def create_cart_product(user_id, data):
     cart_product, created = Cart.objects.get_or_create(
         user_id=user_id,
         product_id=product.id,
-        color=color_value,
         price=product.discounted_price,
         defaults={'quantity': max(quantity, 0)}  
     )

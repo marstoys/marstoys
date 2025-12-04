@@ -15,20 +15,10 @@ class PopularProducts(APIView):
     )
 
     def get(self, request):
-        popular_products = Products.objects.order_by("-created_datetime")[:30]
+        popular_products = Products.objects.order_by("-created_datetime")[:30].prefetch_related('images').select_related('category')
         products_data=[]
         for product in popular_products:
-            available_colors = [
-            {
-                "id": product_color.id,
-                "color": product_color.get_color_display(),
-                "quantity": product_color.quantity,
-                "images": [img.make_https for img in product_color.images.all()]
-            }
-            for product_color in product.colors.all() if product_color.quantity > 0
-        ]
-            if not available_colors:
-                continue
+            
             product_data = {
                 "id": product.id,
                 "name": product.name ,
@@ -40,7 +30,7 @@ class PopularProducts(APIView):
                 "discounted_price": product.discounted_price,
                 "average_rating": product.average_rating,
                 "description": product.description ,
-                "colors": available_colors,
+                "images": [img.image_url for img in product.images.all()],
                 "sold_count": product.sold
             }
             products_data.append(product_data)

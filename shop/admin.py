@@ -6,7 +6,6 @@ from django.template.response import TemplateResponse
 from .models import (
     Category,
     Products,
-    ProductColor,
     ImageProducts,
     Cart,
     Order,
@@ -16,17 +15,14 @@ from django.db import models
 
 
 
-class ProductColorInline(admin.StackedInline):
-    model = ProductColor
-    filter_horizontal = ("images",)
-    extra = 1
+
 
 
 class ProductsAdmin(admin.ModelAdmin):
     list_display = ("name", "category", "sku", "colored_price", "product_image", "discount",)
     list_filter = ("category",)
     search_fields = ("name",)
-    inlines = [ProductColorInline]
+    inlines = []
     readonly_fields = ("product_image",)
 
     def colored_price(self, obj):
@@ -56,7 +52,7 @@ class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
     exclude = ("price",)
-    readonly_fields = ("product", "sku","color", "quantity", "calculated_total_price", "product_image")
+    readonly_fields = ("product", "sku", "quantity", "calculated_total_price", "product_image")
 
     def calculated_total_price(self, obj):
         return f"{obj.quantity * (obj.price or 0):,.0f} so’m"
@@ -178,4 +174,3 @@ admin.site.register(Cart)
 admin.site.register(Products, ProductsAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(ImageProducts)
-admin.site.register(ProductColor)

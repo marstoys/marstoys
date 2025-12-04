@@ -1,7 +1,6 @@
 from rest_framework import serializers, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from core.constants import COLOR_CHOICES
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from core.exceptions.error_messages import ErrorCodes
@@ -14,7 +13,6 @@ from shop.services.create_cart_product import create_cart_product
 class CreateCartProductSerializer(serializers.Serializer):
     product_id = serializers.IntegerField()
     quantity = serializers.IntegerField()
-    color = serializers.ChoiceField(choices=[choice[1] for choice in COLOR_CHOICES])
     
     
     

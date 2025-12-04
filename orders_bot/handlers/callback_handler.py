@@ -70,7 +70,7 @@ async def view_cart_handler(callback_query: CallbackQuery, state: FSMContext):
     total_price = 0
     for i, order in enumerate(orders):
         total_price += order.price * order.quantity
-        text += f"🛒 {i+1}. {order.product.name} — 🎨 {order.color} — 🔢 {order.quantity} ta — 💰 {order.price} so'm\n"
+        text += f"🛒 {i+1}. {order.product.name} — 🔢 {order.quantity} ta — 💰 {order.price} so'm\n"
     text += f"\n⭐ Jami: {total_price} so'm"
 
     await callback_query.message.edit_text(text, reply_markup=cart_keyboard(user))

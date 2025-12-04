@@ -55,35 +55,46 @@
             <div class="col-md-8">
 
                  <div class="mb-3">
-                    <label class="label-bold">Kategoriya:</label>
+                    <label for="category" class="label-bold">Kategoriya:</label>
                     <select id="category" class="form-control">
                         <option value="">Kategoriya tanlang...</option>
                     </select>
                 </div>
-
+                
                 <div class="mb-3">
-                    <label class="label-bold">Mahsulot nomi:</label>
+                    <label for="name" class="label-bold">Mahsulot nomi:</label>
                     <input type="text" id="name" class="form-control">
                 </div>
 
                 <div class="mb-3">
-                    <label class="label-bold">SKU:</label>
+                    <label for="wholesale" class="label-bold">O'yinchoq narxi:</label>
+                    <input type="number" id="wholesale" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label for="discount" class="label-bold">O'yinchoq chegirmasi:</label>
+                    <input type="number" value="0" id="discount" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="label-bold">Mahsulot tavsifi:</label>
+    <textarea id="description" class="form-control" rows="4"></textarea>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="sku" class="label-bold">SKU:</label>
                     <input type="text" id="sku" class="form-control">
                 </div>
 
+                
                 <div class="mb-3">
-                    <label class="label-bold">Rasm URL:</label>
-                    <input type="text" id="image" class="form-control">
-                </div>
-
-                <div class="mb-3">
-                    <label class="label-bold">Skladdagi qoldiq (measurement_value):</label>
+                    <label for="qty" class="label-bold">Skladdagi qoldiq:</label>
                     <input type="number" id="qty" class="form-control">
                 </div>
-
+                
                 <div class="mb-3">
-                    <label class="label-bold">Wholesale price (supply_price):</label>
-                    <input type="number" id="wholesale" class="form-control">
+                    <label for="video" class="label-bold">Video URL:</label>
+                    <input type="text" id="video" class="form-control">
                 </div>
 
             </div>
@@ -175,7 +186,6 @@ function loadCategories() {
             // Fill inputs
             document.getElementById("name").value = result.name;
             document.getElementById("sku").value = result.sku;
-            document.getElementById("image").value = result.image;
             document.getElementById("qty").value = result.qty;
             document.getElementById("wholesale").value = result.wholesale;
 

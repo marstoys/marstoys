@@ -14,7 +14,6 @@ from users.models import CustomUser
 
 class DeleteCartProductSerializer(serializers.Serializer):
     product_id = serializers.IntegerField()
-    color = serializers.CharField()
     
     
 

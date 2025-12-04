@@ -1,4 +1,4 @@
-from shop.models import Order,ProductColor,OrderItem
+from shop.models import Order,OrderItem, Products
 from orders_bot.signals import send_order_cancellation_message
 
 
@@ -10,9 +10,9 @@ def cancel_order(user_id, order_id):
         order.save()
         order_items = OrderItem.objects.filter(order_id=order.id)
         for item in order_items:
-            product_color = ProductColor.objects.filter(product_id=item.product.id,color=item.color).first()
-            product_color.quantity += item.quantity
-            product_color.save()
+            product = Products.objects.filter(id=item.product.id).first()
+            product.quantity += item.quantity
+            product.save()
         data={
             "order_number": order.order_number,
             "first_name": order.ordered_by.full_name,
@@ -26,7 +26,6 @@ def cancel_order(user_id, order_id):
             data["items"].append({
                 "product_name": item.product.name,
                 "quantity": item.quantity,
-                "color": item.color,
                 "calculated_total_price": item.quantity * item.product.discounted_price,
                 "sku": item.product.sku,
             })

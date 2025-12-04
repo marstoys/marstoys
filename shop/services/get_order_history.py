@@ -30,7 +30,7 @@ def get_order_history(user_id):
             "items": [],
             "total_price":0
         }
-        order_items=OrderItem.objects.filter(order_id=order.id).prefetch_related("product__colors__images").select_related("product")
+        order_items=OrderItem.objects.filter(order_id=order.id).prefetch_related("product__images").select_related("product")
         total_price = 0
         for item in order_items:
             total_price += item.price * item.quantity
@@ -41,9 +41,8 @@ def get_order_history(user_id):
                 "product_id": item.product.id,
                 "product_name": item.product.name if item.product else None,
                 "price": float(item.price) ,
-                "color": item.get_color_display(),
                 "quantity": item.quantity,
-                "images": [img.make_https for img in product_color.images.all()] if product_color else [],
+                "images": [img.make_https for img in item.product.images.all()] if item.product else [],
                 "total_price": float(item.price * item.quantity)
             })
         order_dict["total_price"] = total_price

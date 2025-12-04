@@ -23,7 +23,6 @@ class CartProductsSerializer(serializers.Serializer):
     average_rating = serializers.DecimalField(max_digits=3, decimal_places=1)
     description = serializers.CharField()
     images = serializers.ListField(child=serializers.URLField(), allow_null=True)
-    color = serializers.CharField(max_length=20)
     sold_count = serializers.IntegerField()
 
 class GetCartProductAPIView(APIView):

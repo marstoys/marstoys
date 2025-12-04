@@ -26,7 +26,6 @@ def send_order_message(data):
         msg += (
             f"\n<b>{index}. {item.get('product_name')}</b>\n"
             f"   🔢 Soni: {item.get('quantity')}\n"
-            f"   🎨 Rangi: {item.get('color')}\n"
             f"   💰 Narxi: {item.get('calculated_total_price')} UZS\n"
             f"   {f'📦 Karopka raqami: {item.get('sku')}\n' if item.get('sku') else ''}"
         )
@@ -68,7 +67,6 @@ def send_order_cancellation_message(data):
         msg += (
             f"\n<b>{index}. {item.get('product_name')}</b>\n"
             f"   🔢 Soni: {item.get('quantity')}\n"
-            f"   🎨 Rangi: {item.get('color')}\n"
             f"   💰 Narxi: {item.get('calculated_total_price')} UZS\n"
             f"   {f'📦 Karopka raqami: {item.get('sku')}\n' if item.get('sku') else ''}"
         )

@@ -1,6 +1,6 @@
 from core.constants import click_up
 from decimal import Decimal
-from shop.models import ProductColor, Order, OrderItem, Products,Cart
+from shop.models import Order, OrderItem, Products,Cart
 from users.models import CustomUser as User
 from core.exceptions.error_messages import ErrorCodes
 from core.exceptions.exception import CustomApiException
@@ -35,18 +35,13 @@ def create_order(data, user_id):
         "items": []
     }
 
-    color_field = OrderItem._meta.get_field('color')
-    color_display_to_value = {display: value for value, display in color_field.choices}
-
     for item in product_items:
         product_id = item.get('product_id')
         quantity = item.get('quantity')
-        color_display = item.get('color')
 
-        if not product_id or not color_display:
-            raise CustomApiException(ErrorCodes.INVALID_INPUT, message="Product ID and color are required.")
-        color_value = color_display_to_value.get(color_display, color_display)
-
+        if not product_id:
+            raise CustomApiException(ErrorCodes.INVALID_INPUT, message="Product ID is required.")
+           
         product = Products.objects.filter(id=product_id).first()
         if not product:
             raise CustomApiException(ErrorCodes.NOT_FOUND, f"Product with id {product_id} not found")
@@ -55,16 +50,15 @@ def create_order(data, user_id):
             order=order,
             product_id=product.id,
             quantity=quantity,
-            color=color_value,
             price=product.discounted_price,
         )
-        cart_item = Cart.objects.filter(product_id=product.id, user_id=user.id,color=color_value).first()
+        cart_item = Cart.objects.filter(product_id=product.id, user_id=user.id).first()
         if cart_item:
             cart_item.delete()
-        product_color = ProductColor.objects.filter(product_id=product.id,color=color_value).first()
-        if product_color:
-            product_color.quantity -= quantity
-            product_color.save()
+        product = Products.objects.filter(id=product.id).first()
+        if product:
+            product.quantity -= quantity
+            product.save()
     
         total_price += product.discounted_price * Decimal(str(quantity))
         data_to_send["items"].append({

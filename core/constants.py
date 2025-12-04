@@ -14,22 +14,6 @@ class CustomPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 1000
     
-    
-COLOR_CHOICES = (
-    ("white", "Oq"),
-    ("black", "Qora"),
-    ("gray", "Kulrang"),
-    ("red", "Qizil"),
-    ("green", "Yashil"),
-    ("blue", "Ko‘k"),
-    ("yellow", "Sariq"),
-    ("orange", "To‘q sariq"),
-    ("pink", "Pushti"),
-    ("violet", "Binafsha"),
-    ("brown", "Jigarrang"),
-    ("gold", "Oltin"),
-    ("silver", "Kumush"),
-)
 
 
 def get_eskiz_token():

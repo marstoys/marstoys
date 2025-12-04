@@ -14,7 +14,6 @@ class OrderCreateSerializer(serializers.Serializer):
     class OrderItemsSerializer(serializers.Serializer):
         product_id = serializers.IntegerField()
         quantity = serializers.IntegerField(default=1)
-        color = serializers.CharField(max_length=50, required=False, allow_blank=True)
     payment_method = serializers.ChoiceField(choices=['naxt', 'karta'], default='naxt')
     product_items = OrderItemsSerializer(many=True)
 

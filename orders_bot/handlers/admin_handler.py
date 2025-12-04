@@ -7,7 +7,7 @@ from orders_bot.dispatcher import dp,bot
 from orders_bot.buttons.inline import *
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery,   Message
-from shop.models import Order, OrderItem,ProductColor
+from shop.models import Order, OrderItem,Products
 from aiogram.utils.media_group import MediaGroupBuilder
 
 
@@ -35,7 +35,7 @@ async def process_order_number(message: Message,state: FSMContext):
             await message.answer(text="❌ Bu buyurtma bekor qilingan.",reply_markup=back_keyboard())
             await state.clear()
             return
-        orderitems = OrderItem.objects.filter(order_id=order.id).prefetch_related('product__colors__images')
+        orderitems = OrderItem.objects.filter(order_id=order.id).prefetch_related('product__images')
 
         if not orderitems.exists():
             await message.answer("❌ Bu buyurtmada mahsulotlar topilmadi.")
@@ -63,13 +63,11 @@ async def process_order_number(message: Message,state: FSMContext):
 
         for index, item in enumerate(orderitems, start=1):
             product = item.product
-            colors = product.colors.filter(color=item.color).first()
-            image_url = colors.images.first().image.url if colors.images else None
+            image_url = product.images.first().image.url if product.images else None
 
             details_text += (
                 f"{index}. {product.name}\n"
                 f"   📦 Soni: {item.quantity}\n"
-                f"   🎨 Rangi: {item.get_color_display()}\n"
                 f"   💰 Narxi: {item.calculated_total_price} UZS\n"
                 f"   {f'📦 Karopka raqami: {product.sku}\n' if product.sku else ''}\n"
             )
@@ -139,9 +137,9 @@ async def order_status_handler(callback_query: CallbackQuery,state: FSMContext):
             return
         orderitems = OrderItem.objects.filter(order_id=order.id)
         for item in orderitems:
-            product_color = ProductColor.objects.filter(product_id=item.product.id,color=item.color).first()
-            product_color.quantity += item.quantity
-            product_color.save()
+            product = Products.objects.filter(id=item.product.id).first()
+            product.quantity += item.quantity
+            product.save()
     else:
         order = Order.objects.filter(order_number=order_number).first()
         if not order:

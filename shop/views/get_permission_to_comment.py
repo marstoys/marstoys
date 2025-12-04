@@ -5,11 +5,6 @@ from shop.models import Order
 
 
 
-
-
-
-
-
 class PermissionToCommentAPIView(APIView):
 
     def get(self, request):

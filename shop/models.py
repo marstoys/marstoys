@@ -8,7 +8,6 @@ from django.dispatch import receiver
 from django.db.models.signals import post_delete
 from cloudinary.models import CloudinaryField
 from core.models.basemodel import SafeBaseModel
-from core.constants import COLOR_CHOICES
 # Create your models here.
 
 
@@ -38,6 +37,7 @@ class Products(SafeBaseModel):
     name = models.CharField(max_length=100,default='ok', verbose_name="O'yinchoq nomi (uzb):")
     price = models.DecimalField(decimal_places=2, max_digits=14, verbose_name="O'yinchoq narxi (Faqat so'mda):")
     discount = models.IntegerField(default=0, verbose_name="O'yinchoq chegirmasi: (ixtiyoriy)")
+    quantity = models.PositiveIntegerField(default=0, verbose_name="O'yinchoq soni omborda:")
     description = models.TextField(null=True, blank=True, verbose_name="O'yinchoq xaqida (uzb):")
     sku=models.CharField(max_length=100,blank=True, verbose_name="O'yinchoq karobkasidagi kod:")
     video_url = models.URLField(null=True, blank=True, verbose_name="You tubdan video joylash:")
@@ -68,33 +68,10 @@ class Products(SafeBaseModel):
         verbose_name_plural = "Mahsulotlar"
 
 
-class ProductColor(SafeBaseModel):
-    product = models.ForeignKey(
-        Products,
-        on_delete=models.CASCADE,
-        related_name="colors"
-    )
-    color = models.CharField(
-        choices=COLOR_CHOICES,
-        max_length=20,
-        verbose_name="O'yinchoq rangi:"
-    )
-    quantity = models.PositiveIntegerField(default=1, verbose_name="O‘sha rangdagi soni:")
-    images = models.ManyToManyField(
-        'ImageProducts',
-        blank=True,
-        related_name="color_variants"
-    )
-
-    def __str__(self):
-        return f"{self.product.name} - {self.color}"
-
-    class Meta:
-        verbose_name = "Mahsulot rangi"
-        verbose_name_plural = "Mahsulot ranglari"
 
 
 class ImageProducts(SafeBaseModel):
+    product = models.ForeignKey(Products, related_name="images", on_delete=models.CASCADE, verbose_name="O'yinchoq:")
     name = models.CharField(max_length=100, blank=True, null=True, verbose_name="Rasm nomi (ixtiyoriy):")
     image = CloudinaryField("image")
     
@@ -161,7 +138,6 @@ class OrderItem(SafeBaseModel):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name="ordered_products",verbose_name="O'yinchoq nomi:")
     quantity = models.PositiveIntegerField(default=1, verbose_name='Buyurtma soni:')
-    color = models.CharField(choices=COLOR_CHOICES, default=COLOR_CHOICES[0][0], max_length=20, verbose_name="O'yinchoq rangi:")
     price = models.DecimalField(decimal_places=2, max_digits=14, verbose_name="Buyurtma vaqtidagi o'yinchoq narxi (so'mda):")
    
     @property
@@ -193,7 +169,6 @@ class Cart(SafeBaseModel):
     user = models.ForeignKey(User, related_name="carts", on_delete=models.CASCADE)
     product = models.ForeignKey(Products, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
-    color = models.CharField(choices=COLOR_CHOICES, default=COLOR_CHOICES[0][0], max_length=20, verbose_name="O'yinchoq rangi:")
     price = models.DecimalField(decimal_places=2, max_digits=14, verbose_name="Savatchaga qo'shilgan vaqtdagi o'yinchoq narxi (so'mda):")
 
     @property

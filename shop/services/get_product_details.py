@@ -7,7 +7,7 @@ from shop.models import Products
 
 
 def get_product_details(product_id):
-    product = Products.objects.prefetch_related("colors__images").select_related("category").filter(id=product_id).first()
+    product = Products.objects.prefetch_related("images").select_related("category").filter(id=product_id).first()
     if not product:
         raise CustomApiException(ErrorCodes.NOT_FOUND, "Product not found")
     
@@ -24,14 +24,7 @@ def get_product_details(product_id):
             "discounted_price": product.discounted_price,
             "average_rating": product.average_rating,
             "description": product.description,
-            "colors": [
-                {
-                    "id": color.id,
-                    "color": color.get_color_display(),
-                    "quantity": color.quantity,
-                    "images": [img.make_https for img in color.images.all()]
-                } for color in product.colors.all()
-            ],
+            "images": [img.make_https for img in product.images.all()],
             "sold_count": product.sold      
             }
     
