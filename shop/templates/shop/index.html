@@ -296,7 +296,7 @@ document.getElementById("save-btn").onclick = async function () {
     .then(r => r.json())
     .then(res => {
 
-        if (response.status === 201) {
+        if (res.status === 201) {
         alert("✅ Mahsulot muvaffaqiyatli yaratildi!");
         resetFormAfterSuccess();
         return;
