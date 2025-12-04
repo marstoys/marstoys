@@ -299,6 +299,7 @@ document.getElementById("save-btn").onclick = async function () {
         if (response.status === 201) {
         alert("✅ Mahsulot muvaffaqiyatli yaratildi!");
         resetFormAfterSuccess();
+        return;
     } else {
         alert("❌ Xato: " + JSON.stringify(res));
     }
