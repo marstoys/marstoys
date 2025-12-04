@@ -35,12 +35,10 @@ class ProductsAdmin(admin.ModelAdmin):
 
     def product_image(self, obj):
         """Mahsulotga tegishli birinchi rasmni chiqarish"""
-        first_color = obj.colors.first()
-        if first_color:
-            first_image = first_color.images.first()
-            if first_image and first_image.image:
-                return format_html(
-                    '<img src="{}" width="60" height="60" style="border-radius:8px;" />',
+        first_image = obj.images.first()
+        if first_image and first_image.image:
+            return format_html(
+                '<img src="{}" width="60" height="60" style="border-radius:8px;" />',
                     first_image.image.url
                 )
         return "—"
@@ -63,10 +61,9 @@ class OrderItemInline(admin.TabularInline):
     sku.short_description = "Ishlab chiqaruvchi kodi"
 
     def product_image(self, obj):
-        color = obj.product.colors.first()
-        img = color.images.first() if color else None
-        if img:
-            return format_html('<img src="{}" width="50" height="50" style="border-radius:8px;" />', img.image.url)
+        image = obj.product.images.first()
+        if image and image.image:
+            return format_html('<img src="{}" width="50" height="50" style="border-radius:8px;" />', image.image.url)
         return "—"
     product_image.short_description = "Rasm"
 
