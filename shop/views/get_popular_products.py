@@ -30,7 +30,7 @@ class PopularProducts(APIView):
                 "discounted_price": product.discounted_price,
                 "average_rating": product.average_rating,
                 "description": product.description ,
-                "images": [img.image_url for img in product.images.all()],
+                "images": [img.make_https for img in product.images.all()],
                 "sold_count": product.sold
             }
             products_data.append(product_data)
