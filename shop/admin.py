@@ -1,9 +1,10 @@
+from django.db import models
+from django.urls import path
 from django.contrib import admin
 from django.utils.html import format_html
-from django.urls import path
 from django.template.response import TemplateResponse
-
 from shop.services.get_valid_token import get_valid_token
+
 
 from .models import (
     Category,
@@ -14,7 +15,6 @@ from .models import (
     OrderItem,
     BillzToken,
 )
-from django.db import models
 
 
 class ImageProductsInline(admin.TabularInline):
@@ -179,10 +179,10 @@ class DummyModel(models.Model):
 
 
 
-admin.site.register(DummyModel, CustomHTMLAdmin)
-admin.site.register(Category)
 admin.site.register(Cart)
+admin.site.register(Category)
 admin.site.register(BillzToken)
-admin.site.register(Products, ProductsAdmin)
-admin.site.register(Order, OrderAdmin)
 admin.site.register(ImageProducts)
+admin.site.register(Order, OrderAdmin)
+admin.site.register(Products, ProductsAdmin)
+admin.site.register(DummyModel, CustomHTMLAdmin)

@@ -1,7 +1,7 @@
 from core.exceptions.error_messages import ErrorCodes
 from core.exceptions.exception import CustomApiException
 from shop.models import Products
-
+from shop.services.find_product import find_product_from_billz
 
 
 
@@ -11,14 +11,18 @@ def get_product_details(product_id):
     if not product:
         raise CustomApiException(ErrorCodes.NOT_FOUND, "Product not found")
     
-    
+    quantity = find_product_from_billz(product.sku)
+    if quantity is not  None:
+        product.quantity = quantity.get("qty", 0)
+        product.price = quantity.get("wholesale", product.price)
+        product.save()
     
     return {
             "id": product.id,
             "name": product.name,
             "category": product.category.name if product.category else None,
             "price": product.price,
-            "quantity": 0,
+            "quantity": product.quantity,
             "discount": product.discount,
             "video_url": product.video_url,
             "discounted_price": product.discounted_price,
