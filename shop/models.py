@@ -82,7 +82,7 @@ class ImageProducts(SafeBaseModel):
     
     
     def __str__(self):
-        return self.name if self.name else f"Rasm {self.id}"
+        return self.name if self.name else f"Rasm {self.product.name}"
     
     @property
     def make_https(self):
@@ -162,6 +162,9 @@ class CommentProducts(SafeBaseModel):
     comment = models.TextField(null=True, blank=True)
     rating = models.PositiveIntegerField(default=0)
     
+    
+    def __str__(self):
+        return f"Comment by {self.commented_by.full_name} on {self.product.name}"
 
 
 class LikedProducts(SafeBaseModel):
@@ -179,6 +182,9 @@ class Cart(SafeBaseModel):
     @property
     def total_price(self):
         return self.quantity * self.price
+    
+    def __str__(self):
+        return f"Cart of {self.user.full_name} - {self.product.name}"
 
     class Meta:
         verbose_name = "Savatcha"
