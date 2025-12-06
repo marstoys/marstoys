@@ -56,15 +56,16 @@ def create_order(data, user_id):
         if cart_item:
             cart_item.delete()
         product = Products.objects.filter(id=product.id).first()
-        if product:
+        if product and product.quantity >= quantity:
             product.quantity -= quantity
             product.save()
+        else:
+            raise CustomApiException(ErrorCodes.INVALID_INPUT, f"Insufficient stock for product {product.name}")
     
         total_price += product.discounted_price * Decimal(str(quantity))
         data_to_send["items"].append({
             "product_name": product.name,
             "quantity": quantity,
-            "color": order_item.get_color_display(),  
             "sku": product.sku,
             "calculated_total_price": product.discounted_price * Decimal(str(quantity))
         })
