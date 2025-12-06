@@ -19,6 +19,7 @@ class Category(SafeBaseModel):
     ]
     gender=models.CharField(choices=GENDER_CHOICES, max_length=6,default='male', verbose_name='Kimlar uchun:')
     name:str = models.CharField(max_length=100,default='ok',verbose_name='Kategory nomi (uzb)')
+    image = CloudinaryField("image", null=True, blank=True)
 
     @property
     def product_count(self):
