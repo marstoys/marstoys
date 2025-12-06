@@ -34,7 +34,6 @@ def get_order_history(user_id):
         total_price = 0
         for item in order_items:
             total_price += item.price * item.quantity
-            product_color = item.product.colors.filter(product_id=item.product.id,color=item.color).first()
             
             order_dict["items"].append({
                 "item_id": item.id,
