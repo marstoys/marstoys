@@ -18,6 +18,8 @@ def get_order_history(user_id):
             .filter(ordered_by=user_id)
             .order_by('-id')
         )
+    if not orders.exists():
+        return []
 
     result = []
     for order in orders:
