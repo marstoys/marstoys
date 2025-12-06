@@ -15,7 +15,8 @@ def get_all_categories( gender="all"):
         category_data = {
             "id": category.id,
             "name": category.name ,
-            "product_count": category.product_count
+            "product_count": category.product_count,
+            "image": category.make_https if category.image else None,
         }
         date_info.append(category_data)
     return date_info

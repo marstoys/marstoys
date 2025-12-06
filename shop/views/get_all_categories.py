@@ -10,6 +10,7 @@ class CategoryListSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     name = serializers.CharField(max_length=100)
     product_count = serializers.IntegerField()
+    image = serializers.URLField(allow_null=True, required=False)
 
 
 
