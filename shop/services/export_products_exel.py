@@ -14,6 +14,7 @@ def export_products_to_excel():
         'category__name',
         'name',
         'price',
+        'quantity',
         'discount',
         'description',
         'sku',
@@ -24,7 +25,7 @@ def export_products_to_excel():
 
     if not products.exists():
         df = pd.DataFrame(columns=[
-            'ID', 'Kategoriya', "O'yinchoq nomi", "Narxi (so'mda)", "Chegirma (%)",
+            'ID', 'Kategoriya', "O'yinchoq nomi", "Narxi (so'mda)", "Miqdori", "Chegirma (%)",
             "Tavsif",  "Karobka kodi",
             "YouTube video havolasi", "Yaratilgan sana", "Yangilangan sana"
         ])
@@ -40,6 +41,7 @@ def export_products_to_excel():
             'category__name': 'Kategoriya',
             'name': "O'yinchoq nomi",
             'price': "Narxi (so'mda)",
+            "quantity": "Miqdori",
             'discount': "Chegirma (%)",
             'description': "Tavsif",
             'sku': "Karobka kodi",

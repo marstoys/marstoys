@@ -8,7 +8,6 @@ from shop.views.create_order import OrderCreateAPIView
 from shop.views.get_permission_to_comment import PermissionToCommentAPIView
 from shop.views.get_order_history import GetOrderHistoryAPIView
 from shop.views.get_popular_products import PopularProducts
-from shop.views.exel_import import ExcelUploadView
 from shop.views.export_exel_products import ExportExcelProductsView
 from shop.views.get_cart_product import GetCartProductAPIView
 from shop.views.create_cart_product import CreateCartProductView
@@ -29,7 +28,6 @@ urlpatterns = [
     path('order-history/',GetOrderHistoryAPIView.as_view(), name='order-history'),
     path('cancel-order/', CancelOrderView.as_view(), name='cancel-order'),
     path('product-comments/<int:product_id>/', ProductComments.as_view(), name='product-comments'),
-    path("excel-import/", ExcelUploadView.as_view(), name="excel-import"),
     path('export-products/', ExportExcelProductsView.as_view(), name='export-products'),
     path('get-cart-products/', GetCartProductAPIView.as_view(), name='cart-products'),
     path('create-cart-product/', CreateCartProductView.as_view(), name='create-cart-product'),

@@ -46,7 +46,7 @@ def create_order(data, user_id):
         if not product:
             raise CustomApiException(ErrorCodes.NOT_FOUND, f"Product with id {product_id} not found")
 
-        order_item = OrderItem.objects.create(
+        OrderItem.objects.create(
             order=order,
             product_id=product.id,
             quantity=quantity,
