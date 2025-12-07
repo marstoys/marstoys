@@ -6,7 +6,7 @@ from core.exceptions.error_messages import ErrorCodes
 def update_cart(user_id,data):
     cart_id = data.get('cart_id')
     quantity = data.get('quantity')
-    cart = Cart.objects.get(user_id=user_id,id=cart_id)
+    cart = Cart.objects.filter(user_id=user_id,id=cart_id).first()
     if not cart:
         raise CustomApiException(ErrorCodes.NOT_FOUND, message="The specified cart product does not exist.")
     if quantity is None:
