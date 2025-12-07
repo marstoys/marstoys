@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.template.response import TemplateResponse
 from shop.services.get_valid_token import get_valid_token
-
+from django.urls import reverse
 
 from .models import (
     Category,
@@ -87,6 +87,8 @@ class OrderAdmin(admin.ModelAdmin):
         "colored_payment_method",
         "colored_is_paid",
         "colored_status",
+        "order_map_link", 
+        "admin_order_link",
         "created_datetime",
     )
     list_filter = ("status", "is_paid", "payment_method")
@@ -100,12 +102,25 @@ class OrderAdmin(admin.ModelAdmin):
         "modified_datetime",
     )
     inlines = [OrderItemInline]
+    def order_map_link(self, obj):
+        user = obj.ordered_by
+        if not user or not user.lat or not user.lang:
+            return "🗺 Mavjud emas"
+
+        url = f"https://www.google.com/maps?q={user.lat},{user.lang}"
+        return format_html('<a href="{}" target="_blank" style="font-weight:600;">📍 Xaritada ko‘rish</a>', url)
+
+    order_map_link.short_description = "Manzil"
     def get_readonly_fields(self, request, obj=None):
         readonly = list(self.readonly_fields)
         if not obj or obj.payment_method != "naxt":
             readonly.append("is_paid")
         return readonly
+    def admin_order_link(self, obj):
+        url = reverse("admin:shop_order_change", args=[obj.id])
+        return format_html('<a href="{}" style="color:#2980b9; font-weight:600;">🔍 Ko‘rish</a>', url)
 
+    admin_order_link.short_description = "Buyurtma"
     def ordered_by_name(self, obj):
         return obj.ordered_by.first_name if obj.ordered_by else "No User"
     ordered_by_name.short_description = "Buyurtmachi"

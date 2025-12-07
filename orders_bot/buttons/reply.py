@@ -13,3 +13,10 @@ def phone_number_btn():
     design=[[keyboard1],[keyboard2]]
     return ReplyKeyboardMarkup(keyboard=design ,one_time_keyboard=True,
                                resize_keyboard=True)
+    
+    
+def get_location_keyboard():
+    
+    contact_button = KeyboardButton(text="📍 Lokatsiyamni yuborish", request_location=True)
+    design = [[contact_button]]
+    return ReplyKeyboardMarkup(keyboard=design, resize_keyboard=True)
