@@ -5,15 +5,15 @@ class CustomUserAdmin(admin.ModelAdmin):
     model = CustomUser
 
 
-    list_display = ("first_name", "last_name", "tg_id","phone_number", "address")
+    list_display = ("first_name", "last_name", "tg_id","phone_number", "address","lat","lang",)
 
 
     fieldsets = (
-        (None, {"fields": ( "first_name", "last_name", "phone_number","tg_id",  "address")}),
+        (None, {"fields": ( "first_name", "last_name", "phone_number","tg_id",  "address","lat","lang")}),
     )
 
     add_fieldsets = (
-        (None, {"fields": ( "first_name", "last_name", "phone_number","tg_id",  "address")}),
+        (None, {"fields": ( "first_name", "last_name", "phone_number","tg_id",  "address","lat","lang")}),
     )
 
 

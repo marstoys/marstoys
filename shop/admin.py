@@ -88,7 +88,6 @@ class OrderAdmin(admin.ModelAdmin):
         "colored_is_paid",
         "colored_status",
         "order_map_link", 
-        "admin_order_link",
         "created_datetime",
     )
     list_filter = ("status", "is_paid", "payment_method")
@@ -104,11 +103,35 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline]
     def order_map_link(self, obj):
         user = obj.ordered_by
-        if not user or not user.lat or not user.lang:
-            return "🗺 Mavjud emas"
 
-        url = f"https://www.google.com/maps?q={user.lat},{user.lang}"
-        return format_html('<a href="{}" target="_blank" style="font-weight:600;">📍 Xaritada ko‘rish</a>', url)
+        if not user:
+            return "❌ Mavjud emas"
+
+        if getattr(user, "lat", None) and getattr(user, "lang", None):
+            lat = user.lat
+            lon = user.lang
+            url = f"https://www.google.com/maps?q={lat},{lon}"
+
+            return format_html(
+                '<a href="{}" target="_blank" style="font-weight:600;">📍 Xaritada (GPS)</a>',
+                url
+            )
+
+        # 2️⃣ Agar koordinata bo‘lmasa — address matni bo‘yicha ochiladi
+        if user.address:
+            address = user.address.replace(" ", "+")
+            url = f"https://www.google.com/maps?q={address}"
+
+            return format_html(
+                '<a href="{}" target="_blank" style="font-weight:600;">📍 Xaritada (Manzil)</a>',
+                url
+            )
+
+    # 3️⃣ Umuman maʼlumot bo‘lmasa
+        return "❌ Maʼlumot yo‘q"
+
+    order_map_link.short_description = "Manzil (Google Maps)"
+
 
     order_map_link.short_description = "Manzil"
     def get_readonly_fields(self, request, obj=None):
@@ -116,11 +139,6 @@ class OrderAdmin(admin.ModelAdmin):
         if not obj or obj.payment_method != "naxt":
             readonly.append("is_paid")
         return readonly
-    def admin_order_link(self, obj):
-        url = reverse("admin:shop_order_change", args=[obj.id])
-        return format_html('<a href="{}" style="color:#2980b9; font-weight:600;">🔍 Ko‘rish</a>', url)
-
-    admin_order_link.short_description = "Buyurtma"
     def ordered_by_name(self, obj):
         return obj.ordered_by.first_name if obj.ordered_by else "No User"
     ordered_by_name.short_description = "Buyurtmachi"
