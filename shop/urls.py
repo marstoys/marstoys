@@ -14,7 +14,7 @@ from shop.views.create_cart_product import CreateCartProductView
 from shop.views.delete_cart_products import DeleteCartProductsAPIView
 from shop.views.cancel_order import CancelOrderView
 from shop.views.create_products import CreateProductView
-
+from shop.views.update_cart_product import UpdateCartProductView
 
 urlpatterns = [
     path('categories/', CategoryListAPIView.as_view(), name='categories'),
@@ -31,5 +31,6 @@ urlpatterns = [
     path('export-products/', ExportExcelProductsView.as_view(), name='export-products'),
     path('get-cart-products/', GetCartProductAPIView.as_view(), name='cart-products'),
     path('create-cart-product/', CreateCartProductView.as_view(), name='create-cart-product'),
+    path('update-cart-product/', UpdateCartProductView.as_view(), name='update-cart-product'),
     path("delete-cart-products/",DeleteCartProductsAPIView.as_view(),name='delete-cart-products')
 ]
