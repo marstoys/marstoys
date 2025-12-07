@@ -1,7 +1,7 @@
 from aiogram import F
 from django.utils import timezone
 from users.models import CustomUser
-from orders_bot.state import OrderState
+from orders_bot.state import ChannelImageState, OrderState
 from aiogram.filters import StateFilter
 from orders_bot.dispatcher import dp, bot
 from orders_bot.buttons.inline import *
@@ -208,4 +208,64 @@ async def leave_feedback_handler(message: Message, state: FSMContext):
         except Exception as e:
             print("Admin xabar yuborishda xato:", e)
 
+    await state.clear()
+
+
+
+@dp.callback_query(F.data == "send_image_to_channel")
+async def send_image_to_channel_handler(callback_query: CallbackQuery,state: FSMContext):
+    await callback_query.answer()
+    await callback_query.message.answer(
+        "📷 Iltimos, kanalingizga yuborishni istagan rasmni yuboring."
+    )
+    await state.set_state(ChannelImageState.waiting_for_channel_image)
+    
+@dp.message(StateFilter(ChannelImageState.waiting_for_channel_image))
+async def process_channel_image(message: Message, state: FSMContext):
+    if not message.photo:
+        await message.answer("❌ Iltimos, rasm yuboring.")
+        return
+
+    photo = message.photo[-1]
+    await state.update_data(channel_image=photo.file_id)
+    await message.answer("✅ Rasm qabul qilindi, endi mahsulot linkini yuboring.")
+    await state.set_state(ChannelImageState.waiting_for_product_link)
+    
+@dp.message(StateFilter(ChannelImageState.waiting_for_product_link))
+async def process_product_link(message: Message, state: FSMContext):
+    product_link = message.text.strip()
+    data = await state.get_data()
+    channel_image = data.get("channel_image")
+    await state.update_data(product_link=product_link)
+    await message.answer_photo(photo=channel_image,caption=f"📤 Rasm kanalga yuborilsinmi",reply_markup=sending_to_channel_keyboard(product_link))
+    
+    
+@dp.callback_query(F.data == "send_image_to_channel_confirmation")
+async def send_image_to_channel_confirmation(callback_query: CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    channel_image = data.get("channel_image")
+    product_link = data.get("product_link")
+
+    if not channel_image or not product_link:
+        await callback_query.answer("❌ Ma'lumotlar yetarli emas.", show_alert=True)
+        await state.clear()
+        return
+
+    channels = ChannelsToSubscribe.objects.all()
+    for channel in channels:
+        try:
+            await bot.send_photo(
+                chat_id=channel.link,
+                photo=channel_image,
+                reply_markup=sending(product_link)
+            )
+        except Exception as e:
+            print(f"Kanalga rasm yuborishda xato ({channel.link}):", e)
+
+    await callback_query.message.answer("✅ Rasm muvaffaqiyatli yuborildi.",reply_markup=admin_keyboard())
+    await state.clear()
+
+@dp.callback_query(F.data == "cancel_sending_to_channel")
+async def cancel_sending_to_channel(callback_query: CallbackQuery, state: FSMContext):
+    await callback_query.message.answer("❌ Rasm yuborish bekor qilindi.",reply_markup=admin_keyboard())
     await state.clear()

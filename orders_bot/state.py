@@ -15,3 +15,8 @@ class MenuState(StatesGroup):
 class OrderState(StatesGroup):
     waiting_for_order_number = State()
     leave_feedback = State()
+    
+class ChannelImageState(StatesGroup):
+    waiting_for_channel_image = State()
+    waiting_for_product_link = State()
+    sending_to_channel = State()

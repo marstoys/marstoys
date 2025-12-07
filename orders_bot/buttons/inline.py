@@ -23,6 +23,9 @@ def admin_keyboard() -> InlineKeyboardMarkup:
         [
             InlineKeyboardButton(text="📋 Buyurtma raqami bo'yicha qidirish", callback_data="check_order_number"),
         ],
+        [
+            InlineKeyboardButton(text="📲 Kanalga rasm yuborish", callback_data="send_image_to_channel"),
+        ]
     ])
     return keyboard
 
@@ -112,6 +115,28 @@ def info_keyboard() -> InlineKeyboardMarkup:
         ],
         [
             InlineKeyboardButton(text="🔙 Orqaga", callback_data="back"),
+        ],
+    ])
+    return keyboard
+
+
+def sending_to_channel_keyboard(link) -> InlineKeyboardMarkup:
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text="🔗 Mahsulot linki", url=link),
+        ],
+        [
+            InlineKeyboardButton(text="🔥 Yuborish", callback_data="send_image_to_channel_confirmation"),
+        
+            InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_sending_to_channel"),
+        ]
+    ])
+    return keyboard
+
+def sending(link):
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text="🔗 Hoziroq sotib olish", url=link),
         ],
     ])
     return keyboard
