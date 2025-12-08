@@ -4,7 +4,6 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.template.response import TemplateResponse
 from shop.services.get_valid_token import get_valid_token
-from django.urls import reverse
 
 from .models import (
     Category,
