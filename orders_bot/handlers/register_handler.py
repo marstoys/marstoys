@@ -1,4 +1,5 @@
 import re
+from django.db.models import Q
 from users.models import CustomUser
 from orders_bot.dispatcher import dp
 from orders_bot.buttons.reply import *
@@ -92,7 +93,7 @@ async def user_address_get(message: Message, state: FSMContext):
     else:
         location_text = message.text.strip()
 
-    user = CustomUser.objects.filter(phone_number=data['phone_number']).first()
+    user = CustomUser.objects.filter(Q(phone_number=data['phone_number']) | Q(tg_id=tg_id) | Q(username=message.from_user.username)).first()
 
     if user:
         user.username = message.from_user.username or ""
