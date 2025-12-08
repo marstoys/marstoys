@@ -14,7 +14,8 @@ def get_product_details(product_id):
     quantity = find_product_from_billz(product.sku, product.billz_position)
     if quantity is not  None and product.quantity != quantity.get("qty", 0):
         product.quantity = quantity.get("qty", 0)
-        product.price = quantity.get("wholesale", product.price)
+        if quantity.get("wholesale") is not None and product.price != quantity.get("wholesale", product.price):
+            product.price = quantity.get("wholesale", product.price)
         product.save()
     
     return {
