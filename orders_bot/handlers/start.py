@@ -1,4 +1,4 @@
-from aiogram import F
+from django.db.models import Q
 from aiogram.types import Message
 from users.models import CustomUser
 from orders_bot.dispatcher import dp
@@ -13,7 +13,7 @@ from orders_bot.utils import check_user_subscription
 async def start(message: Message, state: FSMContext) -> None:
 
     tg_id = message.from_user.id
-    user = CustomUser.objects.filter(tg_id=tg_id).first()
+    user = CustomUser.objects.filter(Q(tg_id=tg_id) | Q(username=message.from_user.username)).first()
     # 🔐 Obuna tekshirish
     if ChannelsToSubscribe.objects.exists():
         subscription_results = await check_user_subscription(tg_id)
