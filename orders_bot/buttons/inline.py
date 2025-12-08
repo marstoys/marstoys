@@ -123,7 +123,7 @@ def info_keyboard() -> InlineKeyboardMarkup:
 def sending_to_channel_keyboard(link) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text="🔗 Mahsulot linki", web_app=WebAppInfo(url=link)),
+            InlineKeyboardButton(text="🔗 Mahsulot linki", url=link),
         ],
         [
             InlineKeyboardButton(text="🔥 Yuborish", callback_data="send_image_to_channel_confirmation"),
@@ -136,7 +136,7 @@ def sending_to_channel_keyboard(link) -> InlineKeyboardMarkup:
 def sending(link):
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text="🔗 Hoziroq sotib olish", web_app=WebAppInfo(url=link)),
+            InlineKeyboardButton(text="🔗 Hoziroq sotib olish", url=link),
         ],
     ])
     return keyboard
