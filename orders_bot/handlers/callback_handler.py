@@ -13,16 +13,17 @@ from orders_bot.utils import check_user_subscription
 async def back_handler(callback_query: CallbackQuery, state: FSMContext):
     await callback_query.answer()
     user = CustomUser.objects.filter(tg_id=callback_query.from_user.id).first()
-
+    
     if user and user.role == "user":
         await callback_query.message.edit_text(
             text="📌 <b>Asosiy menyu</b>\nQuyidagi bo‘limlardan birini tanlang 👇",
             reply_markup=main_menu_keyboard(user)
         )
-        return
+        
 
     # Admin panel
-    await callback_query.message.edit_text(
+    elif user and user.role == "admin":
+        await callback_query.message.edit_text(
         text=(
             "✨ <b>Assalomu alaykum, administrator!</b>\n\n"
             "📦 Ushbu bot orqali barcha buyurtmalarni boshqarishingiz, "

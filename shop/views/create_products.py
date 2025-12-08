@@ -14,6 +14,7 @@ class CreateProductsSerializer(serializers.Serializer):
     quantity = serializers.IntegerField(required=False, default=0)
     description = serializers.CharField(required=False, allow_blank=True, default="")
     sku = serializers.CharField(required=False, allow_blank=True, default="")
+    billz_position = serializers.CharField(required=False, allow_blank=True, default="")
     video_url = serializers.URLField(required=False, allow_blank=True, default="")
 
     images = serializers.ListField(

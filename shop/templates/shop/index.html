@@ -195,9 +195,9 @@ document.getElementById("find-btn").onclick = function () {
 
             document.getElementById("products-container").innerHTML = "";
 
-            data.products.forEach(prod => {
-                renderProductCard(prod);
-            });
+            data.products.forEach((prod, index) => {
+    renderProductCard(prod, index);
+});
 
         });
 };
@@ -205,7 +205,7 @@ document.getElementById("find-btn").onclick = function () {
 
 
 // -------------------- CARD CHIQARISH --------------------
-function renderProductCard(product) {
+function renderProductCard(product, index) {
 
     let tpl = document.getElementById("card-template");
     let card = tpl.cloneNode(true);
@@ -291,7 +291,6 @@ function renderProductCard(product) {
         btn.textContent = "⏳ Saqlanmoqda...";
 
         let fd = new FormData();
-
         fd.append("category_id", categorySel.value);
         fd.append("product_name", nameI.value);
         fd.append("price", wholesaleI.value);
@@ -300,6 +299,17 @@ function renderProductCard(product) {
         fd.append("description", card.querySelector(".description").value);
         fd.append("sku", skuI.value);
         fd.append("video_url", card.querySelector(".video").value);
+        let shopChecks = [...document.querySelectorAll(".shop-filter:checked")].map(c => c.value);
+
+        let from_supplier = "both";
+        if (shopChecks.length === 1) {
+            if (shopChecks[0] === SHOP_MAIN) from_supplier = "main";
+            else if (shopChecks[0] === SHOP_SECOND) from_supplier = "sec";
+        }
+        let position = index + 1;
+
+        let billz_position = `${from_supplier}_${position}`;
+        fd.append("billz_position", billz_position);
 
         // Billz rasmi → filega aylantirish
         const imgUrl = mainImg.src;

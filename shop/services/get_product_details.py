@@ -11,7 +11,7 @@ def get_product_details(product_id):
     if not product:
         raise CustomApiException(ErrorCodes.NOT_FOUND, "Product not found")
     
-    quantity = find_product_from_billz(product.sku)
+    quantity = find_product_from_billz(product.sku, product.billz_position)
     if quantity is not  None and product.quantity != quantity.get("qty", 0):
         product.quantity = quantity.get("qty", 0)
         product.price = quantity.get("wholesale", product.price)

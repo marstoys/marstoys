@@ -15,6 +15,13 @@ async def start(message: Message, state: FSMContext) -> None:
     tg_id = message.from_user.id
     user = CustomUser.objects.filter(Q(tg_id=tg_id) | Q(username=message.from_user.username)).first()
     # 🔐 Obuna tekshirish
+    if user and user.role == "admin":
+        await message.answer(
+            "🛠 <b>Admin paneliga xush kelibsiz!</b>\nQuyidagi bo‘limlardan foydalaning:",
+            reply_markup=admin_keyboard(),
+            parse_mode="HTML"
+        )
+        return
     if ChannelsToSubscribe.objects.exists():
         subscription_results = await check_user_subscription(tg_id)
         if not subscription_results:
@@ -38,13 +45,6 @@ async def start(message: Message, state: FSMContext) -> None:
         return
 
     # 👨‍💼 Admin panel
-    if user.role == "admin":
-        await message.answer(
-            "🛠 <b>Admin paneliga xush kelibsiz!</b>\nQuyidagi bo‘limlardan foydalaning:",
-            reply_markup=admin_keyboard(),
-            parse_mode="HTML"
-        )
-        return
 
     # 👤 Oddiy foydalanuvchi paneli
     await message.answer(

@@ -10,6 +10,7 @@ def create_products(data,images):
     quantity = data.get("quantity", 0)
     description = data.get("description", "")
     sku = data.get("sku", "")
+    billz_position = data.get("billz_position", "")
     video_url = data.get("video_url", "")
     
     
@@ -25,6 +26,7 @@ def create_products(data,images):
         quantity=quantity,
         description=description,
         sku=sku,
+        billz_position=billz_position,
         video_url=video_url
     )
     for image in images:
