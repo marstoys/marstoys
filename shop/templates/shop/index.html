@@ -3,16 +3,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SKU orqali mahsulot qidirish</title>
+    <title>SKU orqali mahsulotni topish</title>
 
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         body { background: #f4f6f9; }
-        .card-custom { border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+        .card-custom { 
+            border-radius: 12px; 
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08); 
+        }
         .product-img { border-radius: 10px; border: 1px solid #ddd; }
-        .preview-box { width: 90px; height: 90px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; margin-right: 8px; }
+        .preview-box { 
+            width: 90px; height: 90px; 
+            border: 1px solid #ccc; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            margin-right: 8px; 
+            margin-bottom: 8px;
+        }
         .preview-box img { width: 100%; height: 100%; object-fit: cover; }
         .label-bold { font-weight: 600; }
     </style>
@@ -27,120 +36,138 @@
 
             <h2 class="text-center mb-4">📦 SKU orqali mahsulotni topish</h2>
 
+            <!-- =============== OMBOR TANLASH =============== -->
+            <div class="mb-3 text-center">
+
+                <label class="label-bold d-block mb-1">Qaysi ombor bo‘yicha qidirsin?</label>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input shop-filter" type="checkbox" 
+                           value="6f09911e-e338-451a-82b9-d4d058ea4a8f" 
+                           id="shop-main" checked>
+                    <label class="form-check-label" for="shop-main">Asosiy Ombor</label>
+                </div>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input shop-filter" type="checkbox" 
+                           value="4c1bc0eb-3111-4592-92a2-0fbf7a469c36" 
+                           id="shop-second" checked>
+                    <label class="form-check-label" for="shop-second">Ikkinchi Ombor</label>
+                </div>
+
+            </div>
+            <!-- =========================================== -->
+
             <div class="input-group mb-4">
                 <input type="text" id="sku-input" class="form-control form-control-lg" placeholder="SKU kiriting...">
                 <button id="find-btn" class="btn btn-primary btn-lg">Topish</button>
             </div>
+
             <p class="error-text text-danger"></p>
         </div>
     </div>
 
+    <!-- ===================== CARDLAR CHIQADIGAN JOY ===================== -->
+    <div id="products-container" class="mt-4"></div>
 
-    <div id="result-card" class="card card-custom p-4 mt-4 d-none">
+    <!-- ===================== TEMPLATE CARD ===================== -->
+    <div id="card-template" class="card card-custom p-4 mt-4 d-none">
+
         <div class="row">
 
             <div class="col-md-4 text-center">
-                <img id="preview" src="" width="100%" class="product-img mb-3">
+                <img class="product-img main-img mb-3" src="" width="100%">
 
                 <div class="mt-3">
                     <label class="label-bold">Qo‘shimcha rasmlar:</label>
-                    <input type="file" id="images" class="form-control" multiple accept="image/*">
+                    <input type="file" class="form-control images-input" multiple accept="image/*">
                 </div>
 
-                <!-- RASMLAR KO‘RINADIGAN JOY -->
-                <div id="image-preview-container" class="d-flex flex-wrap mt-3"></div>
-
+                <div class="d-flex flex-wrap mt-3 preview-container"></div>
             </div>
 
             <div class="col-md-8">
 
                 <div class="mb-3">
                     <label class="label-bold">Kategoriya:</label>
-                    <select id="category" class="form-control">
-                        <option value="">Kategoriya tanlang...</option>
-                    </select>
+                    <select class="form-control category"></select>
                 </div>
 
                 <div class="mb-3">
                     <label class="label-bold">Mahsulot nomi:</label>
-                    <input type="text" id="name" class="form-control">
+                    <input type="text" class="form-control name">
                 </div>
 
                 <div class="mb-3">
                     <label class="label-bold">O'yinchoq narxi:</label>
-                    <input type="number" id="wholesale" class="form-control">
+                    <input type="number" class="form-control wholesale">
                 </div>
 
                 <div class="mb-3">
                     <label class="label-bold">Chegirma:</label>
-                    <input type="number" id="discount" value="0" class="form-control">
+                    <input type="number" class="form-control discount" value="0">
                 </div>
 
                 <div class="mb-3">
                     <label class="label-bold">Tavsif:</label>
-                    <textarea id="description" class="form-control" rows="3"></textarea>
+                    <textarea class="form-control description" rows="3"></textarea>
                 </div>
 
                 <div class="mb-3">
                     <label class="label-bold">SKU:</label>
-                    <input type="text" id="sku" class="form-control">
+                    <input type="text" class="form-control sku">
                 </div>
 
                 <div class="mb-3">
-                    <label class="label-bold">Qoldiq:</label>
-                    <input type="number" id="qty" class="form-control">
+                    <label class="label-bold qty-label">Qoldiq:</label>
+                    <input type="text" class="form-control qty">
                 </div>
 
                 <div class="mb-3">
                     <label class="label-bold">Video URL:</label>
-                    <input type="text" id="video" class="form-control">
+                    <input type="text" class="form-control video">
                 </div>
 
             </div>
-
         </div>
 
-        <button id="save-btn" class="btn btn-success w-100 mt-3 btn-lg">🚀 Mahsulotni yaratish</button>
+        <button class="btn btn-success w-100 mt-3 btn-lg save-btn">🚀 Mahsulotni yaratish</button>
 
     </div>
 </div>
 
-
 <script>
 
 const TOKEN = "{{ token }}";
-const SHOP_ID = "6f09911e-e338-451a-82b9-d4d058ea4a8f";
+const SHOP_MAIN = "6f09911e-e338-451a-82b9-d4d058ea4a8f";
+const SHOP_SECOND = "4c1bc0eb-3111-4592-92a2-0fbf7a469c36";
 
-loadCategories();
+let CATEGORIES = [];
 
-// ====================
-//  Kategoriyalar
-// ====================
-function loadCategories() {
-    fetch("https://api.toysmars.uz/shop/categories/")
+// -------------------- KATEGORIYALAR YUKLASH --------------------
+fetch("https://api.toysmars.uz/shop/categories/")
     .then(r => r.json())
-    .then(data => {
-        const sel = document.getElementById("category");
-        data.forEach(cat => {
-            let o = document.createElement("option");
-            o.value = cat.id;
-            o.textContent = cat.name;
-            sel.appendChild(o);
-        });
-    });
-}
+    .then(data => { CATEGORIES = data; });
 
 
-// ============================
-//  SKU qidirish
-// ============================
+// -------------------- SKU QIDIRISH --------------------
 document.getElementById("find-btn").onclick = function () {
 
     let sku = document.getElementById("sku-input").value.trim();
-    const dangerText = document.querySelector(".error-text");
-    dangerText.textContent = "";
+    let error = document.querySelector(".error-text");
+    error.textContent = "";
+
     if (!sku) {
-        dangerText.textContent = "Iltimos, SKU kiriting!";
+        error.textContent = "Iltimos, SKU kiriting!";
+        return;
+    }
+
+    // Checkboxlarda tanlangan omborlarni yig‘ish
+    let selectedShops = [...document.querySelectorAll(".shop-filter:checked")]
+        .map(ch => ch.value);
+
+    if (selectedShops.length === 0) {
+        alert("Hech bo‘lmaganda 1 ta omborni tanlang!");
         return;
     }
 
@@ -151,172 +178,161 @@ document.getElementById("find-btn").onclick = function () {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            shop_ids: [SHOP_ID],
+            shop_ids: selectedShops,
             skus: [sku],
             status: "all",
             limit: 10,
             page: 1
         }),
     })
-    .then(r => r.json())
-    .then(data => {
+        .then(r => r.json())
+        .then(data => {
 
-        if (!data.products?.length) return alert("Mahsulot topilmadi!");
+            if (!data.products?.length) {
+                alert("Mahsulot topilmadi!");
+                return;
+            }
 
-        let product = data.products.find(p =>
-            p.product_supplier_stock.some(s => s.shop_id === SHOP_ID)
-        );
+            document.getElementById("products-container").innerHTML = "";
 
-        if (!product) {
-            dangerText.textContent = "Bu SKU bilan mahsulot topilmadi!";
-            return;
-        }
+            data.products.forEach(prod => {
+                renderProductCard(prod);
+            });
 
-        const stock = product.product_supplier_stock.find(s => s.shop_id === SHOP_ID);
-
-        document.getElementById("name").value = product.name;
-        document.getElementById("sku").value = product.sku;
-        document.getElementById("qty").value = stock.measurement_value;
-        document.getElementById("wholesale").value = stock.wholesale_price;
-
-        document.getElementById("preview").src = product.main_image_url;
-
-        // DEFAULT RASMNI PREVIEW-LISTGA QO‘SHAMIZ
-        showPreviewImages([product.main_image_url]);
-
-        document.getElementById("result-card").classList.remove("d-none");
-    });
+        });
 };
 
 
-// ============================
-//  Rasm preview ko‘rsatish
-// ============================
-function showPreviewImages(urls = [], files = []) {
-    const box = document.getElementById("image-preview-container");
-    box.innerHTML = "";
 
-    // Billz rasmi
-    urls.forEach(url => {
-        let div = document.createElement("div");
-        div.className = "preview-box";
-        div.innerHTML = `<img src="${url}">`;
-        box.appendChild(div);
+// -------------------- CARD CHIQARISH --------------------
+function renderProductCard(product) {
+
+    let tpl = document.getElementById("card-template");
+    let card = tpl.cloneNode(true);
+    card.classList.remove("d-none");
+
+    // Elementlar
+    let nameI = card.querySelector(".name");
+    let skuI = card.querySelector(".sku");
+    let qtyI = card.querySelector(".qty");
+    let qtyLabel = card.querySelector(".qty-label");
+    let wholesaleI = card.querySelector(".wholesale");
+    let categorySel = card.querySelector(".category");
+    let mainImg = card.querySelector(".main-img");
+    let previewBox = card.querySelector(".preview-container");
+    let imgInput = card.querySelector(".images-input");
+
+    // Kategoriya select to‘ldirish
+    CATEGORIES.forEach(cat => {
+        let opt = document.createElement("option");
+        opt.value = cat.id;
+        opt.textContent = cat.name;
+        categorySel.appendChild(opt);
     });
 
-    // User rasmlari
-    [...files].forEach(file => {
-        let div = document.createElement("div");
-        div.className = "preview-box";
+    // Product ma'lumotlari joylashtirish
+    nameI.value = product.name;
+    skuI.value = product.sku;
+    mainImg.src = product.main_image_url;
 
-        let reader = new FileReader();
-        reader.onload = e => div.innerHTML = `<img src="${e.target.result}">`;
-        reader.readAsDataURL(file);
+    previewBox.innerHTML = `
+        <div class="preview-box"><img src="${product.main_image_url}"></div>
+    `;
 
-        box.appendChild(div);
+    // Omborlar bo‘yicha qoldiq hisoblash
+    let qtyMain = 0, qtySecond = 0;
+
+    product.product_supplier_stock.forEach(s => {
+        if (s.shop_id === SHOP_MAIN) qtyMain = s.measurement_value || 0;
+        if (s.shop_id === SHOP_SECOND) qtySecond = s.measurement_value || 0;
     });
-}
 
+    let total = qtyMain + qtySecond;
 
-// ============================
-//  User rasm yuklaganda preview
-// ============================
-document.getElementById("images").onchange = function () {
-    const billzImg = document.getElementById("preview").src;
-    const files = document.getElementById("images").files;
-    showPreviewImages([billzImg], files);
-};
-function resetFormAfterSuccess() {
+    qtyI.value = total;
 
-    // Kategoriya
-    document.getElementById("category").value = "";
-
-    // Text inputlar
-    document.getElementById("name").value = "";
-    document.getElementById("wholesale").value = "";
-    document.getElementById("discount").value = "0";
-    document.getElementById("description").value = "";
-    document.getElementById("sku").value = "";
-    document.getElementById("qty").value = "";
-    document.getElementById("video").value = "";
-
-    // User images input
-    document.getElementById("images").value = "";
-
-    // previewlarni tozalash
-    document.getElementById("preview").src = "";
-    document.getElementById("image-preview-container").innerHTML = "";
-
-    // Billz + user oldindan tayyorlangan fayllarni tozalash
-
-    // SKU qidirish qismiga qaytish
-    document.getElementById("result-card").classList.add("d-none");
-    document.getElementById("sku-input").value = "";
-}
-
-
-// ============================
-//  Create Product
-// ============================
-document.getElementById("save-btn").onclick = async function () {
-
-    const btn = document.getElementById("save-btn");
-    btn.disabled = true;
-    btn.textContent = "⏳ Saqlanmoqda...";
-
-    let formData = new FormData();
-
-    formData.append("category_id", document.getElementById("category").value);
-    formData.append("product_name", document.getElementById("name").value);
-    formData.append("price", document.getElementById("wholesale").value);
-    formData.append("discount", document.getElementById("discount").value);
-    formData.append("quantity", document.getElementById("qty").value);
-    formData.append("description", document.getElementById("description").value);
-    formData.append("sku", document.getElementById("sku").value);
-    formData.append("video_url", document.getElementById("video").value);
-
-    // Billz rasmi
-    const billzUrl = document.getElementById("preview").src;
-    const response = await fetch(billzUrl);
-    const blob = await response.blob();
-    const file = new File([blob], "billz.jpg", { type: blob.type });
-    formData.append("images", file);
-
-    // User rasmlari
-    for (let img of document.getElementById("images").files) {
-        formData.append("images", img);
+    if (qtyMain > 0 && qtySecond > 0) {
+        qtyLabel.textContent = "Qoldiq (2 ta ombordan):";
+        qtyLabel.style.color = "red";
+    } else {
+        qtyLabel.textContent = "Qoldiq:";
+        qtyLabel.style.color = "green";
     }
 
-    fetch("https://api.toysmars.uz/shop/create-product/", {
-    method: "POST",
-    body: formData
-})
-.then(async r => {
-    const httpStatus = r.status;    // <-- 201 shu yerda bo‘ladi
-    const res = await r.json();     // JSON ichida status bo‘lmaydi!
+    // Narx MAIN ombordan olinadi
+    let mainStock = product.product_supplier_stock.find(s => s.shop_id === SHOP_MAIN);
+    if (mainStock) wholesaleI.value = mainStock.wholesale_price || 0;
 
-     if (httpStatus === 201) {
-            alert("✅ Mahsulot muvaffaqiyatli yaratildi!");
-            resetFormAfterSuccess();
+
+    // ======== User rasm yuklaganda preview ========
+    imgInput.onchange = function () {
+        previewBox.innerHTML = `
+            <div class="preview-box"><img src="${product.main_image_url}"></div>
+        `;
+
+        [...imgInput.files].forEach(f => {
+            let reader = new FileReader();
+            reader.onload = e => {
+                let div = document.createElement("div");
+                div.className = "preview-box";
+                div.innerHTML = `<img src="${e.target.result}">`;
+                previewBox.appendChild(div);
+            };
+            reader.readAsDataURL(f);
+        });
+    };
+
+
+    // ============= MAHSULOTNI YARATISH =============
+    card.querySelector(".save-btn").onclick = async function () {
+
+        let btn = this;
+        btn.disabled = true;
+        btn.textContent = "⏳ Saqlanmoqda...";
+
+        let fd = new FormData();
+
+        fd.append("category_id", categorySel.value);
+        fd.append("product_name", nameI.value);
+        fd.append("price", wholesaleI.value);
+        fd.append("discount", card.querySelector(".discount").value);
+        fd.append("quantity", qtyI.value);
+        fd.append("description", card.querySelector(".description").value);
+        fd.append("sku", skuI.value);
+        fd.append("video_url", card.querySelector(".video").value);
+
+        // Billz rasmi → filega aylantirish
+        const imgUrl = mainImg.src;
+        const resImg = await fetch(imgUrl);
+        const blob = await resImg.blob();
+        fd.append("images", new File([blob], "billz.jpg", { type: blob.type }));
+
+        // User yuklagan rasmlar
+        [...imgInput.files].forEach(f => fd.append("images", f));
+
+        fetch("https://api.toysmars.uz/shop/create-product/", {
+            method: "POST",
+            body: fd
+        })
+        .then(async r => {
+            let status = r.status;
+            let json = await r.json();
+
+            if (status === 201) {
+                alert("✅ Mahsulot yaratildi!");
+            } else {
+                alert("❌ Xato: " + JSON.stringify(json));
+            }
 
             btn.disabled = false;
             btn.textContent = "🚀 Mahsulotni yaratish";
-            return;
-        }
+        });
 
-    alert("❌ Xato: " + JSON.stringify(res));
+    };
 
-    btn.disabled = false;
-    btn.textContent = "🚀 Mahsulotni yaratish";
-})
-.catch(err => {
-    console.error(err);
-    alert("❌ Server xatosi!");
 
-    btn.disabled = false;
-    btn.textContent = "🚀 Mahsulotni yaratish";
-});
-};
+    document.getElementById("products-container").appendChild(card);
+}
 
 </script>
 
