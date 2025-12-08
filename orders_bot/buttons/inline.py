@@ -123,7 +123,7 @@ def info_keyboard() -> InlineKeyboardMarkup:
 def sending_to_channel_keyboard(link) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text="🔗 Mahsulot linki", url=link),
+            InlineKeyboardButton(text="🔗 Mahsulot linki", url=f"https://t.me/marstoys_bot?startapp={link}"),
         ],
         [
             InlineKeyboardButton(text="🔥 Yuborish", callback_data="send_image_to_channel_confirmation"),
@@ -134,9 +134,14 @@ def sending_to_channel_keyboard(link) -> InlineKeyboardMarkup:
     return keyboard
 
 def sending(link):
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [
-            InlineKeyboardButton(text="🔗 Hoziroq sotib olish", url=link),
-        ],
-    ])
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="🔗 Hoziroq sotib olish",
+                    url=f"https://t.me/marstoys_bot?startapp={link}"
+                )
+            ]
+        ]
+    )
     return keyboard
