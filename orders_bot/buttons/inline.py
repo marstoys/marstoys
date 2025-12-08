@@ -65,7 +65,7 @@ def join_channels():
     ]
 
     buttons.append([InlineKeyboardButton(
-        text="✅ Check",
+        text="✅ Tekshirish",
         callback_data="check_subscription"
     )])
 
