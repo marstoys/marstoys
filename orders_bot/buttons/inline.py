@@ -71,6 +71,8 @@ def join_channels():
 
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
+
+
 def cart_keyboard(user) -> InlineKeyboardMarkup:
     refresh = RefreshToken.for_user(user)
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
@@ -123,7 +125,7 @@ def info_keyboard() -> InlineKeyboardMarkup:
 def sending_to_channel_keyboard(link) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text="🔗 Mahsulot linki", url=f"https://t.me/marstoys_bot?startapp={link}"),
+            InlineKeyboardButton(text="🔗 Mahsulot linki", url=link),
         ],
         [
             InlineKeyboardButton(text="🔥 Yuborish", callback_data="send_image_to_channel_confirmation"),
@@ -139,7 +141,7 @@ def sending(link):
             [
                 InlineKeyboardButton(
                     text="🔗 Hoziroq sotib olish",
-                    url=f"https://t.me/marstoys_bot?startapp={link}"
+                    url=link
                 )
             ]
         ]
