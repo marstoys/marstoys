@@ -60,7 +60,7 @@ async def order_number_handler(callback_query: CallbackQuery, state: FSMContext)
 
 
 @dp.callback_query(F.data == "check_subscription")
-async def check_subscription(callback: CallbackQuery):
+async def check_subscription(callback: CallbackQuery,state: FSMContext):
     user_id = callback.from_user.id
     await callback.answer()
 
@@ -77,6 +77,13 @@ async def check_subscription(callback: CallbackQuery):
         return
 
     user = CustomUser.objects.filter(tg_id=user_id).first()
+    if not user:
+        await callback.message.edit_text(
+            text="📝 Botdan foydalanish uchun ro‘yxatdan o‘ting.\n\n"
+                 "Iltimos, <b>ismingizni kiriting:</b> 👇"
+        )
+        await state.set_state(RegisterState.first_name)
+        return
 
     await callback.message.edit_text(
         text="✅ <b>Obuna muvaffaqiyatli tasdiqlandi!</b>\nBotdan bemalol foydalanishingiz mumkin 😎",
