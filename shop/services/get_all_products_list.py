@@ -13,7 +13,7 @@ def get_all_products_list(data):
     max_price = data.get("max_price")
     min_rating = data.get("min_rating")
     max_rating = data.get("max_rating")
-    queryset = Products.objects.prefetch_related('images').select_related("category")
+    queryset = Products.objects.prefetch_related('images').select_related("category").filter(quantity__gt=0)
     
     if category_id:
         queryset = queryset.filter(category_id=category_id)

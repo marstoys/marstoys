@@ -15,7 +15,7 @@ class PopularProducts(APIView):
     )
 
     def get(self, request):
-        popular_products = Products.objects.order_by("-created_datetime")[:30].prefetch_related('images').select_related('category')
+        popular_products = Products.objects.order_by("-created_datetime").prefetch_related('images').select_related('category').filter(quantity__gt=0)[:30]
         products_data=[]
         for product in popular_products:
             
