@@ -1,4 +1,5 @@
 import re
+from time import time
 from django.db.models import Q
 from users.models import CustomUser
 from orders_bot.dispatcher import dp
@@ -96,7 +97,7 @@ async def user_address_get(message: Message, state: FSMContext):
     user = CustomUser.objects.filter(Q(phone_number=data['phone_number']) | Q(tg_id=tg_id) | Q(username=message.from_user.username)).first()
 
     if user:
-        user.username = message.from_user.username or ""
+        user.username = message.from_user.username or user.custom_username
         user.tg_id = tg_id
         user.first_name = data['first_name']
         user.last_name = data['last_name']
@@ -115,7 +116,7 @@ async def user_address_get(message: Message, state: FSMContext):
             first_name=data['first_name'],
             last_name=data['last_name'],
             phone_number=data['phone_number'],
-            username=message.from_user.username or "",
+            username=message.from_user.username or f"user_{int(time())}",
             address=location_text if not is_location else "",
             lat=lat if is_location else None,
             lang=lon if is_location else None,

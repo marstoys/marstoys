@@ -1,6 +1,6 @@
 from django.db import models
 from core.models.basemodel import SafeBaseModel
-
+from time import time
 class CustomUser(SafeBaseModel):
     ROLE_CHOICES = (
         ("user", "User"),
@@ -19,6 +19,9 @@ class CustomUser(SafeBaseModel):
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
+    @property
+    def custom_username(self):
+        return f"user_{int(time())}_{self.id}"
 
     def __str__(self):
         return self.first_name
