@@ -125,12 +125,12 @@ class Order(SafeBaseModel):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending', verbose_name='Buyurtma xolati:')
 
     def save(self, *args, **kwargs):
-        if not self.order_number:
-            try:
-                self.order_number = str(10_000_000 + (Order.objects.count() + 1))
-            except Exception as e:
-                print(f"Error creating order number: {e}")
+        is_new = self.pk is None
         super().save(*args, **kwargs)
+
+        if is_new and not self.order_number:
+            self.order_number = str(10_000_000 + self.id)
+            super().save(update_fields=["order_number"])
     
     def __str__(self):
         return f"Ordered by {self.ordered_by.full_name} - Status: {self.status}"
