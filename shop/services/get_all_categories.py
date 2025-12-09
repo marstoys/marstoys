@@ -12,6 +12,8 @@ def get_all_categories( gender="all"):
             categories=categories.exclude(gender="male")
     date_info=[]
     for category in categories:
+        if category.product_count <= 0:
+            continue
         category_data = {
             "id": category.id,
             "name": category.name ,
