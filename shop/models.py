@@ -203,3 +203,5 @@ class BillzToken(SafeBaseModel):
     class Meta:
         verbose_name = "Billz Token"
         verbose_name_plural = "Billz Tokenlar"
+        
+        
