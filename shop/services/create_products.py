@@ -16,7 +16,9 @@ def create_products(data,images):
     
     category = Category.objects.filter(id=category_id).first() 
     if not category:
-        raise CustomApiException(ErrorCodes.NOT_FOUND, "Category not found")
+        raise CustomApiException(ErrorCodes.NOT_FOUND, message= "Category not found")
+    if Products.objects.filter(sku=sku).exists():
+        raise CustomApiException(ErrorCodes.ALREADY_EXISTS,message="Bu sku bilan mahsulot mavjud")
     
     product = Products.objects.create(
         category_id=category_id,
