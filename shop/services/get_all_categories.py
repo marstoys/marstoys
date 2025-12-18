@@ -13,7 +13,6 @@ def get_all_categories( gender="all",is_all="no"):
     
     date_info=[]
     for category in categories:
-        
         if  is_all != "yes" and category.product_count <= 0:
             continue
         category_data = {
