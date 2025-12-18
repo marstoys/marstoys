@@ -25,12 +25,20 @@ class CategoryListAPIView(APIView):
                 description="Filter categories by gender",
                 type=openapi.TYPE_STRING,
                 enum=["male", "female", "all"]
+            ),
+            openapi.Parameter(
+                "is_all",
+                openapi.IN_QUERY,
+                description="Include categories with zero products",
+                type=openapi.TYPE_STRING,
+                enum=["yes", "no"]
             )
         ]
     )
 
     def get(self, request):
         gender= request.query_params.get("gender", "all")
-        response= get_all_categories(gender)
+        is_all = request.query_params.get("is_all","no")
+        response= get_all_categories(gender,is_all)
         serializer=CategoryListSerializer(response, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

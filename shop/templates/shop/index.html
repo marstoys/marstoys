@@ -145,7 +145,7 @@ const SHOP_SECOND = "4c1bc0eb-3111-4592-92a2-0fbf7a469c36";
 let CATEGORIES = [];
 
 // -------------------- KATEGORIYALAR YUKLASH --------------------
-fetch("https://api.toysmars.uz/shop/categories/")
+fetch("https://api.toysmars.uz/shop/categories/?is_all=yes")
     .then(r => r.json())
     .then(data => { CATEGORIES = data; });
 
