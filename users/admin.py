@@ -6,7 +6,7 @@ class CustomUserAdmin(admin.ModelAdmin):
     model = CustomUser
 
 
-    list_display = ("first_name", "last_name", "tg_id","phone_number",  "order_map_link")
+    list_display = ("first_name", "last_name", "tg_id","phone_number","role",  "order_map_link")
 
 
     fieldsets = (
