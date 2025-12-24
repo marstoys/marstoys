@@ -10,6 +10,8 @@ def get_product_details(product_id):
     product = Products.objects.prefetch_related("images").select_related("category").filter(id=product_id).first()
     if not product:
         raise CustomApiException(ErrorCodes.NOT_FOUND, "Product not found")
+    product.views += 1
+    product.save()
     
     quantity = find_product_from_billz(product.sku, product.billz_position)
     if quantity is not  None and product.quantity != quantity.get("qty", 0):
